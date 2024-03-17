@@ -1,0 +1,5 @@
+@import './color.css';
+
+.h-line {
+    border-bottom: 1px solid var(--ba-color-light-shade);
+}

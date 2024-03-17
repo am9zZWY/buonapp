@@ -1,0 +1,188 @@
+.searchbar-wrapper {
+  width: 100%;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.searchbar-wrapper.active {
+  background-color: inherit;
+  z-index: 100;
+  top: 0;
+}
+
+@media (max-width: 768px) {
+  .searchbar-wrapper.active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    padding: var(--margin-page);
+    background-color: inherit;
+  }
+}
+
+.searchbar-blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+
+  /* Background blur */
+  backdrop-filter: blur(15px); /* Blur effect */
+  mask-image: linear-gradient(180deg, #fff 50%, #0000 90%);
+
+  /* WebKit */
+  -webkit-backdrop-filter: blur(15px); /* For WebKit/Safari */
+
+  /* Padding to prevent the blur from being clipped */
+  padding: 10px;
+}
+
+.searchbar-search-wrapper {
+  position: relative;
+  z-index: 1;
+
+  /* Flexbox */
+  display: flex;
+  gap: 10px; /* Added gap between input and button */
+  align-items: center;
+
+  /* Basic styling */
+  border: var(--border);
+  border-color: inherit;
+  border-radius: var(--border-radius-strong);
+  padding: 5px 10px;
+  max-width: 100%;
+  margin: var(--margin) 0;
+
+  /* Colors and shadows */
+  box-shadow: var(--box-shadow-neumorphism);
+
+  /* Background blur */
+  background-color: rgba(var(--ba-background-color-rgb), 0.9);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+
+  /* Animations */
+  transition: var(--transition);
+}
+
+.searchbar-search-wrapper.active {
+  box-shadow: var(--box-shadow-neumorphism-pressed);
+  transform: none;
+}
+
+.searchbar-search {
+  border: none;
+  outline: none;
+  font-size: inherit;
+  flex-grow: 1;
+  padding: 10px;
+  border-radius: var(--border-radius-strong);
+  background: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+.searchbar-search-wrapper.active .searchbar-search {
+  cursor: text;
+}
+
+/* Extra styling to remove spinner on number inputs in Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.searchbar-button {
+  /* Basic styling */
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 3em;
+  cursor: pointer;
+
+  /* Colors and shadows */
+  color: #fff;
+  background-size: 200% 200%; /* Increase background size for the gradient animation */
+
+  /* Shadows */
+  box-shadow: var(--box-shadow);
+
+  /* Animations */
+  transition:
+    background 1s ease-in-out,
+    transform ease-in-out 300ms,
+    box-shadow ease-in-out 300ms,
+    scale ease-in-out 300ms;
+}
+
+.searchbar-button.search {
+  background: radial-gradient(circle at top left, #ffc718, #c362b5, #6ab1e1);
+}
+
+.searchbar-button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  background: none;
+  color: inherit;
+  border: none;
+  box-shadow: none;
+}
+
+.searchbar-button:hover,
+.searchbar-button:active {
+  scale: 1.05;
+}
+
+.searchbar-list-wrapper {
+  position: absolute;
+  left: 0;
+  z-index: 110;
+  width: 100%;
+}
+
+.searchbar-quick-preferences {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: var(--margin-auto);
+}
+
+.searchbar-list {
+  /* Layout */
+  width: 100%;
+  max-width: var(--max-width);
+  margin: var(--margin-auto);
+  max-height: 90vh;
+  overflow-y: scroll;
+  padding: var(--padding-small);
+
+  /* Colors */
+  background: var(--ba-background-color);
+
+  /* Borders */
+  border-radius: var(--border-radius);
+
+  /* Shadows */
+  box-shadow: var(--box-shadow-strong);
+}
+
+@media (max-width: 768px) {
+  .searchbar-list {
+    box-shadow: none;
+  }
+}
