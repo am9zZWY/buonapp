@@ -12,12 +12,22 @@
 
     <ba-thumbnails-container title="️Cosa cucinare oggi? 🍝">
         <ba-thumbnail alt="Cooking Image" description="Scopri nuove ricette e prepara piatti deliziosi!"
-                      eyebrow="Ricette"
+                      eyebrow="Appetito"
                       src="https://t4.ftcdn.net/jpg/03/32/75/39/240_F_332753934_tBacXEgxnVplFBRyKbCif49jh0Wz89ns.jpg"
-                      title="Cooking"
+                      title="Recipe of the day"
                       to="/appetito">
             <template #description>
-                <p>Find new recipes and prepare delicious dishes!</p>
+                <p>Today's menu: pasta, pizza, and more!</p>
+
+            </template>
+        </ba-thumbnail>
+
+        <ba-thumbnail alt="Cooking Image" description=""
+                      src="https://t4.ftcdn.net/jpg/03/32/75/39/240_F_332753934_tBacXEgxnVplFBRyKbCif49jh0Wz89ns.jpg"
+                      title="Search for new recipes"
+                      to="/appetito">
+            <template #description>
+                <p>Recipes and delicious dishes!</p>
             </template>
         </ba-thumbnail>
     </ba-thumbnails-container>

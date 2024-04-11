@@ -6,7 +6,9 @@
 
             <!-- Call to Action Buttons -->
             <div>
-                <ba-button v-if="!user" label="Log in" size="small" @click="$emit('login')"/>
+                <ba-button v-if="!user" label="Log in" size="small" serif @click="$emit('login')">
+                    Accedi
+                </ba-button>
                 <span v-else class="welcome">Ciao, <b>{{ user.name }}</b>!</span>
 
                 <!--
@@ -28,7 +30,6 @@
 <script lang="ts" setup>
 import './header.css'
 import BaButton from '../button/Button.vue'
-import BaSearch from '../search/Search.vue'
 
 interface HeaderProps {
     user: { name: string } | null

@@ -1,5 +1,4 @@
 import './assets/style/main.css'
-import './assets/style/color.css'
 import './assets/style/transitions.css'
 
 import { createApp } from 'vue'
