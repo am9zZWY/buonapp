@@ -1,11 +1,11 @@
 <template>
-    <div class="max-w-md bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+    <div class="max-w-md bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl hover:shadow-xl transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
         <div class="md:flex">
             <div class="md:shrink-0">
                 <img class="h-48 w-full object-cover md:h-full md:w-48" :src="src" :alt="alt">
             </div>
             <div class="p-8">
-                <div class="uppercase tracking-wide text-sm text-green-800 font-semibold">{{ eyebrow }}</div>
+                <div class="uppercase tracking-wide text-sm text-green-800 font-semibold" v-if="eyebrow">{{ eyebrow }}</div>
                 <router-link :to="to" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
                     {{ title }}
                 </router-link>
@@ -38,7 +38,7 @@ interface HeaderProps {
     /**
      * The eyebrow text
      */
-    eyebrow: string,
+    eyebrow?: string,
     /**
      * The title text
      */
@@ -53,7 +53,6 @@ const props = withDefaults(defineProps<HeaderProps>(), {
     src: 'https://picsum.photos/512',
     alt: 'Thumbnail Image',
     to: '/',
-    eyebrow: 'Eyebrow',
     title: 'Title',
     description: ''
 })

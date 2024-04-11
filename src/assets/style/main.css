@@ -1,18 +1,13 @@
 @import '../base.css';
-@import './color.css';
 @import './transitions.css';
 @import './util.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  --transition: all .3s cubic-bezier(0, 0, .5, 1);
+    --transition: all .3s cubic-bezier(0, 0, .5, 1);
 
 }
 
 #app {
-  font-weight: normal;
-  font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
