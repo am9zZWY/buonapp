@@ -5,7 +5,7 @@
                       src="https://t3.ftcdn.net/jpg/01/31/58/14/240_F_131581464_7DapB1Od4L3Vjr8aBfk7wkM9grBmDGYA.jpg"
                       title="Weather" to="giorno">
             <template #description>
-                <weather location="Milan, Italy"/>
+                <weather/>
             </template>
         </ba-thumbnail>
     </ba-thumbnails-container>
@@ -18,7 +18,6 @@
                       to="/appetito">
             <template #description>
                 <p>Today's menu: pasta, pizza, and more!</p>
-
             </template>
         </ba-thumbnail>
 
