@@ -4,23 +4,31 @@ import {defineStore} from 'pinia'
 type Weather = {
     location: string,
     temperature: number,
-    weather: string
+    weather: string,
+    lastUpdated: string
 }
 
 export const useWeatherStore = defineStore('weather', () => {
     const weather = ref<Weather>({
         location: 'Posada, Italy',
         temperature: 20,
-        weather: 'sunny'
+        weather: 'sunny',
+        lastUpdated: '2021-09-01 12:00'
     })
+
+    const dateToLocaleString = (date: number) => {
+        return new Date(date * 1000).toLocaleString().replace(',', '').slice(0, -3)
+    }
 
     const fetchWeather = async (location?: string) => {
         fetch(`https://api.weatherapi.com/v
 1/current.json?key=ed0259613b1d44d387890933241204&q=${location ?? weather.value.location}`)
             .then((response) => response.json())
             .then((data) => {
+                weather.value.location = `${data.location.name}, ${data.location.country}`
                 weather.value.temperature = data.current.temp_c
                 weather.value.weather = data.current.condition.text
+                weather.value.lastUpdated = dateToLocaleString(data.current.last_updated_epoch)
             })
     }
 
