@@ -1,6 +1,48 @@
 import {ref} from 'vue'
 import {defineStore} from 'pinia'
 
+type Weather = {
+    location: string,
+    temperature: number,
+    weather: string
+}
+
+export const useWeatherStore = defineStore('weather', () => {
+    const weather = ref<Weather>({
+        location: 'Posada, Italy',
+        temperature: 20,
+        weather: 'sunny'
+    })
+
+    const fetchWeather = async (location?: string) => {
+        fetch(`https://api.weatherapi.com/v
+1/current.json?key=ed0259613b1d44d387890933241204&q=${location ?? weather.value.location}`)
+            .then((response) => response.json())
+            .then((data) => {
+                weather.value.temperature = data.current.temp_c
+                weather.value.weather = data.current.condition.text
+            })
+    }
+
+    const updateLocation = (location: string | null) => {
+        if (!location) {
+            console.warn('No location provided')
+            return
+        }
+
+        weather.value.location = location
+        console.log('Changed location to: ' + location)
+        fetchWeather(weather.value.location)
+    }
+
+    fetchWeather()
+
+    return {
+        weather,
+        updateLocation
+    }
+})
+
 type Recipe = {
     id: string
     title: string

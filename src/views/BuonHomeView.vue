@@ -5,7 +5,7 @@
                       src="https://t3.ftcdn.net/jpg/01/31/58/14/240_F_131581464_7DapB1Od4L3Vjr8aBfk7wkM9grBmDGYA.jpg"
                       title="Weather" to="giorno">
             <template #description>
-                <weather/>
+                <weather disable-edit/>
             </template>
         </ba-thumbnail>
     </ba-thumbnails-container>
