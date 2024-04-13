@@ -43,6 +43,8 @@ export const useWeatherStore = defineStore('weather', () => {
     fetchWeather(weather.value.location)
   }
 
+  fetchWeather()
+
   return {
     weather,
     updateLocation
