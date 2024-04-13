@@ -5,10 +5,8 @@
   </ThumbnailLinkContainer>
 
   <ThumbnailLinkContainer title="Cosa cucinare oggi? 🍝">
-    <ThumbnailLink v-for="recipe in recipes" :key="recipe.id" :title="recipe.name" :description="recipe.description" to="/buon/appetito/ricetta/:id">
-      <template #description>
-        <p>Today's menu: pasta, pizza, and more!</p>
-      </template>
+    <ThumbnailLink v-for="recipe in recipes" :key="recipe.id" :title="recipe.name" :description="recipe.description"
+                   :eyebrow="recipe.steps.length + ' steps'" :to="'/buon/appetito/ricetta/' + recipe.id">
     </ThumbnailLink>
   </ThumbnailLinkContainer>
 
@@ -17,10 +15,9 @@
 </template>
 
 <script lang="ts" setup>
-const recipes = ref([
-  {id: 1, name: 'Pasta al pomodoro', description: 'La ricetta classica della pasta al pomodoro'},
-  {id: 2, name: 'Pizza margherita', description: 'La ricetta classica della pizza margherita'},
-  {id: 3, name: 'Tiramisù', description: 'La ricetta classica del tiramisù'},
-  {id: 4, name: 'Caffè', description: 'La ricetta classica del caffè'},
-]);
+import { useRecipeStore } from '~/stores/recipe'
+
+const recipeStore = useRecipeStore()
+
+const { recipes } = storeToRefs(recipeStore)
 </script>

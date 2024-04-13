@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 
-type Todo = {
+type Task = {
     title: string
     description?: string
     completed: boolean
@@ -12,7 +12,7 @@ type Todo = {
 
 
 export const todoStore = defineStore('todo', () => {
-    const todos = ref<Map<string, Todo>>(new Map())
+    const todos = ref<Map<string, Task>>(new Map())
 
     function addTodo(title: string, dueDate: Date, description: string = '', priority: 'low' | 'medium' | 'high' = 'medium') {
         const createdDate = new Date()
