@@ -1,0 +1,26 @@
+.Button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+
+    /* Thanks to https://neumorphism.io for the code */
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow:  4px 4px 8px #c9c9c9,
+    -4px -4px 8px #ffffff;
+
+    transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+/* Rounded corners applied only with "round" class */
+.Button.round {
+    border-radius: 50%;
+}
+
+/* Optional: Hover effects (apply to both button styles) */
+.Button:hover, .Button:active {
+    box-shadow: inset 4px 4px 8px #c9c9c9,
+    inset -4px -4px 8px #ffffff;
+}
