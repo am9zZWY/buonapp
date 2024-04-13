@@ -1,0 +1,13 @@
+@import '../base.css';
+@import 'transitions.css';
+@import 'util.css';
+
+:root {
+    --transition: all .3s cubic-bezier(0, 0, .5, 1);
+
+}
+
+#app {
+    font-weight: normal;
+    font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
