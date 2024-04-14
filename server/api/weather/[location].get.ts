@@ -1,4 +1,4 @@
-import type { WeatherApiResponse } from '~/server/api/weather/index'
+import { WeatherApiResponse } from '~/types/weather'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
