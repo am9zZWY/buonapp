@@ -6,7 +6,7 @@
 
   <ThumbnailLinkContainer title="Cosa cucinare oggi? 🍝">
     <ThumbnailLink v-for="recipe in recipes" :key="recipe.id" :title="recipe.name" :description="recipe.description"
-                   :eyebrow="recipe.steps.length + ' steps'" :to="'/buon/appetito/ricetta/' + recipe.id">
+                   :eyebrow="recipe.steps.length + ' steps'" :to="'/buon/appetito/' + recipe.id">
     </ThumbnailLink>
   </ThumbnailLinkContainer>
 
