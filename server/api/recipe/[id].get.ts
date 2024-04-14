@@ -1,4 +1,4 @@
-import { Recipe } from '~/server/api/recipe/index'
+import { Recipe } from '~/types/recipe'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
@@ -29,8 +29,14 @@ const getRecipe = async (id: string) => {
   return {
     id,
     name: 'Spaghetti Carbonara',
-    description: 'A classic Italian pasta dish',
-    ingredients: ['Spaghetti', 'Eggs', 'Pancetta', 'Parmesan cheese', 'Black pepper'],
-    steps: ['Cook spaghetti', 'Fry pancetta', 'Mix eggs and cheese', 'Combine everything', 'Serve with pepper']
+    text: 'A classic Italian pasta dish',
+    ingredients: 'Spaghetti\nPancetta\nEggs\nParmesan cheese\nBlack pepper',
+    instructions: '1. Cook spaghetti\n2. Fry pancetta\n3. Mix eggs, cheese, and pepper\n4. Combine everything\n5. Serve',
+    yield: '4 servings',
+    prepTime: '10 minutes',
+    cookTime: '20 minutes',
+    totalTime: '30 minutes',
+    link: 'https://en.wikipedia.org/wiki/Carbonara',
+    notes: 'Be careful not to scramble the eggs'
   } as Recipe
 }

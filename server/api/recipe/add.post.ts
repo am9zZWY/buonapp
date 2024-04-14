@@ -1,4 +1,4 @@
-import { Recipe } from '~/server/api/recipe/index'
+import { Recipe } from '~/types/recipe'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
