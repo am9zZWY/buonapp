@@ -12,24 +12,6 @@ This template should help get you started developing with Vue 3 in Vite using bu
 
 TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
 
-## Storybook
-
-buonapp includes Storybook for developing UI components in isolation. You can use it to build and test components independently of the main application.
-
-### Storybook Commands
-
-```sh
-bun storybook
-```
-
-Launches Storybook in development mode.
-
-```sh
-bun build-storybook
-```
-
-Builds Storybook for production.
-
 ## Customize configuration
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).

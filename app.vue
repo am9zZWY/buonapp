@@ -1,8 +1,10 @@
 <template>
   <div class="mx-5">
-    <Main>
+    <NuxtPwaManifest />
+    <NuxtLoadingIndicator />
+    <NuxtLayout>
       <NuxtPage />
-    </Main>
+    </NuxtLayout>
   </div>
 </template>
 

@@ -15,7 +15,7 @@
                       eyebrow="Appetito"
                       src="https://t4.ftcdn.net/jpg/03/32/75/39/240_F_332753934_tBacXEgxnVplFBRyKbCif49jh0Wz89ns.jpg"
                       title="Recipe of the day"
-                      to="/buon/appetito">
+                      to="/buon/appetito/oftheday">
             <template #description>
                 <p>Today's menu: pasta, pizza, and more!</p>
             </template>

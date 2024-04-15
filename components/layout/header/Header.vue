@@ -1,8 +1,8 @@
 <template>
-  <header class="max-w-screen-lg m-auto my-4 py-3 h-line">
+  <header class="max-w-screen-lg m-auto my-4 py-3">
     <div class="container mx-auto flex justify-between items-center">
       <!-- Logo -->
-      <NuxtLink class="text-2xl font-bold hover:underline" to="/">Buonapp</NuxtLink>
+      <NuxtLink class="text-2xl font-bold underline  decoration-wavy decoration-from-font underline-offset-8" to="/">Buonapp</NuxtLink>
 
       <!-- Call to Action Buttons -->
       <div>

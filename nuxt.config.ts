@@ -1,27 +1,4 @@
-import type { VitePWAOptions } from 'vite-plugin-pwa'
-
-const pwaOptions: Partial<VitePWAOptions> = {
-  base: '/',
-  devOptions: {
-    enabled: process.env.SW_DEV === 'true',
-    /* when using generateSW the PWA plugin will switch to classic */
-    type: 'module',
-    navigateFallback: 'index.html',
-    suppressWarnings: true
-  },
-  includeAssets: ['favicon.svg'],
-  manifest: {
-    name: 'Buonapp: Your daily helper',
-    short_name: 'Buonapp',
-    theme_color: '#ffffff',
-    display: 'standalone',
-    orientation: 'portrait'
-  },
-  mode: 'development',
-  registerType: 'autoUpdate',
-  selfDestroying: true,
-  minify: true
-}
+const sw = process.env.SW === 'true'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -32,14 +9,59 @@ export default defineNuxtConfig({
     }
   ],
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@vite-pwa/nuxt', "@nuxt/content"],
-  pwa: pwaOptions,
+  modules: [
+    '@pinia/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@vite-pwa/nuxt',
+    '@nuxt/content',
+    '@nuxt/image',
+    '@nuxt/eslint'
+  ],
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'esnext'
+      }
+    },
+    prerender: {
+      routes: ['/']
+    }
+  },
+  pwa: {
+    base: '/',
+    devOptions: {
+      enabled: true,
+      type: 'module',
+      navigateFallback: '/',
+      suppressWarnings: true
+    },
+    includeAssets: ['favicon.svg'],
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+    },
+    injectManifest: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+    },
+    manifest: {
+      name: 'Buonapp',
+      short_name: 'Buonapp',
+      theme_color: '#ffffff',
+      display: 'standalone',
+      orientation: 'portrait',
+      lang: 'en',
+      start_url: '/'
+    },
+    mode: 'development',
+    registerType: 'autoUpdate',
+    selfDestroying: true,
+    minify: true
+  },
   runtimeConfig: {
     weatherApiKey: ''
   },
   pinia: {
     storesDirs: ['./stores/**'],
-    disableVuex: true,
+    disableVuex: true
   },
   tailwindcss: {
     cssPath: ['~/assets/css/tailwind.css', { injectPosition: 'first' }],
