@@ -1,19 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import type { Weather } from '~/types/weather'
 
-type Weather = {
-  location: string,
-  temperature: number,
-  weather: string,
-  lastUpdated: string
-}
+const localStorage = process.server ? null : window.localStorage
 
 export const useWeatherStore = defineStore('weather', () => {
   const weather = ref({
     location: 'Posada, Italy',
     temperature: 20,
-    weather: 'sunny',
-    lastUpdated: '2021-09-01 12:00'
+    weather: 'Sunny',
+    lastUpdated: '5/12/2021 10:00:00'
   })
 
   const fetchWeather = async (location?: string) => {
@@ -39,10 +35,17 @@ export const useWeatherStore = defineStore('weather', () => {
     }
 
     weather.value.location = location
+    localStorage?.setItem('location', location)
+
     console.log('Changed location to: ' + location)
     fetchWeather(weather.value.location)
   }
 
+  // Fetch weather data on startup
+  const locationFromStorage = localStorage?.getItem('location')
+  if (locationFromStorage) {
+    weather.value.location = locationFromStorage
+  }
   fetchWeather()
 
   return {
