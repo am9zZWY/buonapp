@@ -1,9 +1,10 @@
 <template>
   <div v-if="recipe">
-    <h1>{{ recipe.name }}</h1>
+    <h2>{{ recipe.name }}</h2>
   </div>
   <div v-else>
-    <p>Recipe not found</p>
+    <h2 class="text-xl font-bold">Oh no!</h2>
+    <p>We did not find the recipe you looked for.</p>
   </div>
 </template>
 
