@@ -3,7 +3,7 @@
     <div
       class="max-w-full flex flex-col-reverse md:flex-row justify-start gap-x-20 gap-y-5 transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
       <div>
-        <NuxtImg alt="Thumbnail" :src="src"
+        <img alt="Thumbnail" :src="src"
                  class="object-cover rounded-xl shadow-md overflow-hidden hover:shadow-xl" />
       </div>
       <div>
