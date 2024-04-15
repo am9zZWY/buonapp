@@ -14,7 +14,6 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxt/content',
     '@nuxt/image',
-    '@nuxt/eslint',
     '@nuxt/ui'
   ],
   nitro: {
