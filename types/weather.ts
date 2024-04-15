@@ -19,3 +19,17 @@ export type WeatherApiResponse = {
     last_updated_epoch: number
   }
 }
+
+/**
+ * Weather
+ *
+ * @typedef {Object} Weather
+ *
+ * @description Internal Weather type for the BuonApp app.
+ */
+export type Weather = {
+  location: string,
+  temperature: number,
+  weather: string,
+  lastUpdated: string
+}
