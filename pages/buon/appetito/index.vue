@@ -5,8 +5,8 @@
   </ThumbnailLinkContainer>
 
   <ThumbnailLinkContainer title="Cosa cucinare oggi? 🍝">
-    <ThumbnailLink v-for="recipe in recipes" :key="recipe.id" :title="recipe.name" :description="recipe.description"
-                   :eyebrow="recipe.steps.length + ' steps'" :to="'/buon/appetito/' + recipe.id">
+    <ThumbnailLink v-for="recipe in recipes" :key="recipe.id" :title="recipe.name" :description="recipe.text"
+                   :eyebrow="recipe.instructions.length + ' steps'" :to="'/buon/appetito/' + recipe.id">
     </ThumbnailLink>
   </ThumbnailLinkContainer>
 
@@ -18,6 +18,5 @@
 import { useRecipeStore } from '~/stores/recipe'
 
 const recipeStore = useRecipeStore()
-
 const { recipes } = storeToRefs(recipeStore)
 </script>

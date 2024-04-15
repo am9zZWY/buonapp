@@ -32,7 +32,7 @@ export default defineNuxtConfig({
     }
   ],
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@vite-pwa/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', '@vite-pwa/nuxt', "@nuxt/content"],
   pwa: pwaOptions,
   runtimeConfig: {
     weatherApiKey: ''
