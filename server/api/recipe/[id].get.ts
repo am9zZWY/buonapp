@@ -26,17 +26,21 @@ const getRecipe = async (id: string) => {
   // Fetch recipe from database
   console.debug('Fetching recipe:', id)
 
-  return {
-    id,
-    name: 'Spaghetti Carbonara',
-    text: 'A classic Italian pasta dish',
-    ingredients: 'Spaghetti\nPancetta\nEggs\nParmesan cheese\nBlack pepper',
-    instructions: '1. Cook spaghetti\n2. Fry pancetta\n3. Mix eggs, cheese, and pepper\n4. Combine everything\n5. Serve',
-    yield: '4 servings',
-    prepTime: '10 minutes',
-    cookTime: '20 minutes',
-    totalTime: '30 minutes',
-    link: 'https://en.wikipedia.org/wiki/Carbonara',
-    notes: 'Be careful not to scramble the eggs'
-  } as Recipe
+  const recipes: Recipe[] = [
+    {
+      id: '1',
+      name: 'Spaghetti Carbonara',
+      text: 'A classic Italian pasta dish',
+      ingredients: 'Spaghetti\nPancetta\nEggs\nParmesan cheese\nBlack pepper',
+      instructions: '1. Cook spaghetti\n2. Fry pancetta\n3. Mix eggs, cheese, and pepper\n4. Combine everything\n5. Serve',
+      yield: '4 servings',
+      prepTime: '10 minutes',
+      cookTime: '20 minutes',
+      totalTime: '30 minutes',
+      link: 'https://en.wikipedia.org/wiki/Carbonara',
+      notes: 'Be careful not to scramble the eggs'
+    }
+  ]
+
+  return recipes
 }
