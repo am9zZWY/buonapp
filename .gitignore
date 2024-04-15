@@ -39,3 +39,4 @@ sw.*
 # Nuxt
 .nuxt
 .output
+.vercel
