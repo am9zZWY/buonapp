@@ -2,12 +2,12 @@
   <header class="max-w-screen-lg m-auto my-4 py-3 h-line">
     <div class="container mx-auto flex justify-between items-center">
       <!-- Logo -->
-      <NuxtLink class="text-2xl font-bold" to="/">Buonapp</NuxtLink>
+      <NuxtLink class="text-2xl font-bold hover:underline" to="/">Buonapp</NuxtLink>
 
       <!-- Call to Action Buttons -->
       <div>
-        <Button v-if="!user" label="Log in" size="small" serif @click="$emit('login')">
-          Accedi
+        <Button v-if="!user?.loggedIn" label="Log in" size="small" serif @click="$emit('login')">
+          Ciao?
         </Button>
         <span v-else class="welcome">Ciao, <b>{{ user.name }}</b>!</span>
 
@@ -29,9 +29,10 @@
 
 <script lang="ts" setup>
 import './header.css'
+import type { User } from '~/types/user'
 
 interface HeaderProps {
-  user: { name: string } | null
+  user: User | null
 }
 
 withDefaults(defineProps<HeaderProps>(), {
