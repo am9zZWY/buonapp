@@ -4,7 +4,7 @@
       class="max-w-md md:max-w-1xl rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
       <div class="md:flex">
         <div class="md:shrink-0">
-          <NuxtImg class="h-48 w-full object-cover md:h-full md:w-48" :src="src" :alt="alt" />
+          <img class="h-48 w-full object-cover md:h-full md:w-48" :src="src" :alt="alt" />
         </div>
         <div class="p-8">
           <div class="uppercase tracking-wide text-sm text-green-800 dark:text-white font-semibold" v-if="eyebrow">

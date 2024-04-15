@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vite-pwa/nuxt',
     '@nuxt/content',
-    '@nuxt/image',
     '@nuxt/ui'
   ],
   nitro: {
