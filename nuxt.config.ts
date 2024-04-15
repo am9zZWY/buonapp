@@ -11,11 +11,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@pinia/nuxt',
-    '@nuxtjs/tailwindcss',
     '@vite-pwa/nuxt',
     '@nuxt/content',
     '@nuxt/image',
-    '@nuxt/eslint'
+    '@nuxt/eslint',
+    '@nuxt/ui'
   ],
   nitro: {
     esbuild: {
@@ -62,14 +62,5 @@ export default defineNuxtConfig({
   pinia: {
     storesDirs: ['./stores/**'],
     disableVuex: true
-  },
-  tailwindcss: {
-    cssPath: ['~/assets/css/tailwind.css', { injectPosition: 'first' }],
-    configPath: 'tailwind.config',
-    exposeConfig: {
-      level: 2
-    },
-    config: {},
-    viewer: true
   }
 })

@@ -1,52 +1,55 @@
 <template>
-    <div class="max-w-md md:max-w-1xl bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
-        <div class="md:flex">
-            <div class="md:shrink-0">
-                <NuxtImg class="h-48 w-full object-cover md:h-full md:w-48" :src="src" :alt="alt" />
-            </div>
-            <div class="p-8">
-                <div class="uppercase tracking-wide text-sm text-green-800 font-semibold" v-if="eyebrow">{{ eyebrow }}</div>
-                <NuxtLink :to="to" class="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
-                    {{ title }}
-                </NuxtLink>
-                <p class="mt-2 text-slate-500">
-                    <slot name="description">
-                        {{ description }}
-                    </slot>
-                </p>
-            </div>
+  <NuxtLink :to="to" :disabled="!to">
+    <div
+      class="max-w-md md:max-w-1xl rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
+      <div class="md:flex">
+        <div class="md:shrink-0">
+          <NuxtImg class="h-48 w-full object-cover md:h-full md:w-48" :src="src" :alt="alt" />
         </div>
+        <div class="p-8">
+          <div class="uppercase tracking-wide text-sm text-green-800 dark:text-white font-semibold" v-if="eyebrow">
+            {{ eyebrow }}
+          </div>
+          <h2 class="block mt-1 text-lg leading-tight font-medium hover:underline">
+            {{ title }}
+          </h2>
+          <p class="mt-2 text-slate-400 dark:text-slate-300">
+            <slot name="description">
+              {{ description }}
+            </slot>
+          </p>
+        </div>
+      </div>
     </div>
+  </NuxtLink>
 </template>
 
 <script lang="ts" setup>
-import './thumbnail-link.css'
-
 interface HeaderProps {
-    /**
-     * The source of the image
-     */
-    src: string,
-    /**
-     * The alt text of the image
-     */
-    alt: string,
-    /**
-     * The link to navigate to
-     */
-    to: string,
-    /**
-     * The eyebrow text
-     */
-    eyebrow?: string,
-    /**
-     * The title text
-     */
-    title: string,
-    /**
-     * The description text
-     */
-    description: string
+  /**
+   * The source of the image
+   */
+  src: string,
+  /**
+   * The alt text of the image
+   */
+  alt: string,
+  /**
+   * The link to navigate to
+   */
+  to: string,
+  /**
+   * The eyebrow text
+   */
+  eyebrow?: string,
+  /**
+   * The title text
+   */
+  title: string,
+  /**
+   * The description text
+   */
+  description: string
 }
 
 withDefaults(defineProps<HeaderProps>(), {

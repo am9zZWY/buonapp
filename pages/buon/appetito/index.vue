@@ -1,7 +1,9 @@
 <template>
   <!-- Add recipes -->
-  <ThumbnailLinkContainer title="Ricetta del giorno" subtitle="Le migliori ricette per te">
-    <!-- TODO: Add recipe of the day -->
+  <ThumbnailLinkContainer title="Ricetta del giorno" subtitle="Oggi ti consigliamo...">
+    <template #full-width>
+      <ThumbnailHero :title="recipes?.[0]?.name" subtitle="La ricetta più semplice e veloce" :description="recipes?.[0]?.instructions" to="'/buon/appetito/oftheday" :src="recipes?.[0]?.image" />
+    </template>
   </ThumbnailLinkContainer>
 
   <ThumbnailLinkContainer title="Cosa cucinare oggi? 🍝">
@@ -16,6 +18,7 @@
 
 <script lang="ts" setup>
 import { useRecipeStore } from '~/stores/recipe'
+import ThumbnailHero from '~/components/thumbnail/ThumbnailHero.vue'
 
 const recipeStore = useRecipeStore()
 const { recipes } = storeToRefs(recipeStore)
