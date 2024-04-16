@@ -10,17 +10,18 @@
 
 <script setup lang="ts">
 useSeoMeta({
-  title: 'Buonapp - Your Ultimate Food Delivery Solution',
-  description: 'Discover the convenience of Buonapp, the premier food delivery app connecting you with the finest restaurants in your area. Savor the flavors of your favorite cuisines, delivered right to your doorstep!',
-  themeColor: '#ff7f00',
-  ogTitle: 'Buonapp - Your Ultimate Food Delivery Solution',
-  ogDescription: 'Buonapp is your go-to food delivery app, offering a seamless experience to order from a variety of restaurants in your area. Explore the culinary delights of your neighborhood with Buonapp!',
-  ogImage: 'https://example.com/buonapp-logo.png',
-  ogUrl: 'https://buonapp.com',
-  twitterTitle: 'Buonapp - Your Ultimate Food Delivery Solution',
-  twitterDescription: 'Buonapp connects you with the best restaurants in your area for convenient food delivery. Enjoy delicious meals from the comfort of your home!',
-  twitterImage: 'https://example.com/buonapp-twitter-card.png',
-  twitterCard: 'summary_large_image',
-})
+  title: 'Buonapp - Your daily companion ☀️',
+  description: "Discover buonapp: Your ultimate all-in-one tool for seamless daily management. With features like calendar, todos, recipes, weather, and news, buonapp streamlines your day with simplicity and convenience. Say hello to effortless organization and productivity!",
+  author: "Josef Müller 🚀",
+  robots: "index, follow",
+  ogTitle: "Buonapp - Your daily companion ☀️",
+  ogDescription: "Discover buonapp: Your ultimate all-in-one tool for seamless daily management. With features like calendar, todos, recipes, weather, and news, buonapp streamlines your day with simplicity and convenience. Say hello to effortless organization and productivity!",
+  ogUrl: "https://buonapp.vercel.app/buonapp",
+  ogImage: "https://buonapp.vercel.app/logo.png",
+  twitterTitle: "Buonapp - Your daily companion ☀️",
+  twitterDescription: "Discover buonapp: Your ultimate all-in-one tool for seamless daily management. With features like calendar, todos, recipes, weather, and news, buonapp streamlines your day with simplicity and convenience. Say hello to effortless organization and productivity!",
+  twitterImage: "https://example.com/buonapp.jpg"
+});
+
 
 </script>
