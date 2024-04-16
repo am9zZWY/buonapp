@@ -27,6 +27,9 @@ export default defineNuxtConfig({
   },
   pwa: {
     base: '/',
+    client: {
+      installPrompt: true
+    },
     devOptions: {
       enabled: true,
       type: 'module',
@@ -34,9 +37,6 @@ export default defineNuxtConfig({
       suppressWarnings: true
     },
     includeAssets: ['favicon.svg'],
-    workbox: {
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
-    },
     injectManifest: {
       globPatterns: ['**/*.{js,css,html,png,svg,ico}']
     },
@@ -49,10 +49,17 @@ export default defineNuxtConfig({
       lang: 'en',
       start_url: '/'
     },
+    minify: true,
     mode: 'development',
+    pwaAssets: {
+      config: true
+    },
     registerType: 'autoUpdate',
     selfDestroying: true,
-    minify: true
+    strategies: 'generateSW',
+    workbox: {
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}']
+    }
   },
   runtimeConfig: {
     weatherApiKey: ''
