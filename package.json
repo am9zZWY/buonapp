@@ -1,8 +1,14 @@
 {
   "name": "buonapp",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
+  "contributors": [
+    {
+      "name": "Josef Müller",
+      "email": "46693545+am9zZWY@users.noreply.github.com"
+    }
+  ],
   "scripts": {
     "build": "nuxt build",
     "build-only": "vite build",
