@@ -19,7 +19,6 @@ export default defineEventHandler(async (event) => {
     lastUpdated: 'never'
   }
 
-  // ed0259613b1d44d387890933241204
   await fetch(`https://api.weatherapi.com/v
 1/current.json?key=${config.weatherApiKey}&q=${location}`)
     .then((response) => response.json() as Promise<WeatherApiResponse>)

@@ -25,6 +25,10 @@ export default defineNuxtConfig({
       routes: ['/']
     }
   },
+  pinia: {
+    storesDirs: ['./stores/**'],
+    disableVuex: true
+  },
   pwa: {
     base: '/',
     client: {
@@ -63,9 +67,5 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     weatherApiKey: ''
-  },
-  pinia: {
-    storesDirs: ['./stores/**'],
-    disableVuex: true
   }
 })
