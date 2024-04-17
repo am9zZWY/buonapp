@@ -1,15 +1,18 @@
 <template>
   <div>
-    <button @click="editLocation" v-if="!edit.location" :disabled="disableEdit"
-            :class="[{ 'hover:underline': !disableLastUpdated}, 'focus:outline-none']">
-      {{ weather.location }}
-    </button>
-    <input v-show="edit.location" v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
-           ref="locationInputEl" class="border-b border-gray-300 italic" />
-    – {{ weather.temperature }}°C – {{ weather.weather }}
-  </div>
-  <div class="text-gray-600 font-extralight text-xs" v-if="!disableLastUpdated">
-    Last updated: {{ weather.lastUpdated }}
+    <div>
+      The weather in
+      <button @click="editLocation" v-if="!edit.location" :disabled="disableEdit"
+              :class="[{ 'hover:underline': !disableLastUpdated}, 'focus:outline-none']">
+        {{ weather.location }}
+      </button>
+      <input v-show="edit.location" v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
+             ref="locationInputEl" class="border-b border-gray-300 italic" />
+      is {{ weather.temperature }}°C and {{ weather.weather.toLowerCase() }}.
+    </div>
+    <div class="text-gray-600 font-extralight text-xs" v-if="!disableLastUpdated">
+      Last updated: {{ weather.lastUpdated }}
+    </div>
   </div>
 </template>
 

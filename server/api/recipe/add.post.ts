@@ -1,8 +1,8 @@
-import { Recipe } from '~/types/recipe'
+import { MelaRecipe } from '~/types/melaRecipe'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const { name, ingredients, steps, tags } = JSON.parse(body) as Recipe
+  const { name, ingredients, steps, tags } = JSON.parse(body) as MelaRecipe
 
   if (!name || !ingredients || !steps || !tags) {
     throw createError({
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   return `Recipe added: ${name}`
 })
 
-const saveRecipe = async (recipe: Recipe) => {
+const saveRecipe = async (recipe: MelaRecipe) => {
   // Save recipe to database
   console.debug('Saving recipe:', recipe)
 

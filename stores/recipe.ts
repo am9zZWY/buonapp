@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Recipe } from '~/types/recipe'
+import type { MelaRecipe } from '~/types/melaRecipe'
 
 export const useRecipeStore = defineStore('recipes', () => {
-  const recipeList = ref<Recipe[]>()
-  const recipeMap = ref<Record<string, Recipe>>()
+  const recipeList = ref<MelaRecipe[]>()
+  const recipeMap = ref<Record<string, MelaRecipe>>()
 
   const fetchRecipes = async () => {
-    const data = await $fetch<Recipe[]>('/api/recipe/1')
+    const data = await $fetch<MelaRecipe[]>('/api/recipe/1')
 
     if (!data) {
       console.warn('Failed to fetch recipes')
@@ -19,7 +19,7 @@ export const useRecipeStore = defineStore('recipes', () => {
     recipeMap.value = data.reduce((acc, recipe) => {
       acc[recipe.id] = recipe
       return acc
-    }, {} as Record<string, Recipe>)
+    }, {} as Record<string, MelaRecipe>)
   }
 
   fetchRecipes()
