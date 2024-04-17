@@ -1,5 +1,5 @@
 <template>
-  <Section title="Buon giorno ☀️" subtitle="Good morning!">
+  <Section title="Buongiorno ☀️" subtitle="Good morning!">
     <Subsection>
       <Quote />
     </Subsection>

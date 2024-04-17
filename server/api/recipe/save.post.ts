@@ -1,29 +1,21 @@
 import { MelaRecipe } from '~/types/melaRecipe'
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-  const { name, ingredients, steps, tags } = JSON.parse(body) as MelaRecipe
+  const recipe = await readBody<MelaRecipe>(event)
 
-  if (!name || !ingredients || !steps || !tags) {
+  if (!recipe.name || !recipe.ingredients || !recipe.instructions) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Missing required fields'
     })
   }
 
-  const recipe = {
-    name,
-    ingredients,
-    steps,
-    tags
-  }
-
   // Save recipe to database
   await saveRecipe(recipe)
 
   // Send recipe data
-  setStatusCode(event, 201)
-  return `Recipe added: ${name}`
+  setResponseStatus(event, 201)
+  return `Recipe added: ${recipe.name}`
 })
 
 const saveRecipe = async (recipe: MelaRecipe) => {

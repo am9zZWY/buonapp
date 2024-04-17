@@ -4,41 +4,65 @@ import type { MelaRecipe } from '~/types/melaRecipe'
 
 const localStorage = process.server ? null : window.localStorage
 
-export const useRecipeStore = defineStore('recipes', () => {
-  const recipeList = ref<MelaRecipe[]>()
+export const useRecipeStore = defineStore('recipeList', () => {
   const recipeMap = ref<Record<string, MelaRecipe>>()
+  const recipeList = computed(() => Object.values(recipeMap.value ?? {}))
 
-  const fetchRecipes = async () => {
-    const data = await $fetch<MelaRecipe[]>('/api/recipe/1')
+  const prepareStore = async () => {
+    // Fetch recipes from server
+    const serverRecipes = await $fetch<MelaRecipe[]>('/api/recipe/list')
 
-    if (!data) {
-      console.warn('Failed to fetch recipes')
-      return
+    if (!serverRecipes) {
+      console.warn('Failed to fetch recipes from server')
+    } else {
+      console.log('Fetched recipes:', serverRecipes)
+      recipeMap.value = serverRecipes.reduce((acc, recipe) => {
+        acc[recipe.id] = recipe
+        return acc
+      }, {} as Record<string, MelaRecipe>)
     }
 
-    console.log('Fetched recipes:', data)
-    recipeList.value = data
-    recipeMap.value = data.reduce((acc, recipe) => {
-      acc[recipe.id] = recipe
-      return acc
-    }, {} as Record<string, MelaRecipe>)
+    // Get recipes from local storage
+    const localRecipes = localStorage?.getItem('recipeList')
+    if (localRecipes) {
+      const parsedLocalRecipes = JSON.parse(localRecipes) as MelaRecipe[]
+
+      // Merge local recipes with server recipes
+      parsedLocalRecipes.forEach(localRecipe => {
+        // Overwrite server recipes with local recipes
+        recipeMap.value![localRecipe.id] = localRecipe
+        console.log('Merged local recipe:', localRecipe)
+      })
+    }
   }
 
-  const addRecipe = async (recipe: MelaRecipe) => {
-    await $fetch('/api/recipe/add', {
+  const saveRecipe = async (recipe: MelaRecipe) => {
+    if (!recipe.id) {
+      // Generate a new id
+      recipe.id = Math.random().toString(36).slice(2, 5)
+    }
+
+    $fetch('/api/recipe/save', {
       method: 'POST',
-      body: JSON.stringify(recipe),
+      body: JSON.stringify(recipe)
     })
 
-    // Save to local store
-    recipeList.value?.push(recipe)
+    // Check if recipe already exists
+    if (recipeMap.value![recipe.id]) {
+      console.warn('Recipe already exists:', recipe)
+    }
+
+    // Save to store
     recipeMap.value![recipe.id] = recipe
 
     // Save to localStore
-    localStorage?.setItem('recipes', JSON.stringify(recipeList.value))
+    localStorage?.setItem('recipeList', JSON.stringify(recipeList.value))
+
+    // Return the recipe id
+    return recipe.id
   }
 
-  fetchRecipes()
+  prepareStore()
 
-  return { recipes: recipeList, recipeMap }
+  return { recipeList, recipeMap, saveRecipe }
 })

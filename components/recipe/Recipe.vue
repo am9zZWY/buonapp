@@ -68,6 +68,10 @@
         </div>
       </div>
 
+      <div class="flex justify-center mt-4">
+        <Button label="Edit recipe" :to="`/buon/appetito/${recipe.id}/edit`" />
+      </div>
+
     </section>
     <div v-else>
       <h2 class="text-xl font-bold">Oh no!</h2>
