@@ -34,7 +34,7 @@ export const useWeatherStore = defineStore('weather', () => {
       return
     }
 
-    weather.value.location = location
+    weather.value.location = location.split(',')[0].trim()
     localStorage?.setItem('location', location)
 
     console.log('Changed location to: ' + location)
