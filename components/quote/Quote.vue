@@ -10,5 +10,5 @@
 <script setup lang="ts">
 import type { Quote } from '~/types/quote'
 
-const { data } = await useFetch<Quote>('/api/quote')
+const { data } = await useLazyFetch<Quote>('/api/quote')
 </script>

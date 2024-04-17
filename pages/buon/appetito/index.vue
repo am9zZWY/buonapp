@@ -12,8 +12,7 @@
     </ThumbnailLink>
   </Section>
 
-  <!-- TODO: Allow to add new recipes -->
-  <Button label="Add your own recipe" to="/buon/appetito/aggiungi-ricetta" />
+  <Button label="Add your own recipe" to="/buon/appetito/add" />
 </template>
 
 <script lang="ts" setup>
