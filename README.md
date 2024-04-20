@@ -1,5 +1,7 @@
 # buonapp
 
+[![DeepScan grade](https://deepscan.io/api/teams/21000/projects/27014/branches/863105/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=21000&pid=27014&bid=863105)
+
 buonapp is an all-in-one application featuring a calendar, todos, recipes, weather, and news. It's designed to be easy to use and convenient for managing various aspects of your daily life.
 
 This template should help get you started developing with Vue 3 in Vite using bun as the package manager.
