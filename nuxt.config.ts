@@ -1,5 +1,3 @@
-const sw = process.env.SW === 'true'
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   components: [
@@ -12,7 +10,6 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@vite-pwa/nuxt',
-    '@nuxt/content',
     '@nuxt/ui'
   ],
   nitro: {
@@ -42,8 +39,10 @@ export default defineNuxtConfig({
     },
     includeAssets: ['favicon.svg'],
     injectManifest: {
+      minify: true,
       globPatterns: ['**/*.{js,css,html,png,svg,ico}']
     },
+    injectRegister: 'auto',
     manifest: {
       name: 'Buonapp',
       short_name: 'Buonapp',
