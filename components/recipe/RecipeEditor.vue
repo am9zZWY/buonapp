@@ -92,6 +92,10 @@ import { useRecipeStore } from '~/stores/recipe'
 const router = useRouter()
 const recipeStore = useRecipeStore()
 
+interface RecipeEditorProps {
+  id?: string,
+  noRedirect?: boolean
+}
 const props = withDefaults(defineProps<{
   id?: string,
   noRedirect?: boolean

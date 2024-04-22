@@ -8,21 +8,14 @@
 </template>
 
 <script lang="ts" setup>
+interface ButtonProps {
+  label: string
+  rounded?: boolean,
+  serif?: boolean
+}
+
 const props = withDefaults(
-  defineProps<{
-    /**
-     * The label of the button
-     */
-    label: string
-    /**
-     * rounded or square button
-     */
-    rounded?: boolean,
-    /**
-     * Serif or sans-serif font
-     */
-    serif?: boolean
-  }>(),
+  defineProps<ButtonProps>(),
   {
     rounded: false,
     serif: false

@@ -24,7 +24,7 @@ type ThumbnailHeroProps = {
   to?: string,
 }
 
-const props = withDefaults(
+withDefaults(
   defineProps<ThumbnailHeroProps>(),
   {
     title: 'Title',

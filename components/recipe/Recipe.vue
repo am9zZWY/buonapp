@@ -86,9 +86,10 @@ import { prepareRecipe, type Recipe } from '~/types/melaRecipe'
 
 const recipeStore = useRecipeStore()
 
-const props = withDefaults(defineProps<{
+interface RecipeProps {
   id: string
-}>(), {
+}
+const props = withDefaults(defineProps<RecipeProps>(), {
   id: ''
 })
 const { id } = toRefs(props)
