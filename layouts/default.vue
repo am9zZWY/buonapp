@@ -1,6 +1,7 @@
 <template>
   <main>
     <Header :user="user" @login="onLogin" @logout="onLogout" @create-account="onCreateAccount" />
+    <SpeedInsights />
 
     <div class="max-w-screen-lg mx-auto">
       <slot />
@@ -54,6 +55,7 @@
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
 import { storeToRefs } from 'pinia'
+import { SpeedInsights } from '@vercel/speed-insights/nuxt'
 
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
