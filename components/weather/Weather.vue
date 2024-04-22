@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="weather">
     <div>
       The weather in
       <ClientOnly>
@@ -8,16 +8,19 @@
           {{ weather.location }}
         </button>
         <input v-show="edit.location" v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
-               ref="locationInputEl" class="border-b border-gray-300 italic" />
+               ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
         is {{ weather.temperature }}°C and {{ weather.weather.toLowerCase() }}.
       </ClientOnly>
     </div>
-    <div class="text-gray-600 font-extralight text-xs" v-if="!disableLastUpdated">
+    <p class="text-gray-600 font-extralight text-xs" v-if="!disableLastUpdated">
       <ClientOnly>
         Last updated: {{ weather.lastUpdated }}
       </ClientOnly>
-    </div>
+    </p>
   </div>
+  <template v-else>
+    <p>Loading the weather 🌦️</p>
+  </template>
 </template>
 
 <script lang="ts" setup>

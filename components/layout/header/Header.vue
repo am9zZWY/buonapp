@@ -8,22 +8,29 @@
 
       <!-- Call to Action Buttons -->
       <div>
-        <Button v-if="!user?.loggedIn" label="Log in" serif @click="$emit('login')">
-          Ciao?
-        </Button>
-        <span v-else class="welcome">Ciao, <b>{{ user.name }}</b>!</span>
+        <UPopover v-if="!user?.loggedIn">
+          <template v-slot="{ open }">
+            <Button @click="open" label="Ciao?" serif
+                    trailing-icon="i-heroicons-arrow-right" />
+          </template>
 
-        <!--
-        TODO: Think about better ways to handle this. Login is boring!
-              Why should someone want to login?
-        <Button size="small" @click="$emit('logout')" label="Log out" v-if="user"/>
-        <Button
-            primary
-            size="small"
-            @click="$emit('createAccount')"
-            label="Sign up"
-            v-if="!user"
-        /> -->
+          <template #panel>
+            <div class="p-2 space-y-2 flex flex-col">
+              <Button
+                serif
+                @click="$emit('createAccount')"
+                label="Sign up"
+              />
+              <Button
+                serif
+                class="bg-gray-100"
+                @click="$emit('login')"
+                label="Log in"
+              />
+            </div>
+          </template>
+        </UPopover>
+        <span v-else class="font-serif">Ciao, <span class="font-bold">{{ user.name }}</span>!</span>
       </div>
     </div>
   </header>
