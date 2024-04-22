@@ -96,10 +96,7 @@ interface RecipeEditorProps {
   id?: string,
   noRedirect?: boolean
 }
-const props = withDefaults(defineProps<{
-  id?: string,
-  noRedirect?: boolean
-}>(), {
+const props = withDefaults(defineProps<RecipeEditorProps>(), {
   id: ''
 })
 const { id } = toRefs(props)

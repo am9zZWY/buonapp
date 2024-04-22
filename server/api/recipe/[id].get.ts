@@ -11,15 +11,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const recipe = await getRecipe(id)
-  if (!recipe) {
+  /* if (!recipe) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Recipe not found'
     })
-  }
+  } */
 
-  return recipe
+  return await getRecipe(id)
 })
 
 const getRecipe = async (id: string) => {
