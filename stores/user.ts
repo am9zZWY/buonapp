@@ -31,5 +31,5 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-  return { user, login }
+  return { user, login, logout, createAccount }
 })

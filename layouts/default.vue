@@ -62,7 +62,7 @@ const { user } = storeToRefs(userStore)
 
 const onLogin = () => userStore.login('Josef')
 const onLogout = () => userStore.logout()
-const onCreateAccount = () => userStore.createAccount()
+const onCreateAccount = () => userStore.createAccount('Josef', '123@123.de')
 </script>
 
 <style>
