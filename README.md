@@ -4,7 +4,7 @@
 
 buonapp is an all-in-one application featuring a calendar, todos, recipes, weather, and news. It's designed to be easy to use and convenient for managing various aspects of your daily life.
 
-![Buonapp Banner](public/social-logo.png)
+![Buonapp Banner](public/banner.png)
 
 This template should help get you started developing with Vue 3 in Vite using bun as the package manager.
 

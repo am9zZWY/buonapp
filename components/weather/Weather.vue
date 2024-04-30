@@ -1,21 +1,21 @@
 <template>
   <ClientOnly>
     <span v-if="compact">
-        <UPopover v-if="!edit.location">
-          <template v-slot="{ open }">
-              <button @click="open" :disabled="disableEdit"
-                      :class="[{ 'hover:underline': !disableLastUpdated}]" class="focus:outline-none inline-block">
-                {{ weather.temperature }}°C
-              </button>
-          </template>
+      <UPopover v-if="!edit.location">
+        <template v-slot="{ open }">
+            <button @click="open" :disabled="disableEdit"
+                    :class="[{ 'hover:underline': !disableLastUpdated}]" class="focus:outline-none inline-block">
+              {{ weather.temperature }}°C
+            </button>
+        </template>
 
-          <template #panel>
-            <div class="p-2 space-y-2 flex flex-col">
-              <input v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
-                     ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
-            </div>
-          </template>
-        </UPopover>
+        <template #panel>
+          <div class="p-2 space-y-2 flex flex-col">
+            <input v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
+                   ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
+          </div>
+        </template>
+      </UPopover>
     </span>
     <div v-else>
       The weather in

@@ -32,7 +32,7 @@
     "jsdom": "^24.0.0",
     "nuxt": "^3.11.2",
     "pinia": "^2.1.7",
-    "vue": "^3.4.21",
+    "vue": "^3.4.26",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
@@ -53,6 +53,8 @@
     "vue-tsc": "^2.0.6"
   },
   "trustedDependencies": [
-    "@vercel/speed-insights"
+    "@vercel/speed-insights",
+    "sharp",
+    "vue-demi"
   ]
 }

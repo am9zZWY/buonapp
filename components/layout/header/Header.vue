@@ -7,7 +7,7 @@
       </h1>
 
       <!-- Call to Action Buttons -->
-      <div>
+      <!-- <div>
         <UPopover v-if="!user?.loggedIn">
           <template v-slot="{ open }">
             <Button @click="open" label="Ciao?" serif
@@ -32,6 +32,7 @@
         </UPopover>
         <span v-else class="font-serif">Ciao, <span class="font-bold">{{ user.name }}</span>!</span>
       </div>
+      -->
     </div>
   </header>
 </template>

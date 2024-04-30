@@ -4,7 +4,7 @@
       <input v-model.trim="filter" type="text" placeholder="Filter news"
              class="border border-gray-300 p-2 rounded" />
       <template v-for="news in filteredData">
-        <News :description="news.description" :title="news.title" :to="news.link" :pub-date="news.pubDate" />
+        <LazyNews :description="news.description" :title="news.title" :to="news.link" :pub-date="news.pubDate" />
       </template>
     </div>
   </div>
@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 import type { Rss } from '~/types/rss'
-import News from '~/components/news/News.vue'
 
 interface RssNewsProps {
   maxNews?: number
