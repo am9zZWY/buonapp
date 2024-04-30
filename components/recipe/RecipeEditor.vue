@@ -144,7 +144,7 @@ const submit = () => {
 
       // Redirect to the new recipe
       if (!props.noRedirect) {
-        router.push(`/buon/appetito/${id.value}/edit`)
+        router.push(`/buon/appetito/${id}/edit`)
       }
     }).catch((error: Error) => {
     console.error('Error saving recipe', error)

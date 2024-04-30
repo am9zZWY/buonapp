@@ -1,26 +1,36 @@
 <template>
-  <div v-if="weather">
-    <div>
+  <ClientOnly>
+    <span v-if="compact">
+        <UPopover v-if="!edit.location">
+          <template v-slot="{ open }">
+              <button @click="open" :disabled="disableEdit"
+                      :class="[{ 'hover:underline': !disableLastUpdated}]" class="focus:outline-none inline-block">
+                {{ weather.temperature }}°C
+              </button>
+          </template>
+
+          <template #panel>
+            <div class="p-2 space-y-2 flex flex-col">
+              <input v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
+                     ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
+            </div>
+          </template>
+        </UPopover>
+    </span>
+    <div v-else>
       The weather in
-      <ClientOnly>
-        <button @click="editLocation" v-if="!edit.location" :disabled="disableEdit"
-                :class="[{ 'hover:underline': !disableLastUpdated}, 'focus:outline-none']">
-          {{ weather.location }}
-        </button>
-        <input v-show="edit.location" v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
-               ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
-        is {{ weather.temperature }}°C and {{ weather.weather.toLowerCase() }}.
-      </ClientOnly>
-    </div>
-    <p class="text-gray-600 font-extralight text-xs" v-if="!disableLastUpdated">
-      <ClientOnly>
+      <button @click="editLocation" v-if="!edit.location" :disabled="disableEdit"
+              :class="[{ 'hover:underline': !disableLastUpdated}, 'focus:outline-none']">
+        {{ weather.location }}
+      </button>
+      <input v-show="edit.location" v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
+             ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
+      is {{ weather.temperature }}°C and {{ weather.weather.toLowerCase() }}.
+      <p class="text-gray-600 font-extralight text-xs" v-if="!disableLastUpdated">
         Last updated: {{ weather.lastUpdated }}
-      </ClientOnly>
-    </p>
-  </div>
-  <template v-else>
-    <p>Loading the weather 🌦️</p>
-  </template>
+      </p>
+    </div>
+  </ClientOnly>
 </template>
 
 <script lang="ts" setup>
@@ -29,7 +39,8 @@ import { useWeatherStore } from '~/stores/weather'
 
 type WeatherProps = {
   disableEdit?: boolean,
-  disableLastUpdated?: boolean
+  disableLastUpdated?: boolean,
+  compact?: boolean
 }
 
 type Edit = { [key: string]: boolean }

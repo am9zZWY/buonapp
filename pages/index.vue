@@ -1,11 +1,11 @@
 <template>
-  <Section title="Buongiorno ☀️" subtitle="Good morning!">
+  <Section title="Buongiorno! 🌞">
+    <template #before>
+      <QuickLook />
+    </template>
+
     <Subsection>
       <Quote />
-    </Subsection>
-
-    <Subsection title="Tempo 🌦">
-      <Weather />
     </Subsection>
 
     <Subsection title="Notizie 📰" subtitle="News from around the world">
@@ -36,3 +36,5 @@
     </ClientOnly>
   </Section>
 </template>
+<script setup lang="ts">
+</script>
