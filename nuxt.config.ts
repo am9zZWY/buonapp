@@ -7,7 +7,13 @@ export default defineNuxtConfig({
     }
   ],
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt', '@vite-pwa/nuxt', '@nuxt/ui', "@nuxtjs/i18n"],
+  modules: [
+    '@pinia/nuxt',
+    '@vite-pwa/nuxt',
+    '@nuxt/ui',
+    "@nuxtjs/i18n",
+    "@nuxt/eslint"
+  ],
   nitro: {
     esbuild: {
       options: {
@@ -61,6 +67,7 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
-    weatherApiKey: ''
+    weatherApiKey: '',
+    openaiApiKey: ''
   }
 })
