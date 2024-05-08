@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Weather } from '~/types/weather'
 
-const localStorage = process.server ? null : window.localStorage
+const localStorage = import.meta.server ? null : window.localStorage
 
 export const useWeatherStore = defineStore('weather', () => {
   const weather = ref({

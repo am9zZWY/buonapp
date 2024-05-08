@@ -1,10 +1,19 @@
 <template>
   <div class="flex flex-col space-y-4">
     <div class="grid grid-cols-1 gap-4">
-      <input v-model.trim="filter" type="text" placeholder="Filter news"
-             class="border border-gray-300 p-2 rounded" />
+      <input
+        v-model.trim="filter"
+        type="text"
+        placeholder="Filter news"
+        class="border border-gray-300 p-2 rounded"
+      >
       <template v-for="news in filteredData">
-        <LazyNews :description="news.description" :title="news.title" :to="news.link" :pub-date="news.pubDate" />
+        <LazyNews
+          :description="news.description"
+          :title="news.title"
+          :to="news.link"
+          :pub-date="news.pubDate"
+        />
       </template>
     </div>
   </div>
@@ -32,7 +41,9 @@ const filteredData = computed<Rss[]>(() => {
     return data.value.slice(0, props.maxNews)
   }
 
-  return data.value?.filter((news: Rss) => cleanString(news.title).match(cleanString(filter.value))).slice(0, props.maxNews)
+  return data.value
+    ?.filter((news: Rss) => cleanString(news.title).match(cleanString(filter.value)))
+    .slice(0, props.maxNews)
 })
 
 const cleanString = (str: string) => str.toLowerCase().replace(/[^a-zA-Z0-9]/g, '')

@@ -1,7 +1,16 @@
-import { WeatherApiResponse } from '~/types/weather'
+import type { WeatherApiResponse } from '~/types/weather'
+import type { NitroRuntimeConfig } from 'nitropack'
 
 export default defineEventHandler(async (event) => {
-  const config = useRuntimeConfig(event)
+  const config: NitroRuntimeConfig  = useRuntimeConfig(event)
+  const { weatherApiKey } = config
+  if (!weatherApiKey) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Weather API key not provided'
+    })
+  }
+
   const location = getRouterParam(event, 'location')
 
   // Check if location is provided
@@ -20,7 +29,7 @@ export default defineEventHandler(async (event) => {
   }
 
   await fetch(`https://api.weatherapi.com/v
-1/current.json?key=${config.weatherApiKey}&q=${location}`)
+1/current.json?key=${weatherApiKey}&q=${location}`)
     .then((response) => response.json() as Promise<WeatherApiResponse>)
     .then((data: WeatherApiResponse) => {
       // Extract weather data

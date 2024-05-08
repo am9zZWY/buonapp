@@ -3,43 +3,54 @@
     <Section title="Add your own recipe" subtitle="Share your favorite recipe with the community">
       <DevOnly>{{ recipe }}</DevOnly>
 
-      <form @submit.prevent="submit" class="w-full">
+      <form class="w-full" @submit.prevent="submit">
         <div class="shadow-lg rounded-lg overflow-hidden mb-5">
           <div class="flex flex-col md:flex-row justify-between items-start px-6 py-4">
             <div class="w-full md:w-1/2">
               <h2 class="text-xl font-semibold font-serif text-gray-800 dark:text-gray-200">
-                <input v-model="recipe.name"
-                       class="w-full text-xl font-semibold font-serif text-gray-800 dark:text-gray-200"
-                       placeholder="Recipe name" />
+                <input
+                  v-model="recipe.name"
+                  class="w-full text-xl font-semibold font-serif text-gray-800 dark:text-gray-200"
+                  placeholder="Recipe name"
+                >
               </h2>
 
               <!-- Cooking time -->
               <div class="flex justify-between mt-2">
                 <div class="flex items-center gap-x-3 text-xs">
                   <p>
-                  <span class="text-gray-600 dark:text-gray-400">
-                    <input v-model="recipe.prepTime" class="w-16 text-gray-600 dark:text-gray-400"
-                           placeholder="Prep time" />
-                  </span>
-                    <br>
+                    <span class="text-gray-600 dark:text-gray-400">
+                      <input
+                        v-model="recipe.prepTime"
+                        class="w-16 text-gray-600 dark:text-gray-400"
+                        placeholder="Prep time"
+                      >
+                    </span>
+                    <br >
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Prep</span>
                   </p>
-                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"></div>
+                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"/>
                   <p>
-                  <span class="text-gray-600 dark:text-gray-400">
-                    <input v-model="recipe.cookTime" class="w-16 text-gray-600 dark:text-gray-400"
-                           placeholder="Cook time" />
-                  </span>
-                    <br>
+                    <span class="text-gray-600 dark:text-gray-400">
+                      <input
+                        v-model="recipe.cookTime"
+                        class="w-16 text-gray-600 dark:text-gray-400"
+                        placeholder="Cook time"
+                      >
+                    </span>
+                    <br >
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Cook</span>
                   </p>
-                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"></div>
+                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"/>
                   <p>
-                  <span class="text-gray-600 dark:text-gray-400">
-                    <input v-model="recipe.totalTime" class="w-16 text-gray-600 dark:text-gray-400"
-                           placeholder="Total time" />
-                  </span>
-                    <br>
+                    <span class="text-gray-600 dark:text-gray-400">
+                      <input
+                        v-model="recipe.totalTime"
+                        class="w-16 text-gray-600 dark:text-gray-400"
+                        placeholder="Total time"
+                      >
+                    </span>
+                    <br >
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Total</span>
                   </p>
                 </div>
@@ -47,32 +58,47 @@
 
               <!-- Description -->
               <p class="text-gray-800 dark:text-slate-400 mt-4">
-                <textarea v-model="recipe.text" class="w-full text-gray-800 dark:text-slate-400 h-24"
-                          placeholder="Recipe description" />
+                <textarea
+                  v-model="recipe.text"
+                  class="w-full text-gray-800 dark:text-slate-400 h-24"
+                  placeholder="Recipe description"
+                />
               </p>
             </div>
 
             <!-- Image -->
-            <div class="w-full md:w-1/2 mt-4" v-if="recipe?.images?.[0]">
-              <textarea v-model="recipe.images" class="w-full text-gray-800 dark:text-slate-400 h-24"
-                        placeholder="Image URL" />
+            <div v-if="recipe?.images?.[0]" class="w-full md:w-1/2 mt-4">
+              <textarea
+                v-model="recipe.images"
+                class="w-full text-gray-800 dark:text-slate-400 h-24"
+                placeholder="Image URL"
+              />
             </div>
           </div>
         </div>
 
-
         <div class="flex flex-col md:flex-row justify-between items-start">
           <div class="w-full md:w-1/2 shadow-lg rounded-lg overflow-hidden md:mr-2 mb-4 md:mb-0">
             <div class="px-6 py-4">
-              <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">Ingredients</h3>
-              <textarea class="text-gray-800 dark:text-slate-400 h-48" v-model="recipe.ingredients" />
+              <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">
+                Ingredients
+              </h3>
+              <textarea
+                v-model="recipe.ingredients"
+                class="text-gray-800 dark:text-slate-400 h-48"
+              />
             </div>
           </div>
 
           <div class="w-full md:w-1/2 shadow-lg rounded-lg overflow-hidden md:ml-2">
             <div class="px-6 py-4">
-              <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">Instructions</h3>
-              <textarea class="text-gray-800 dark:text-slate-400 h-48" v-model="recipe.instructions" />
+              <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">
+                Instructions
+              </h3>
+              <textarea
+                v-model="recipe.instructions"
+                class="text-gray-800 dark:text-slate-400 h-48"
+              />
             </div>
           </div>
         </div>
@@ -93,7 +119,7 @@ const router = useRouter()
 const recipeStore = useRecipeStore()
 
 interface RecipeEditorProps {
-  id?: string,
+  id?: string
   noRedirect?: boolean
 }
 const props = withDefaults(defineProps<RecipeEditorProps>(), {
@@ -122,22 +148,27 @@ const updateFromStore = async (id: string) => {
   recipe.value = recipeMap.value?.[id] ?? generateEmptyRecipe()
 }
 
-watch(id, () => {
-  if (!id.value) {
-    console.log('No recipe ID provided. Creating a new recipe')
-    return
-  }
+watch(
+  id,
+  () => {
+    if (!id.value) {
+      console.log('No recipe ID provided. Creating a new recipe')
+      return
+    }
 
-  if (!recipeMap.value) {
-    console.warn('Recipe map not loaded')
-    return
-  }
+    if (!recipeMap.value) {
+      console.warn('Recipe map not loaded')
+      return
+    }
 
-  updateFromStore(id.value)
-}, { immediate: true })
+    updateFromStore(id.value)
+  },
+  { immediate: true }
+)
 
 const submit = () => {
-  recipeStore.saveRecipe(recipe.value)
+  recipeStore
+    .saveRecipe(recipe.value)
     .then(async (id: string) => {
       // Reload the recipe from the store to get the updated ID
       await updateFromStore(id)
@@ -146,8 +177,9 @@ const submit = () => {
       if (!props.noRedirect) {
         router.push(`/buon/appetito/${id}/edit`)
       }
-    }).catch((error: Error) => {
-    console.error('Error saving recipe', error)
-  })
+    })
+    .catch((error: Error) => {
+      console.error('Error saving recipe', error)
+    })
 }
 </script>

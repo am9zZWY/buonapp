@@ -1,4 +1,4 @@
-import { MelaRecipe } from '~/types/melaRecipe'
+import type { MelaRecipe } from '~/types/melaRecipe'
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')

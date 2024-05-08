@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { MelaRecipe } from '~/types/melaRecipe'
 
-const localStorage = process.server ? null : window.localStorage
+const localStorage = import.meta.server ? null : window.localStorage
 
 export const useRecipeStore = defineStore('recipeList', () => {
   const recipeMap = ref<Record<string, MelaRecipe>>()
