@@ -10,7 +10,7 @@ export const useRecipeStore = defineStore('recipeList', () => {
 
   const prepareStore = async () => {
     // Fetch recipes from server
-    const serverRecipes = await $fetch<MelaRecipe[]>('/api/recipe/list')
+    const serverRecipes = await $fetch<MelaRecipe[]>('/api/recipe/get/list')
 
     if (!serverRecipes) {
       console.warn('Failed to fetch recipes from server')
@@ -42,7 +42,7 @@ export const useRecipeStore = defineStore('recipeList', () => {
       recipe.id = Math.random().toString(36).slice(2, 5)
     }
 
-    $fetch('/api/recipe/save', {
+    await $fetch('/api/recipe/add/save', {
       method: 'POST',
       body: JSON.stringify(recipe)
     })

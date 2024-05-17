@@ -14,13 +14,13 @@
                   <br>
                   <span class="font-extralight text-gray-300 dark:text-gray-500">Prep</span>
                 </p>
-                <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"></div>
+                <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"/>
                 <p>
                   <span class="text-gray-600 dark:text-gray-400">{{ recipe.cookTime }}</span>
                   <br>
                   <span class="font-extralight text-gray-300 dark:text-gray-500">Cook</span>
                 </p>
-                <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"></div>
+                <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"/>
                 <p>
                   <span class="text-gray-600 dark:text-gray-400">{{ recipe.totalTime }}</span>
                   <br>
@@ -34,8 +34,8 @@
           </div>
 
           <!-- Image -->
-          <div class="w-full md:w-1/2 mt-4" v-if="recipe?.images?.[0]">
-            <img :src="recipe?.images?.[0]" class="w-2/3 object-cover rounded-xl overflow-hidden" :alt="recipe.name" />
+          <div v-if="recipe?.images?.[0]" class="w-full md:w-1/2 mt-4">
+            <img :alt="recipe.name" :src="recipe?.images?.[0]" class="w-2/3 object-cover rounded-xl overflow-hidden" >
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@
       </div>
 
       <div class="flex justify-center mt-4">
-        <Button label="Edit recipe" :to="`/buon/appetito/${recipe.id}/edit`" />
+        <Button :to="`/buon/appetito/${recipe.id}/edit`" label="Edit recipe" />
       </div>
 
     </section>
@@ -89,6 +89,7 @@ const recipeStore = useRecipeStore()
 interface RecipeProps {
   id: string
 }
+
 const props = withDefaults(defineProps<RecipeProps>(), {
   id: ''
 })

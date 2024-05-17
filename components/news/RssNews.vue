@@ -2,25 +2,25 @@
   <div class="flex flex-col space-y-4">
     <div class="grid grid-cols-1 gap-4">
       <input
+        v-if="data && data.length > 0"
         v-model.trim="filter"
-        type="text"
-        placeholder="Filter news"
         class="border border-gray-300 p-2 rounded"
+        placeholder="Filter news"
+        type="text"
       >
       <template v-for="news in filteredData">
         <LazyNews
-          :description="news.description"
+          :pub-date="news.pubDate"
           :title="news.title"
           :to="news.link"
-          :pub-date="news.pubDate"
         />
       </template>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import type { Rss } from '~/types/rss'
+<script lang="ts" setup>
+import type { RssNews } from '~/types/news'
 
 interface RssNewsProps {
   maxNews?: number
@@ -30,9 +30,9 @@ const props = withDefaults(defineProps<RssNewsProps>(), {
   maxNews: 3
 })
 
-const { data } = await useLazyFetch<Rss[]>('/api/rss')
+const { data } = await useLazyFetch<RssNews[]>('/api/news/rss')
 const filter = ref<string>('')
-const filteredData = computed<Rss[]>(() => {
+const filteredData = computed<RssNews[]>(() => {
   if (!data.value) {
     return []
   }
@@ -42,7 +42,7 @@ const filteredData = computed<Rss[]>(() => {
   }
 
   return data.value
-    ?.filter((news: Rss) => cleanString(news.title).match(cleanString(filter.value)))
+    ?.filter((news: RssNews) => cleanString(news.title).match(cleanString(filter.value)))
     .slice(0, props.maxNews)
 })
 

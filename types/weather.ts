@@ -1,8 +1,6 @@
 /**
  * WeatherApiResponse
  *
- * @typedef {Object} WeatherApiResponse
- *
  * @description Weather API response type for the BuonApp app.
  * @see https://www.weatherapi.com/docs/
  */
@@ -22,8 +20,6 @@ export type WeatherApiResponse = {
 
 /**
  * Weather
- *
- * @typedef {Object} Weather
  *
  * @description Internal Weather type for the BuonApp app.
  */

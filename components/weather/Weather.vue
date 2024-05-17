@@ -2,31 +2,37 @@
   <ClientOnly>
     <span v-if="compact">
       <UPopover v-if="!edit.location">
-        <template v-slot="{ open }">
-            <button @click="open" :disabled="disableEdit"
-                    :class="[{ 'hover:underline': !disableLastUpdated}]" class="focus:outline-none inline-block">
+        <template #default="{ open }">
+            <button
+              :class="[{ 'hover:underline': !disableLastUpdated}]" :disabled="disableEdit"
+              class="focus:outline-none inline-block" @click="open">
               {{ weather.temperature }}°C
             </button>
         </template>
 
         <template #panel>
           <div class="p-2 space-y-2 flex flex-col">
-            <input v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
-                   ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
+            <input
+              ref="locationInputEl" v-model="locationInput" class="border-b border-gray-300 italic rounded"
+              @blur="saveLocation" @keydown.enter="saveLocation">
           </div>
         </template>
       </UPopover>
     </span>
     <div v-else>
       The weather in
-      <button @click="editLocation" v-if="!edit.location" :disabled="disableEdit"
-              :class="[{ 'hover:underline': !disableLastUpdated}, 'focus:outline-none']">
+      <button
+        v-if="!edit.location" :class="[{ 'hover:underline': !disableLastUpdated}, 'focus:outline-none']"
+        :disabled="disableEdit"
+        @click="editLocation">
         {{ weather.location }}
       </button>
-      <input v-show="edit.location" v-model="locationInput" @blur="saveLocation" @keydown.enter="saveLocation"
-             ref="locationInputEl" class="border-b border-gray-300 italic rounded" />
+      <input
+        v-show="edit.location" ref="locationInputEl" v-model="locationInput"
+        class="border-b border-gray-300 italic rounded"
+        @blur="saveLocation" @keydown.enter="saveLocation">
       is {{ weather.temperature }}°C and {{ weather.weather.toLowerCase() }}.
-      <p class="text-gray-600 font-extralight text-xs" v-if="!disableLastUpdated">
+      <p v-if="!disableLastUpdated" class="text-gray-600 font-extralight text-xs">
         Last updated: {{ weather.lastUpdated }}
       </p>
     </div>

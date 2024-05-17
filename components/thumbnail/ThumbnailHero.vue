@@ -1,10 +1,11 @@
 <template>
-  <NuxtLink :to="to" :disabled="!to">
+  <NuxtLink :disabled="!to" :to="to">
     <div
       class="max-w-full flex flex-col-reverse md:flex-row justify-start gap-x-20 gap-y-5 transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
       <div>
-        <img alt="Thumbnail" :src="src"
-                 class="object-cover rounded-xl shadow-md overflow-hidden hover:shadow-xl" />
+        <img
+:src="src" alt="Thumbnail"
+             class="object-cover rounded-xl shadow-md overflow-hidden hover:shadow-xl" >
       </div>
       <div>
         <h2 class="text-4xl font-medium font-serif hover:underline">{{ title }}</h2>

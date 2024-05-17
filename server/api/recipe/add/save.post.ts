@@ -1,4 +1,4 @@
-import { MelaRecipe } from '~/types/melaRecipe'
+import type { MelaRecipe } from '~/types/melaRecipe'
 
 export default defineEventHandler(async (event) => {
   const recipe = await readBody<MelaRecipe>(event)
@@ -11,14 +11,19 @@ export default defineEventHandler(async (event) => {
   }
 
   // Save recipe to database
-  await saveRecipe(recipe)
+  await saveRecipeInDb(recipe)
 
   // Send recipe data
   setResponseStatus(event, 201)
   return `Recipe added: ${recipe.name}`
 })
 
-const saveRecipe = async (recipe: MelaRecipe) => {
+/**
+ * Save a recipe in an online database.
+ *
+ * @param recipe
+ */
+const saveRecipeInDb = async (recipe: MelaRecipe) => {
   // Save recipe to database
   console.debug('Saving recipe:', recipe)
 

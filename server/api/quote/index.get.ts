@@ -1,4 +1,4 @@
-import { QuotableQuote, Quote } from '~/types/quote'
+import type { QuotableQuote, Quote } from '~/types/quote'
 
 
 

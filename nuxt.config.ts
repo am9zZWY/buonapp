@@ -11,8 +11,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vite-pwa/nuxt',
     '@nuxt/ui',
-    "@nuxtjs/i18n",
-    "@nuxt/eslint"
+    '@nuxtjs/i18n',
+    '@nuxt/eslint'
   ],
   nitro: {
     esbuild: {
@@ -20,6 +20,7 @@ export default defineNuxtConfig({
         target: 'esnext'
       }
     },
+    preset: 'vercel-edge',
     prerender: {
       routes: ['/']
     }

@@ -1,5 +1,6 @@
 <template>
-  <UButton class="shadow-inner" :class="{ 'round': props.rounded, 'font-serif': props.serif }" :label="label"
+  <UButton
+:class="{ 'round': props.rounded, 'font-serif': props.serif }" :label="label" class="shadow-inner"
            color="white" variant="solid" @click="onClick">
     <slot>
       {{ label }}

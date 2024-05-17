@@ -1,6 +1,6 @@
 <template>
   <ClientOnly>
-    <Section title="Add your own recipe" subtitle="Share your favorite recipe with the community">
+    <Section subtitle="Share your favorite recipe with the community" title="Add your own recipe">
       <DevOnly>{{ recipe }}</DevOnly>
 
       <form class="w-full" @submit.prevent="submit">
@@ -26,10 +26,10 @@
                         placeholder="Prep time"
                       >
                     </span>
-                    <br >
+                    <br>
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Prep</span>
                   </p>
-                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"/>
+                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px" />
                   <p>
                     <span class="text-gray-600 dark:text-gray-400">
                       <input
@@ -38,10 +38,10 @@
                         placeholder="Cook time"
                       >
                     </span>
-                    <br >
+                    <br>
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Cook</span>
                   </p>
-                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px"/>
+                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px" />
                   <p>
                     <span class="text-gray-600 dark:text-gray-400">
                       <input
@@ -50,7 +50,7 @@
                         placeholder="Total time"
                       >
                     </span>
-                    <br >
+                    <br>
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Total</span>
                   </p>
                 </div>
@@ -103,8 +103,12 @@
           </div>
         </div>
 
+        <div v-if="errorMessage !== ''" class="border border-red-400">
+          {{ errorMessage }}
+        </div>
+
         <div class="flex justify-center mt-4">
-          <Button type="submit" label="Save Recipe" size="lg" />
+          <Button label="Save Recipe" size="lg" type="submit" />
         </div>
       </form>
     </Section>
@@ -122,6 +126,7 @@ interface RecipeEditorProps {
   id?: string
   noRedirect?: boolean
 }
+
 const props = withDefaults(defineProps<RecipeEditorProps>(), {
   id: ''
 })
@@ -143,6 +148,8 @@ const generateEmptyRecipe = () => ({
   notes: ''
 })
 const recipe = ref<MelaRecipe>(generateEmptyRecipe())
+
+const errorMessage = ref<string>('')
 
 const updateFromStore = async (id: string) => {
   recipe.value = recipeMap.value?.[id] ?? generateEmptyRecipe()
@@ -174,9 +181,7 @@ const submit = () => {
       await updateFromStore(id)
 
       // Redirect to the new recipe
-      if (!props.noRedirect) {
-        router.push(`/buon/appetito/${id}/edit`)
-      }
+      await router.push(`/buon/appetito/${id}`)
     })
     .catch((error: Error) => {
       console.error('Error saving recipe', error)

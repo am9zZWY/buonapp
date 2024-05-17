@@ -1,5 +1,5 @@
 <template>
-  <RecipeEditor :id="id" no-redirect />
+  <RecipeEditor :id="id" />
 </template>
 
 <script lang="ts" setup>
