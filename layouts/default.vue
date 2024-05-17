@@ -3,51 +3,27 @@
     <Header :user="user" @login="onLogin" @logout="onLogout" @create-account="onCreateAccount" />
     <SpeedInsights />
 
-    <div class="max-w-screen-lg mx-auto">
+    <div class="max-w-screen-lg mx-auto relative">
       <slot />
-
       <ClientOnly>
-        <div
-          v-if="$pwa?.offlineReady || $pwa?.needRefresh"
-          class="pwa-toast"
-          role="alert"
-        >
-          <div class="message">
-          <span v-if="$pwa.offlineReady">
-            App ready to work offline
-          </span>
-            <span v-else>
-            New content available, click on reload button to update.
-          </span>
-          </div>
-          <button
-            v-if="$pwa.needRefresh"
-            @click="$pwa.updateServiceWorker()"
-          >
-            Reload
-          </button>
-          <button @click="$pwa.cancelPrompt()">
-            Close
-          </button>
-        </div>
-        <div
-          v-if="$pwa?.showInstallPrompt && !$pwa?.offlineReady && !$pwa?.needRefresh"
-          class="pwa-toast"
-          role="alert"
-        >
-          <div class="message">
-          <span>
-            Install PWA
-          </span>
-          </div>
-          <button @click="$pwa.install()">
-            Install
-          </button>
-          <button @click="$pwa.cancelInstall()">
-            Cancel
-          </button>
-        </div>
+        <PwaButton />
       </ClientOnly>
+
+      <!-- Floating Island -->
+      <div
+        class="floating-island p-3 rounded-3xl bg-neutral-100 dark:bg-neutral-600 shadow-2xl items-center">
+        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="onAddTodo">
+          <UIcon name="ri:add-line" dynamic />
+        </button>
+        <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
+        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="onViewTodos">
+          <UIcon name="ri:todo-line" dynamic />
+        </button>
+        <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
+        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="onSettings">
+          <UIcon name="ri:settings-5-line" dynamic />
+        </button>
+      </div>
     </div>
   </main>
 </template>
@@ -63,31 +39,29 @@ const { user } = storeToRefs(userStore)
 const onLogin = () => userStore.login('Josef')
 const onLogout = () => userStore.logout()
 const onCreateAccount = () => userStore.createAccount('Josef', '123@123.de')
+
+const onAddTodo = () => {
+  // Add your add todo logic here
+}
+
+const onViewTodos = () => {
+  // Add your view todos logic here
+}
+
+const onSettings = () => {
+  // Add your settings logic here
+}
 </script>
 
-<style>
-.pwa-toast {
+<style scoped>
+.floating-island {
   position: fixed;
-  right: 0;
-  bottom: 0;
-  margin: 16px;
-  padding: 12px;
-  border: 1px solid #8885;
-  border-radius: 4px;
-  z-index: 1;
-  text-align: left;
-  box-shadow: 3px 4px 5px 0 #8885;
-}
-
-.pwa-toast .message {
-  margin-bottom: 8px;
-}
-
-.pwa-toast button {
-  border: 1px solid #8885;
-  outline: none;
-  margin-right: 5px;
-  border-radius: 2px;
-  padding: 3px 10px;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  z-index: 1000;
 }
 </style>

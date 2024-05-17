@@ -29,7 +29,7 @@
                     <br>
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Prep</span>
                   </p>
-                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px" />
+                  <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
                   <p>
                     <span class="text-gray-600 dark:text-gray-400">
                       <input
@@ -41,7 +41,7 @@
                     <br>
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Cook</span>
                   </p>
-                  <div class="mx-2 h-8 bg-gray-300 dark:bg-gray-600 w-px" />
+                  <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
                   <p>
                     <span class="text-gray-600 dark:text-gray-400">
                       <input
@@ -67,7 +67,7 @@
             </div>
 
             <!-- Image -->
-            <div v-if="recipe?.images?.[0]" class="w-full md:w-1/2 mt-4">
+            <div class="w-full md:w-1/2 mt-4">
               <textarea
                 v-model="recipe.images"
                 class="w-full text-gray-800 dark:text-slate-400 h-24"

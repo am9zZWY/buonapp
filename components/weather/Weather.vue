@@ -5,8 +5,8 @@
         <template #default="{ open }">
             <button
               :class="[{ 'hover:underline': !disableLastUpdated}]" :disabled="disableEdit"
-              class="focus:outline-none inline-block" @click="open">
-              {{ weather.temperature }}°C
+              class="focus:outline-none inline-block text-nowrap" @click="open">
+              {{ weather.temperature }}°C, {{ weather.weather.toLowerCase() }}
             </button>
         </template>
 
@@ -67,7 +67,6 @@ const locationInputEl = ref(null)
 const editLocation = () => {
   edit.value.location = true
   locationInputEl.value?.focus()
-  console.log('editLocation', locationInputEl.value)
 }
 const saveLocation = () => {
   edit.value.location = false

@@ -53,7 +53,7 @@ const parseAndClean = (summaries?: string): AiNews[] => {
   }
 
   return summaries
-    .split(/\d+\.\s*(?=[A-Z])|(?:\d\.?$)/g)  // Split using the regex pattern
+    .split(/(?:\d+\.\s*(?=[A-Z]))|(?:\d\.?$)|(?:\-\s(?=[A-Z]))/g)  // Split using the regex pattern
     .map(summary =>
       summary.trim()
         .replace(/\n/g, ' ')
@@ -88,7 +88,7 @@ export default async function(openaiApiKey: string) {
       `${cleanUpString(item.title, 30)}: ${cleanUpString(item.description, 30)}`
     )
     .join('\n')
-  console.log('News feed:', newsFeed)
+  console.debug('Cleaned up RSS News feed:', newsFeed)
 
   /**
    * Fetch the most important news from RSS feeds and summarize them
@@ -108,7 +108,7 @@ export default async function(openaiApiKey: string) {
         }
       ],
       max_tokens: maxTokens.value,  // Strict token limit to enforce brevity
-      temperature: 0.2 // Low temperature for deterministic and focused output
+      temperature: 0.1 // Low temperature for deterministic and focused output
     })
 
     // Extract the AI news

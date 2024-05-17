@@ -1,13 +1,16 @@
 export type Todo = {
+  id: string
   description: string
-  dueDate: string
+  dueDate?: string
   priority: number
+  done: boolean
   children: Todo[]
 }
 
 export const defaultTodo: Todo = {
   description: 'Clean up room',
-  dueDate: 'today',
   priority: 1,
-  children: []
+  done: false,
+  children: [],
+  id: '0',
 }

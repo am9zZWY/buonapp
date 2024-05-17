@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full mb-14 rounded-xl py-4 border-b last-of-type:border-none">
+  <div class="w-full mb-14 rounded-xl py-4">
     <h1 class="text-xl font-serif font-bold">{{ title }}</h1>
     <h2 v-if="subtitle" class="text-gray-800 dark:text-slate-400">{{ subtitle }}</h2>
     <div class="mt-2 flex-wrap justify-start gap-x-20 gap-y-10 flex">
@@ -19,6 +19,7 @@ interface SectionProps {
 }
 
 withDefaults(defineProps<SectionProps>(), {
-  title: 'New Title'
+  title: 'New Title',
+  subtitle: undefined,
 })
 </script>

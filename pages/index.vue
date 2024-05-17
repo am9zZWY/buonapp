@@ -6,25 +6,19 @@
       </template>
 
       <Subsection>
-        <Quote />
+        <LazyQuote />
       </Subsection>
 
-      <Subsection title="Notizie 📰" subtitle="News from around the world">
-        <RssNews />
-      </Subsection>
+      <!-- <Subsection title="Notizie 📰" subtitle="News from around the world">
+        <LazyRssNews />
+      </Subsection> -->
+    </Section>
+
+    <Section title="Plan your day 📅🐑">
+      <TodoContainer />
     </Section>
 
     <Section title="️Cosa cucinare oggi? 🍝" subtitle="What to cook today?">
-      <!-- <ThumbnailLink alt="Cooking Image" description="Scopri nuove ricette e prepara piatti deliziosi!"
-                     eyebrow="Appetito"
-                     src="https://t4.ftcdn.net/jpg/03/32/75/39/240_F_332753934_tBacXEgxnVplFBRyKbCif49jh0Wz89ns.jpg"
-                     title="Recipe of the day"
-                     to="/buon/appetito/oftheday">
-        <template #description>
-          <p>Today's menu: pasta, pizza, and more!</p>
-        </template>
-      </ThumbnailLink> -->
-
       <ClientOnly>
         <ThumbnailLink
           alt="Cooking Image"

@@ -2,17 +2,18 @@
   <!-- Add recipes -->
   <Section title="Ricetta del giorno" subtitle="Today we recommend">
     <template #full-width>
-      <ThumbnailHero :title="recipeList?.[0]?.name" subtitle="La ricetta più semplice e veloce"
-                     :description="recipeList?.[0]?.instructions" :to="'/buon/appetito/' + recipeList?.[0]?.id"
-                     :src="recipeList?.[0]?.images" />
+      <ThumbnailHero
+        :title="recipeOfTheDay?.name" subtitle="La ricetta più semplice e veloce"
+        :description="recipeOfTheDay?.instructions" :to="`/buon/appetito/${recipeOfTheDay?.id}`"
+        :src="recipeOfTheDay?.images" />
     </template>
   </Section>
 
   <Section title="Cosa cucinare oggi? 🍝" subtitle="What to cook today?">
-    <ThumbnailLink v-for="recipe in recipeList" :key="recipe.id" :title="recipe.name" :description="recipe.text"
-                   :eyebrow="recipe.instructions.split('\n').length + ' steps'" :to="'/buon/appetito/' + recipe.id"
-                   :src="recipe.images?.split(',')[0]">
-    </ThumbnailLink>
+    <ThumbnailLink
+      v-for="recipe in recipeList" :key="recipe.id" :title="recipe.name" :description="recipe.text"
+      :eyebrow="recipe.instructions.split('\n').length + ' steps'" :to="`/buon/appetito/${recipe.id}`"
+      :src="recipe.images?.split(',')[0]" />
   </Section>
 
   <Section title="Personalizza la tua esperienza" subtitle="Customize your experience">
@@ -26,4 +27,5 @@ import ThumbnailHero from '~/components/thumbnail/ThumbnailHero.vue'
 
 const recipeStore = useRecipeStore()
 const recipeList = computed(() => recipeStore.recipeList)
+const recipeOfTheDay = computed(() => recipeStore.recipeOfTheDay)
 </script>
