@@ -64,7 +64,21 @@ export const useRecipeStore = defineStore('recipeList', () => {
     return recipe.id
   }
 
+  const removeRecipe = async (recipeId: string) => {
+    /* await $fetch('/api/recipe/remove', {
+      method: 'POST',
+      body: JSON.stringify(recipeId)
+    }) */
+
+    // Remove from store
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete recipeMap.value![recipeId]
+
+    // Save to localStore
+    localStorage?.setItem('recipeList', JSON.stringify(recipeList.value))
+  }
+
   prepareStore()
 
-  return { recipeList, recipeMap, recipeOfTheDay, saveRecipe }
+  return { recipeList, recipeMap, recipeOfTheDay, saveRecipe, removeRecipe }
 })

@@ -3,7 +3,7 @@
     <Section subtitle="Share your favorite recipe with the community" title="Add your own recipe">
       <DevOnly>{{ recipe }}</DevOnly>
 
-      <form class="w-full" @submit.prevent="submit">
+      <form class="w-full" @submit.prevent="handleForm">
         <div class="shadow-lg rounded-lg overflow-hidden mb-5">
           <div class="flex flex-col md:flex-row justify-between items-start px-6 py-4">
             <div class="w-full md:w-1/2">
@@ -108,7 +108,8 @@
         </div>
 
         <div class="flex justify-center mt-4">
-          <Button label="Save Recipe" size="lg" type="submit" />
+          <Button label="Save Recipe" size="lg" type="submit" name="save" />
+          <Button label="Remove Recipe" size="lg" type="submit" name="delete" class="ml-4" />
         </div>
       </form>
     </Section>
@@ -173,18 +174,37 @@ watch(
   { immediate: true }
 )
 
-const submit = () => {
-  recipeStore
-    .saveRecipe(recipe.value)
-    .then(async (id: string) => {
-      // Reload the recipe from the store to get the updated ID
-      await updateFromStore(id)
+const handleForm = (event: SubmitEvent) => {
+  const submitterName = event.submitter?.name
+  if (!submitterName) {
+    console.error('No submitter name found')
+    return
+  }
 
-      // Redirect to the new recipe
-      await router.push(`/buon/appetito/${id}`)
-    })
-    .catch((error: Error) => {
-      console.error('Error saving recipe', error)
-    })
+  // Check if form is save or delete
+  if (submitterName === 'save') {
+    recipeStore
+      .saveRecipe(recipe.value)
+      .then(async (id: string) => {
+        // Reload the recipe from the store to get the updated ID
+        await updateFromStore(id)
+
+        // Redirect to the new recipe
+        await router.push(`/buon/appetito/${id}`)
+      })
+      .catch((error: Error) => {
+        console.error('Error saving recipe', error)
+      })
+  } else if (submitterName === 'delete') {
+    recipeStore
+      .removeRecipe(recipe.value.id)
+      .then(() => {
+        // Redirect to the recipe list
+        router.push('/buon/appetito')
+      })
+      .catch((error: Error) => {
+        console.error('Error deleting recipe', error)
+      })
+  }
 }
 </script>
