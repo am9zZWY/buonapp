@@ -18,9 +18,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const categories = getRouterParam(event, 'categories')
+    ?.trim()
+    ?.split(',')
+    .map((category) => category.trim())
+
   // Fetch the most important news from RSS feeds and summarize them
   const aiNews = await useAiNews(openaiApiKey)
   aiNews.setMaxTokens(50)
+  aiNews.setMaxItems(3)
+  aiNews.setCategories(categories)
   await aiNews.summarizeNews()
 
   return aiNews.aiNews.value

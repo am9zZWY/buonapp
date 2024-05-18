@@ -75,6 +75,7 @@ export default async function(openaiApiKey: string) {
   // Configuration
   const maxTokens = ref<number>(MAX_TOKENS)
   const maxItems = ref<number>(4)
+  const newsCategories = ref<string[]>(['political', 'digital', 'environmental'])
 
   // Use RSS module to fetch news
   const rssNews = await useRssNews()
@@ -95,12 +96,16 @@ export default async function(openaiApiKey: string) {
    * using OpenAI's GPT-3.5 model
    */
   const summarizeNews = async () => {
+    const strCategories = newsCategories.value
+      .slice(0, newsCategories.value.length - 1)
+      .join(', ') + ' and ' + newsCategories.value[newsCategories.value.length - 1]
+
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         {
           role: 'system',
-          content: 'Summarize German and global political, digital, and environmental news in a few keywords. Output should be in English.'
+          content: `Summarize German and global ${strCategories} news in a few keywords. Output should be in English.`
         },
         {
           role: 'user',
@@ -138,10 +143,26 @@ export default async function(openaiApiKey: string) {
     maxTokens.value = tokens
   }
 
+  /**
+   * Set the maximum number of news items to summarize
+   * @param items
+   */
   const setMaxItems = (items: number) => {
     maxItems.value = items
   }
 
+  /**
+   * Set the news categories to fetch
+   * @param categories
+   */
+  const setCategories = (categories?: string[]) => {
+    if (!categories) {
+      return
+    }
 
-  return { aiNews, setMaxTokens, setMaxItems, summarizeNews }
+    newsCategories.value = categories
+  }
+
+
+  return { aiNews, setMaxTokens, setMaxItems, setCategories, summarizeNews }
 }

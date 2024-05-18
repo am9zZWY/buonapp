@@ -66,7 +66,7 @@ const locationInputEl = ref(null)
 
 const editLocation = () => {
   edit.value.location = true
-  locationInputEl.value?.focus()
+  locationInputEl.value?.target.focus()
 }
 const saveLocation = () => {
   edit.value.location = false

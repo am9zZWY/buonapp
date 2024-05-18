@@ -2,12 +2,19 @@
   <div>
     <div
       class="relative rounded-xl shadow-lg bg-white dark:bg-neutral-800 p-6 pb-2 mb-4 transition duration-500 ease-in-out transform hover:shadow-xl hover:-translate-y-1 cursor-pointer">
-      <p class="status text-xs text-blue-500 dark:text-blue-300 mb-2">
-        {{ todo?.completed ? 'Done' : 'Not done' }}
+      <p
+        v-if="todo?.completed !== undefined"
+        class="text-xs mb-2 px-2 py-0.5 absolute top-3 right-3 border-1 rounded-2xl"
+        :class="{'bg-green-300 dark:bg-green-400 text-green-700 dark:text-white': todo?.completed, 'bg-red-300 dark:bg-red-400 text-red-700 dark:text-white': !todo?.completed}"
+        @click="todo.completed = !todo?.completed ?? false"
+      >
+        {{ todo?.completed ? 'Done 🎉' : 'Not done' }}
       </p>
       <textarea
         v-model="title"
         class="description w-full text-lg text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent mb-2"
+        :class="{ 'line-through': todo?.completed }"
+        :disabled="todo?.completed"
         aria-label="Todo Description"
         rows="1"
         placeholder="Type your task here..."
@@ -69,14 +76,3 @@ if (todo.value) {
   }, { immediate: true })
 }
 </script>
-
-<style scoped>
-.status {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background-color: rgba(0, 0, 0, 0.1);
-  padding: 2px 8px;
-  border-radius: 12px;
-}
-</style>

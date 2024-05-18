@@ -14,7 +14,7 @@
       </Subsection> -->
     </Section>
 
-    <Section title="Plan your day 📅🐑">
+    <Section title="Plan your day 📅">
       <TodoContainer />
     </Section>
 
