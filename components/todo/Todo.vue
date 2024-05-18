@@ -3,14 +3,16 @@
     <div
       class="relative rounded-xl shadow-lg bg-white dark:bg-neutral-800 p-6 pb-2 mb-4 transition duration-500 ease-in-out transform hover:shadow-xl hover:-translate-y-1 cursor-pointer">
       <p class="status text-xs text-blue-500 dark:text-blue-300 mb-2">
-        {{ todo.done ? 'Done' : 'Not done' }}
+        {{ todo?.completed ? 'Done' : 'Not done' }}
       </p>
       <textarea
-        v-model="description"
+        :value="title"
         class="description w-full text-lg text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent mb-2"
-        aria-label="Task Description"
+        aria-label="Todo Description"
         rows="1"
         placeholder="Type your task here..."
+        @input="emit('update:modelValue', $event.target?.value ?? '')"
+        @keydown.enter.prevent="emit('enter')"
       />
       <p v-if="formattedDueDate !== ''" class="text-gray-600 dark:text-gray-400 font-extralight text-xs mt-2">
         {{ formattedDueDate }}
@@ -23,14 +25,18 @@
 import { type Todo } from '~/types/todo'
 
 interface TodoProps {
-  todo: Todo
+  todo?: Todo,
+  modelValue?: string,
 }
 
-const props = defineProps<TodoProps>()
-const { todo } = toRefs(props)
+const emit = defineEmits(['enter', 'update:modelValue'])
 
+const props = defineProps<TodoProps>()
+const { todo, modelValue } = toRefs(props)
+
+const title = ref('')
 const formattedDueDate = computed(() => {
-  if (!todo.value.dueDate) {
+  if (!todo?.value?.dueDate) {
     return ''
   }
 
@@ -38,14 +44,21 @@ const formattedDueDate = computed(() => {
   return dueDate.toLocaleDateString()
 })
 
-const description = ref('')
-watch(todo.value, () => {
-  description.value = todo.value.description
+watch(modelValue, () => {
+  if (modelValue.value || modelValue.value === '') {
+    title.value = modelValue.value ?? ''
+  }
 }, { immediate: true })
 
-watch(description, () => {
-  todo.value.description = description.value
-})
+if (todo.value) {
+  watch(todo.value, () => {
+    if (!todo.value) {
+      return
+    }
+
+    title.value = todo.value.title
+  }, { immediate: true })
+}
 </script>
 
 <style scoped>

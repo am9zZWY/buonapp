@@ -11,18 +11,14 @@
 
       <!-- Floating Island -->
       <div
-        class="floating-island p-3 rounded-3xl bg-neutral-100 dark:bg-neutral-600 shadow-2xl items-center">
-        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="onAddTodo">
-          <UIcon name="ri:add-line" dynamic />
+        class="floating-island p-2 rounded-3xl shadow-lg ring-1 ring-black/5 bg-white/70 dark:bg-neutral-600 items-center">
+        <button class="rounded-3xl p-2 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="toHome">
+          <UIcon name="ri:home-4-line" :dynamic="true" />
         </button>
-        <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
-        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="onViewTodos">
-          <UIcon name="ri:todo-line" dynamic />
-        </button>
-        <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
-        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="onSettings">
+        <!-- <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
+        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="toSettings">
           <UIcon name="ri:settings-5-line" dynamic />
-        </button>
+        </button> -->
       </div>
     </div>
   </main>
@@ -33,6 +29,7 @@ import { useUserStore } from '~/stores/user'
 import { storeToRefs } from 'pinia'
 import { SpeedInsights } from '@vercel/speed-insights/nuxt'
 
+const router = useRouter()
 const userStore = useUserStore()
 const { user } = storeToRefs(userStore)
 
@@ -40,16 +37,11 @@ const onLogin = () => userStore.login('Josef')
 const onLogout = () => userStore.logout()
 const onCreateAccount = () => userStore.createAccount('Josef', '123@123.de')
 
-const onAddTodo = () => {
-  // Add your add todo logic here
+const toSettings = () => {
+  router.push('/settings')
 }
-
-const onViewTodos = () => {
-  // Add your view todos logic here
-}
-
-const onSettings = () => {
-  // Add your settings logic here
+const toHome = () => {
+  router.push('/')
 }
 </script>
 

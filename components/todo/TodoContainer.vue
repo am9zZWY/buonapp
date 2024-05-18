@@ -1,16 +1,21 @@
 <template>
   <div class="container mx-auto p-4">
-    <Todo v-for="todo in todos" :key="todo.id" :todo="todo" />
+    <Todo v-for="todoId in todos.keys()" :key="todoId" :todo="todos.get(todoId)" />
+    <Todo v-model="title" @enter="addTodo" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { defaultTodo, type Todo } from '~/types/todo'
+import { useTodoStore } from '~/stores/todo'
+import type { Todo } from '~/types/todo'
 
-const todos = ref<Todo[]>([
-  defaultTodo,
-  { ...defaultTodo, id: '2', description: 'Buy some milk' },
-  { ...defaultTodo, id: '3', description: 'Go to the gym' }
-])
+const todoStore = useTodoStore()
+const todos = computed<Map<string, Todo>>(() => todoStore.todos)
+
+const title = ref('')
+const addTodo = () => {
+  todoStore.addTodoFromTitle(title.value)
+  title.value = ''
+}
 </script>

@@ -1,16 +1,14 @@
 export type Todo = {
-  id: string
-  description: string
-  dueDate?: string
-  priority: number
-  done: boolean
-  children: Todo[]
+  title: string
+  completed: boolean
+  createdDate: Date
+  dueDate?: Date | undefined
+  priority: 'low' | 'medium' | 'high'
 }
 
 export const defaultTodo: Todo = {
-  description: 'Clean up room',
-  priority: 1,
-  done: false,
-  children: [],
-  id: '0',
+  title: 'Clean up room',
+  completed: false,
+  createdDate: new Date(),
+  priority: 'medium',
 }
