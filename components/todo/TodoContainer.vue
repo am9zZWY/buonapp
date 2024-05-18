@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-4">
-    <Todo v-for="todoId in todos.keys()" :key="todoId" :todo="todos.get(todoId)" />
+    <Todo v-for="todoId in todos.keys()" :key="todoId" :todo="todos.get(todoId)" @delete="todoStore.removeTodo(todoId)" />
     <Todo v-model="title" @enter="addTodo" />
   </div>
 </template>
