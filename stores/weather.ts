@@ -1,8 +1,16 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Weather } from '~/types/weather'
+import pino from 'pino'
 
 const localStorage = import.meta.server ? null : window.localStorage
+
+const logger = pino(
+  {
+    levelComparison: 'DESC',
+    msgPrefix: '[RecipeEditor] '
+  }
+)
 
 export const useWeatherStore = defineStore('weather', () => {
   const weather = ref({
@@ -13,15 +21,15 @@ export const useWeatherStore = defineStore('weather', () => {
   })
 
   const fetchWeather = async (location?: string) => {
-    console.log('Fetching weather data for:', location ?? weather.value.location)
+    logger.info('Fetching weather data for:', location ?? weather.value.location)
     const data = await $fetch<Weather>('/api/weather/' + (location ?? weather.value.location))
 
     if (!data) {
-      console.warn('Failed to fetch weather data')
+      logger.warn('Failed to fetch weather data')
       return
     }
 
-    console.log('Fetched weather data:', data)
+    logger.info('Weather data:', data)
     weather.value.location = data.location
     weather.value.temperature = data.temperature
     weather.value.weather = data.weather
@@ -30,14 +38,14 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const updateLocation = (location: string | null) => {
     if (!location) {
-      console.warn('No location provided')
+      logger.warn('Location is empty')
       return
     }
 
     weather.value.location = location.split(',')[0].trim()
     localStorage?.setItem('location', location)
 
-    console.log('Changed location to: ' + location)
+    logger.info('Updating location:', weather.value.location)
     fetchWeather(weather.value.location)
   }
 

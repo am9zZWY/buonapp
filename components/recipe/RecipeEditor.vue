@@ -119,6 +119,14 @@
 <script lang="ts" setup>
 import { type MelaRecipe } from '~/types/melaRecipe'
 import { useRecipeStore } from '~/stores/recipe'
+import pino from 'pino'
+
+const logger = pino(
+  {
+    levelComparison: 'DESC',
+    msgPrefix: '[RecipeEditor] '
+  }
+)
 
 const router = useRouter()
 const recipeStore = useRecipeStore()
@@ -160,12 +168,12 @@ watch(
   id,
   () => {
     if (!id.value) {
-      console.log('No recipe ID provided. Creating a new recipe')
+      logger.warn('No ID provided')
       return
     }
 
     if (!recipeMap.value) {
-      console.warn('Recipe map not loaded')
+      logger.warn('No recipe map found')
       return
     }
 
@@ -177,7 +185,7 @@ watch(
 const handleForm = (event: SubmitEvent) => {
   const submitterName = event.submitter?.name
   if (!submitterName) {
-    console.error('No submitter name found')
+    logger.warn('No submitter name found')
     return
   }
 
@@ -193,7 +201,8 @@ const handleForm = (event: SubmitEvent) => {
         await router.push(`/buon/appetito/${id}`)
       })
       .catch((error: Error) => {
-        console.error('Error saving recipe', error)
+        logger.error('Error saving recipe', error)
+        errorMessage.value = error.message
       })
   } else if (submitterName === 'delete') {
     recipeStore
@@ -203,7 +212,8 @@ const handleForm = (event: SubmitEvent) => {
         router.push('/buon/appetito')
       })
       .catch((error: Error) => {
-        console.error('Error deleting recipe', error)
+        logger.error('Error deleting recipe', error)
+        errorMessage.value = error.message
       })
   }
 }

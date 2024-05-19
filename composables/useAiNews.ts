@@ -2,6 +2,14 @@ import OpenAI from 'openai'
 import type { AiNews, RssNews } from '~/types/news'
 import useRssNews from '~/composables/useRssNews'
 import { ref } from 'vue'
+import pino from 'pino'
+
+const logger = pino(
+  {
+    levelComparison: 'DESC',
+    msgPrefix: '[useAiNews] '
+  }
+)
 
 const MAX_TOKENS: number = 50
 
@@ -17,6 +25,10 @@ const STOP_WORDS = [
  */
 const cleanUpString = (str: string, maxLength?: number): string => {
   let cleanedStr = str
+  if (!cleanedStr) {
+    logger.warn('Empty string')
+    return ''
+  }
 
   // Remove HTML tags
   cleanedStr = cleanedStr.replace(/<[^>]*>/g, '')
@@ -49,6 +61,7 @@ const cleanUpString = (str: string, maxLength?: number): string => {
  */
 const parseAndClean = (summaries?: string): AiNews[] => {
   if (!summaries) {
+    logger.warn('Empty summaries')
     return []
   }
 
@@ -89,7 +102,7 @@ export default async function(openaiApiKey: string) {
       `${cleanUpString(item.title, 30)}: ${cleanUpString(item.description, 30)}`
     )
     .join('\n')
-  console.debug('Cleaned up RSS News feed:', newsFeed)
+  logger.info('Cleaned up RSS News feed:', newsFeed)
 
   /**
    * Fetch the most important news from RSS feeds and summarize them
@@ -99,6 +112,7 @@ export default async function(openaiApiKey: string) {
     const strCategories = newsCategories.value
       .slice(0, newsCategories.value.length - 1)
       .join(', ') + ' and ' + newsCategories.value[newsCategories.value.length - 1]
+    logger.info('Summarizing news for categories:', strCategories)
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
@@ -118,7 +132,7 @@ export default async function(openaiApiKey: string) {
 
     // Extract the AI news
     const gptAiNews = completion.choices[0].message.content?.trim()
-    console.log('AI news:', gptAiNews)
+    logger.info('GPT AI News:', gptAiNews)
 
     // Parse the news summaries
     const parsedNews = parseAndClean(gptAiNews)
@@ -126,7 +140,7 @@ export default async function(openaiApiKey: string) {
     if (gptAiNews) {
       aiNews.value = parsedNews
     } else {
-      console.error('Error fetching AI news')
+      logger.error('No AI news found')
     }
   }
 
@@ -136,7 +150,7 @@ export default async function(openaiApiKey: string) {
    */
   const setMaxTokens = (tokens: number) => {
     if (tokens > MAX_TOKENS) {
-      console.error('Max tokens cannot exceed ' + MAX_TOKENS)
+      logger.warn('Exceeded maximum tokens')
       return
     }
 

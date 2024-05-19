@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="relative rounded-xl shadow-lg bg-white dark:bg-neutral-800 p-6 pb-2 mb-4 transition duration-500 ease-in-out transform hover:shadow-xl hover:-translate-y-1 cursor-pointer">
+      class="relative rounded-xl shadow-lg bg-white dark:bg-neutral-800 p-3 mb-4 transition duration-500 ease-in-out transform hover:shadow-xl hover:-translate-y-1 cursor-pointer">
       <p
         v-if="todo?.completed !== undefined"
         class="text-xs mb-2 px-2 py-0.5 absolute top-3 right-3 border-1 rounded-2xl"
@@ -12,7 +12,7 @@
       </p>
       <textarea
         v-model="title"
-        class="description w-full text-lg text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent mb-2"
+        class="w-full text-lg text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent"
         :class="{ 'line-through': todo?.completed }"
         :disabled="todo?.completed"
         aria-label="Todo Description"

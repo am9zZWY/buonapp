@@ -8,11 +8,11 @@ export default defineNuxtConfig({
   ],
   devtools: { enabled: true },
   modules: [
-    '@pinia/nuxt',
-    '@vite-pwa/nuxt',
-    '@nuxt/ui',
-    '@nuxtjs/i18n',
-    '@nuxt/eslint'
+    '@pinia/nuxt', // Pinia store
+    '@vite-pwa/nuxt', // PWA
+    '@nuxt/ui', // UI
+    '@nuxtjs/i18n', // Internationalization
+    '@nuxt/eslint', // Linting
   ],
   nitro: {
     esbuild: {
