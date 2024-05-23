@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import type { MelaRecipe } from '~/types/melaRecipe'
 import { getDailyElement } from '~/utils/getDailyElement'
 
 const localStorage = import.meta.server ? null : window.localStorage
 
 export const useRecipeStore = defineStore('recipeList', () => {
-  const recipeMap = ref<Record<string, MelaRecipe>>()
+  const recipeMap = useState('recipes', () => ({} as Record<string, MelaRecipe>))
   const recipeList = computed(() => Object.values(recipeMap.value ?? {}))
   const recipeOfTheDay = computed(() => getDailyElement(recipeList.value))
 

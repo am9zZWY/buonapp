@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import type { Weather } from '~/types/weather'
 import pino from 'pino'
 
@@ -13,12 +12,12 @@ const logger = pino(
 )
 
 export const useWeatherStore = defineStore('weather', () => {
-  const weather = ref({
+  const weather = useState('weather', () => ({
     location: 'Posada, Italy',
     temperature: 20,
     weather: 'Sunny',
     lastUpdated: '5/12/2021 10:00:00'
-  })
+  }))
 
   const fetchWeather = async (location?: string) => {
     logger.info('Fetching weather data for:', location ?? weather.value.location)
@@ -35,6 +34,7 @@ export const useWeatherStore = defineStore('weather', () => {
     weather.value.weather = data.weather
     weather.value.lastUpdated = data.lastUpdated
   }
+  fetchWeather()
 
   const updateLocation = (location: string | null) => {
     if (!location) {
@@ -54,7 +54,7 @@ export const useWeatherStore = defineStore('weather', () => {
   if (locationFromStorage) {
     weather.value.location = locationFromStorage
   }
-  fetchWeather()
+
 
   return {
     weather,
