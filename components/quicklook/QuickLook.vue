@@ -9,7 +9,7 @@
     <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
     <p>
       <span class="text-gray-600 dark:text-gray-400">
-        <NuxtLink to="/buone/notizie">
+        <NuxtLink to="/buone/notizie" class="hover:underline">
           <AiNews :max-news="2" subjects="politics, technology, climate" />
         </NuxtLink>
       </span>
