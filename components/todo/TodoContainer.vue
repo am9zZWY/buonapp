@@ -1,17 +1,20 @@
 <template>
-  <div class="container mx-auto p-4">
-    <Todo v-for="todoId in todos.keys()" :key="todoId" :todo="todos.get(todoId)" @delete="deleteTodo(todoId)" />
-    <Todo v-model="title" @enter="addTodo" />
-  </div>
+  <ClientOnly>
+    <div class="container">
+      <Todo
+        v-for="todoId in todosMap.keys()" :key="todoId" :todo="todosMap.get(todoId)"
+        @completed="completeTodo(todoId, $event)" @delete="deleteTodo(todoId)" />
+      <Todo v-model:title="title" @enter="addTodo" />
+    </div>
+  </ClientOnly>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useTodoStore } from '~/stores/todo'
-import type { Todo } from '~/types/todo'
 
 const todoStore = useTodoStore()
-const todos = computed<Map<string, Todo>>(() => todoStore.todos)
+const todosMap = computed(() => todoStore.todosMap)
 
 const title = ref('')
 const addTodo = () => {
@@ -25,5 +28,9 @@ const addTodo = () => {
 
 const deleteTodo = (todoId: string) => {
   todoStore.removeTodo(todoId)
+}
+
+const completeTodo = (todoId: string, completed: boolean) => {
+  todoStore.completeTodo(todoId, completed)
 }
 </script>

@@ -1,32 +1,69 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 import type { Todo } from '~/types/todo'
 
-export const useTodoStore = defineStore('todo', () => {
-  const todos = ref<Map<string, Todo>>(new Map())
+const localStorage = import.meta.server ? null : window.localStorage
 
-  function addTodo(title: string, dueDate: Date, priority: 'low' | 'medium' | 'high' = 'medium') {
+export const useTodoStore = defineStore('todo', () => {
+  const todosMap = useState('todosMap', () => new Map<string, Todo>())
+
+  // Load todos from localStorage
+  const todosFromStorage = localStorage?.getItem('todos')
+  if (todosFromStorage) {
+    const todos = JSON.parse(todosFromStorage) as Todo[]
+    for (const todo of todos) {
+      todo.title = todo.title ?? ''
+      todo.priority = todo.priority ?? 'medium'
+      todo.completed = todo.completed ?? false
+      todo.dueDate = todo.dueDate ? new Date(todo.dueDate) : undefined
+      todo.createdDate = new Date(todo.createdDate)
+
+      const id = todo.createdDate.getTime().toString()
+      todosMap.value.set(id, todo)
+    }
+    console.log('Loaded todos from localStorage:', todosMap.value)
+  }
+
+  const todosList = computed(() => Array.from(todosMap.value.values()))
+
+  const saveTodos = () => {
+    localStorage?.setItem('todos', JSON.stringify(todosList.value))
+  }
+
+  const addTodo = (title: string, dueDate: Date, priority: 'low' | 'medium' | 'high' = 'medium') => {
     const createdDate = new Date()
     const id = createdDate.getTime().toString()
 
-    todos.value.set(id, {
+    todosMap.value.set(id, {
       title: title,
       completed: false,
       createdDate: createdDate,
       dueDate: dueDate,
-      priority: priority,
+      priority: priority
     } as Todo)
+
+    // Save to localStorage
+    saveTodos()
 
     return id
   }
 
-  function addTodoFromDescription(title: string) {
-    return addTodo(title, new Date())
+  const addTodoFromTitle = (title: string) => addTodo(title, new Date())
+
+  const removeTodo = (id: string): boolean => {
+    return todosMap.value.delete(id)
   }
 
-  function removeTodo(id: string): boolean {
-    return todos.value.delete(id)
+  const completeTodo = (id: string, completed = true) => {
+    const todo = todosMap.value.get(id)
+    if (!todo) {
+      return
+    }
+
+    todo.completed = completed
+
+    // Save to localStorage
+    saveTodos()
   }
 
-  return { todos, addTodo, addTodoFromTitle: addTodoFromDescription, removeTodo }
+  return { todosMap, addTodo, addTodoFromTitle, completeTodo, removeTodo }
 })
