@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt', // PWA
     '@nuxt/ui', // UI
     '@nuxtjs/i18n', // Internationalization
-    '@nuxt/eslint', // Linting
+    '@nuxt/eslint' // Linting
   ],
   nitro: {
     esbuild: {
@@ -66,6 +66,9 @@ export default defineNuxtConfig({
     workbox: {
       globPatterns: ['**/*.{js,css,html,png,svg,ico}']
     }
+  },
+  routeRules: {
+    '/api/**': { cors: true }
   },
   runtimeConfig: {
     weatherApiKey: '',
