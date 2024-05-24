@@ -119,14 +119,6 @@
 <script lang="ts" setup>
 import { type MelaRecipe } from '~/types/melaRecipe'
 import { useRecipeStore } from '~/stores/recipe'
-import pino from 'pino'
-
-const logger = pino(
-  {
-    levelComparison: 'DESC',
-    msgPrefix: '[RecipeEditor] '
-  }
-)
 
 const router = useRouter()
 const recipeStore = useRecipeStore()
@@ -168,12 +160,12 @@ watch(
   id,
   () => {
     if (!id.value) {
-      logger.warn('No ID provided')
+      console.warn('No ID provided')
       return
     }
 
     if (!recipeMap.value) {
-      logger.warn('No recipe map found')
+      console.warn('No recipe map found')
       return
     }
 
@@ -185,7 +177,7 @@ watch(
 const handleForm = (event: SubmitEvent) => {
   const submitterName = event.submitter?.name
   if (!submitterName) {
-    logger.warn('No submitter name found')
+    console.warn('No submitter name found')
     return
   }
 
@@ -201,7 +193,7 @@ const handleForm = (event: SubmitEvent) => {
         await router.push(`/buon/appetito/${id}`)
       })
       .catch((error: Error) => {
-        logger.error('Error saving recipe', error)
+        console.error('Error saving recipe', error)
         errorMessage.value = error.message
       })
   } else if (submitterName === 'delete') {
@@ -212,7 +204,7 @@ const handleForm = (event: SubmitEvent) => {
         router.push('/buon/appetito')
       })
       .catch((error: Error) => {
-        logger.error('Error deleting recipe', error)
+        console.error('Error deleting recipe', error)
         errorMessage.value = error.message
       })
   }

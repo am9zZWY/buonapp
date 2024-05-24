@@ -1,13 +1,6 @@
 import type { WeatherApiResponse } from '~/types/weather'
 import type { NitroRuntimeConfig } from 'nitropack'
-import pino from 'pino'
 
-const logger = pino(
-  {
-    levelComparison: 'DESC',
-    msgPrefix: '[weather.[location].get] '
-  }
-)
 
 export default defineEventHandler(async (event) => {
   const config: NitroRuntimeConfig  = useRuntimeConfig(event)
@@ -53,7 +46,7 @@ export default defineEventHandler(async (event) => {
       })
     })
 
-  logger.info('Weather data:', weather)
+  console.info('Weather data:', weather)
 
   // Send weather data
   return weather

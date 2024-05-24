@@ -1,13 +1,5 @@
 import type { NitroRuntimeConfig } from 'nitropack'
 import useAiNews from '~/composables/useAiNews'
-import pino from 'pino'
-
-const logger = pino(
-  {
-    levelComparison: 'DESC',
-    msgPrefix: '[news.ai.[categories].get] '
-  }
-)
 
 /**
  * Fetch the most important news from RSS feeds and summarize them
@@ -20,7 +12,7 @@ export default defineEventHandler(async (event) => {
   const config: NitroRuntimeConfig = useRuntimeConfig(event)
   const { openaiApiKey } = config
   if (!openaiApiKey) {
-    logger.error('OpenAI API key not provided')
+    console.error('OpenAI API key not provided')
     throw createError({
       statusCode: 500,
       statusMessage: 'OpenAI API key not provided'
@@ -33,7 +25,7 @@ export default defineEventHandler(async (event) => {
     .map((category) => category.trim())
 
   if (!categories || !categories.length) {
-    logger.error('Categories not provided')
+    console.error('Categories not provided')
     throw createError({
       statusCode: 400,
       statusMessage: 'Categories not provided'

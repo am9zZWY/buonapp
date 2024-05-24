@@ -19,6 +19,10 @@ export default defineNuxtConfig({
       options: {
         target: 'esnext'
       }
+    },
+    preset: 'vercel-edge',
+    prerender: {
+      routes: ['/']
     }
   },
   pinia: {

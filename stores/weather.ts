@@ -1,15 +1,8 @@
 import { defineStore } from 'pinia'
 import type { Weather } from '~/types/weather'
-import pino from 'pino'
 
 const localStorage = import.meta.server ? null : window.localStorage
 
-const logger = pino(
-  {
-    levelComparison: 'DESC',
-    msgPrefix: '[weather] '
-  }
-)
 
 export const useWeatherStore = defineStore('weather', () => {
   const weather = useState('weather', () => ({
@@ -20,15 +13,15 @@ export const useWeatherStore = defineStore('weather', () => {
   }))
 
   const fetchWeather = async (location?: string) => {
-    logger.info('Fetching weather data for:', location ?? weather.value.location)
+    console.info('Fetching weather data for:', location ?? weather.value.location)
     const data = await $fetch<Weather>('/api/weather/' + (location ?? weather.value.location))
 
     if (!data) {
-      logger.warn('Failed to fetch weather data')
+      console.warn('Failed to fetch weather data')
       return
     }
 
-    logger.info('Weather data:', data)
+    console.info('Weather data:', data)
     weather.value.location = data.location
     weather.value.temperature = data.temperature
     weather.value.weather = data.weather
@@ -38,14 +31,14 @@ export const useWeatherStore = defineStore('weather', () => {
 
   const updateLocation = (location: string | null) => {
     if (!location) {
-      logger.warn('Location is empty')
+      console.warn('Location is empty')
       return
     }
 
     weather.value.location = location.split(',')[0].trim()
     localStorage?.setItem('location', location)
 
-    logger.info('Updating location:', weather.value.location)
+    console.info('Updating location:', weather.value.location)
     fetchWeather(weather.value.location)
   }
 
