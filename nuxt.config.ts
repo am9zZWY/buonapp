@@ -67,9 +67,6 @@ export default defineNuxtConfig({
       globPatterns: ['**/*.{js,css,html,png,svg,ico}']
     }
   },
-  routeRules: {
-    '/api/**': { cors: true }
-  },
   runtimeConfig: {
     weatherApiKey: '',
     openaiApiKey: ''
