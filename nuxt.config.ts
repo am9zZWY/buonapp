@@ -19,9 +19,6 @@ export default defineNuxtConfig({
       options: {
         target: 'esnext'
       }
-    },
-    prerender: {
-      routes: ['/']
     }
   },
   pinia: {
