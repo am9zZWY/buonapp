@@ -25,7 +25,7 @@
         :for="`task-checkbox-${randomId}`"
         class="text-xs mb-2 px-2 py-0.5 absolute top-3 right-3 border-1 rounded-2xl cursor-pointer"
         :class="{'border border-green-600 dark:text-white': todo.completed, 'border border-red-700  dark:text-white': !todo.completed}">
-        {{ todo?.completed ? 'Completed' : 'Not Completed' }}
+        {{ todo?.completed ? '🎉 Completed' : 'Not Completed' }}
       </label>
     </div>
     <p
