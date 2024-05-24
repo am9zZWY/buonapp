@@ -20,7 +20,6 @@ export default defineNuxtConfig({
         target: 'esnext'
       }
     },
-    preset: 'vercel-edge',
     prerender: {
       routes: ['/']
     }
