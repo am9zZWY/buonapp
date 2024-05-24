@@ -7,7 +7,7 @@ const localStorage = import.meta.server ? null : window.localStorage
 const logger = pino(
   {
     levelComparison: 'DESC',
-    msgPrefix: '[RecipeEditor] '
+    msgPrefix: '[weather] '
   }
 )
 

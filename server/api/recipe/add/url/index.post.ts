@@ -16,7 +16,10 @@ function getRecipe(url: string) {
   // Fetch recipe from URL
   console.debug('Fetching recipe:', url)
 
-
-
-  return recipes
+  return {
+    title: 'Recipe title',
+    description: 'Recipe description',
+    ingredients: ['Ingredient 1', 'Ingredient 2'],
+    instructions: ['Instruction 1', 'Instruction 2']
+  }
 }

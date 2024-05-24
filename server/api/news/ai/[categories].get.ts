@@ -5,7 +5,7 @@ import pino from 'pino'
 const logger = pino(
   {
     levelComparison: 'DESC',
-    msgPrefix: '[[categories].get] '
+    msgPrefix: '[news.ai.[categories].get] '
   }
 )
 

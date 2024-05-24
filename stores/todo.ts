@@ -1,5 +1,13 @@
 import { defineStore } from 'pinia'
 import type { Todo } from '~/types/todo'
+import pino from 'pino'
+
+const logger = pino(
+  {
+    levelComparison: 'DESC',
+    msgPrefix: '[todo] '
+  }
+)
 
 const localStorage = import.meta.server ? null : window.localStorage
 
@@ -20,7 +28,7 @@ export const useTodoStore = defineStore('todo', () => {
       const id = todo.createdDate.getTime().toString()
       todosMap.value.set(id, todo)
     }
-    console.log('Loaded todos from localStorage:', todosMap.value)
+    logger.info('Loaded todos from localStorage:', todosMap.value)
   }
 
   const todosList = computed(() => Array.from(todosMap.value.values()))

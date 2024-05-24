@@ -1,8 +1,16 @@
 import { defineStore } from 'pinia'
 import type { MelaRecipe } from '~/types/melaRecipe'
 import { getDailyElement } from '~/utils/getDailyElement'
+import pino from 'pino'
 
 const localStorage = import.meta.server ? null : window.localStorage
+
+const logger = pino(
+  {
+    levelComparison: 'DESC',
+    msgPrefix: '[recipe] '
+  }
+)
 
 export const useRecipeStore = defineStore('recipeList', () => {
   const recipeMap = useState('recipes', () => ({} as Record<string, MelaRecipe>))
@@ -14,9 +22,9 @@ export const useRecipeStore = defineStore('recipeList', () => {
     const serverRecipes = await $fetch<MelaRecipe[]>('/api/recipe/get/list')
 
     if (!serverRecipes) {
-      console.warn('Failed to fetch recipes from server')
+      logger.warn('Failed to fetch recipes from server')
     } else {
-      console.log('Fetched recipes:', serverRecipes)
+      logger.info('Fetched recipes:', serverRecipes)
       recipeMap.value = serverRecipes.reduce((acc, recipe) => {
         acc[recipe.id] = recipe
         return acc
@@ -32,7 +40,7 @@ export const useRecipeStore = defineStore('recipeList', () => {
       parsedLocalRecipes.forEach(localRecipe => {
         // Overwrite server recipes with local recipes
         recipeMap.value![localRecipe.id] = localRecipe
-        console.log('Merged local recipe:', localRecipe)
+        logger.info('Merged local recipe:', localRecipe)
       })
     }
   }
@@ -50,7 +58,7 @@ export const useRecipeStore = defineStore('recipeList', () => {
 
     // Check if recipe already exists
     if (recipeMap.value![recipe.id]) {
-      console.warn('Recipe already exists:', recipe)
+      logger.warn('Recipe already exists:', recipe)
     }
 
     // Save to store
