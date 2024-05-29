@@ -23,20 +23,22 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
-    "@nuxt/eslint": "^0.3.10",
-    "@nuxt/ui": "^2.15.2",
+    "@nuxt/eslint": "^0.3.13",
+    "@nuxt/ui": "^2.16.0",
     "@nuxtjs/i18n": "^8.3.1",
-    "@nuxtjs/tailwindcss": "^6.11.4",
+    "@nuxtjs/tailwindcss": "^6.12.0",
     "@pinia/nuxt": "^0.5.1",
     "@rgrove/parse-xml": "^4.1.0",
-    "@vercel/speed-insights": "^1.0.10",
+    "@vercel/speed-insights": "^1.0.11",
     "@vite-pwa/nuxt": "latest",
-    "jsdom": "^24.0.0",
+    "@xenova/transformers": "^2.17.1",
+    "jsdom": "^24.1.0",
     "nuxt": "^3.11.2",
-    "openai": "^4.40.2",
+    "openai": "^4.47.2",
     "pinia": "^2.1.7",
-    "vue": "^3.4.26",
-    "vue-router": "^4.3.0"
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
@@ -54,6 +56,7 @@
   },
   "trustedDependencies": [
     "@vercel/speed-insights",
+    "protobufjs",
     "sharp",
     "vue-demi"
   ]
