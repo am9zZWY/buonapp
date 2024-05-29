@@ -15,10 +15,12 @@
         <button class="rounded-3xl p-2 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="toHome">
           <UIcon name="ri:home-4-line" :dynamic="true" />
         </button>
-        <!-- <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
-        <button class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="toSettings">
-          <UIcon name="ri:settings-5-line" dynamic />
-        </button> -->
+        <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
+        <a
+class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+           href="https://github.com/am9zZWY/buonapp" target="_blank" rel="noopener noreferrer" title="GitHub">
+          <UIcon name="mdi:github" dynamic />
+        </a>
       </div>
     </div>
   </main>
@@ -37,8 +39,8 @@ const onLogin = () => userStore.login('Josef')
 const onLogout = () => userStore.logout()
 const onCreateAccount = () => userStore.createAccount('Josef', '123@123.de')
 
-const toSettings = () => {
-  router.push('/settings')
+const toGithub = () => {
+  router.push('https://github.com/am9zZWY/buonapp')
 }
 const toHome = () => {
   router.push('/')
