@@ -2,50 +2,9 @@ import OpenAI from 'openai'
 import type { AiNews, RssNews } from '~/types/news'
 import useRssNews from '~/composables/useRssNews'
 import { ref } from 'vue'
+import { cleanString } from '~/utils/cleanString'
 
 const MAX_TOKENS: number = 50
-
-const STOP_WORDS = [
-  'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he', 'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'were', 'will', 'with', 'yet', // English
-  'der', 'die', 'das', 'ein', 'eine', 'einer', 'einem', 'einen', 'eines', 'und', 'oder', 'aber', 'denn', 'weil', 'wenn', 'als', 'wie', 'dass', 'daß', 'denn', 'doch', 'nicht', 'nur', 'auch', 'sowie', 'sowohl', 'sogar', 'sondern' // German
-]
-
-/**
- * Clean up a string by removing HTML tags, URLs, punctuation, and truncating it
- * @param str
- * @param maxLength
- */
-const cleanUpString = (str: string, maxLength?: number): string => {
-  let cleanedStr = str
-  if (!cleanedStr) {
-    console.warn('Empty string')
-    return ''
-  }
-
-  // Remove HTML tags
-  cleanedStr = cleanedStr.replace(/<[^>]*>/g, '')
-
-  // Remove URLs
-  cleanedStr = cleanedStr.replace(/https?:\/\/\S+/g, '')
-
-  // Remove stop words
-  const stopWordsPattern = new RegExp(`\\b(${STOP_WORDS.join('|')})\\b`, 'gi')
-  cleanedStr = cleanedStr.replace(stopWordsPattern, '')
-
-  // Remove punctuation and special characters
-  cleanedStr = cleanedStr.replace(/[.,/#?!$%^&*;:{}=|+\[\]\-_`~()]/g, '')
-
-  // Replace multiple spaces with a single space and trim leading/trailing spaces
-  cleanedStr = cleanedStr.replace(/\s+/g, ' ').trim()
-
-  // Truncate the string if it exceeds maxLength
-  if (maxLength && cleanedStr.length > maxLength) {
-    cleanedStr = cleanedStr.substring(0, maxLength).trim() + '...'
-  }
-
-  return cleanedStr
-}
-
 
 /**
  * Parse news summaries from a string
@@ -91,7 +50,7 @@ export default async function(openaiApiKey: string) {
   const newsFeed = Array
     .from(new Set(rssNews.rssNews.value))
     .map((item: RssNews) =>
-      `${cleanUpString(item.title, 30)}: ${cleanUpString(item.description, 30)}`
+      `${cleanString(item.title, 30)}: ${cleanString(item.description, 30)}`
     )
     .join('\n')
   console.info('Cleaned up RSS News feed:', newsFeed)

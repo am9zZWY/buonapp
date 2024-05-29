@@ -1,5 +1,10 @@
 import type { NitroRuntimeConfig } from 'nitropack'
-import useAiNews from '~/composables/useAiNews'
+import useAiNews from '~/composables/useChatGptNews'
+import { z } from 'zod'
+
+const categoriesSchema = z.object({
+  categories: z.string()
+})
 
 /**
  * Fetch the most important news from RSS feeds and summarize them
@@ -11,26 +16,32 @@ import useAiNews from '~/composables/useAiNews'
 export default defineEventHandler(async (event) => {
   const config: NitroRuntimeConfig = useRuntimeConfig(event)
   const { openaiApiKey } = config
+  let errorMessage = ''
   if (!openaiApiKey) {
-    console.error('OpenAI API key not provided')
+    errorMessage = 'OpenAI API key not provided'
+    console.error(errorMessage)
     throw createError({
       statusCode: 500,
-      statusMessage: 'OpenAI API key not provided'
+      statusMessage: errorMessage
     })
   }
 
-  const categories = getRouterParam(event, 'categories')
-    ?.trim()
-    ?.split(',')
-    .map((category) => category.trim())
-
-  if (!categories || !categories.length) {
-    console.error('Categories not provided')
+  // Validate the categories
+  const params = await getValidatedRouterParams(event, params => categoriesSchema.parse(params))
+  if (!params) {
+    errorMessage = 'Categories not provided'
+    console.error(errorMessage)
     throw createError({
       statusCode: 400,
-      statusMessage: 'Categories not provided'
+      statusMessage: errorMessage
     })
   }
+
+  // Extract the categories from the URL
+  const categories = params.categories
+    .trim()
+    .split(',')
+    .map((category) => category.trim())
 
   // Fetch the most important news from RSS feeds and summarize them
   const aiNews = await useAiNews(openaiApiKey)

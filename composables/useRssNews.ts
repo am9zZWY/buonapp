@@ -11,11 +11,23 @@ const NEWS_URLS = [
 export default async function() {
   const rssNews = ref<RssNews[]>([])
   const newsList = ref<Set<string>>(new Set(NEWS_URLS))
+  /**
+   * If set to true, the fetchRss function will not be called automatically
+   * when parameters change
+   */
+  const noWatch = ref<boolean>(false)
+  /**
+   * The maximum age of the news in days
+   */
   const maxAge = ref<number>(2)
+  /**
+   * The maximum number of news from each feed
+   */
+  const maxNews = ref<number>(5)
 
   const fetchRss = async () => {
     try {
-      rssNews.value = await utilsFetchRss(Array.from(newsList.value), maxAge.value)
+      rssNews.value = await utilsFetchRss(Array.from(newsList.value), maxAge.value).then(news => news.slice(0, maxNews.value))
     } catch (error) {
       console.error('Error fetching RSS feeds:', error)
     }
@@ -42,7 +54,9 @@ export default async function() {
     return fetchRss()
   }
 
-  watch(maxAge, fetchRss)
+  if (!noWatch.value) {
+    watch([maxAge, maxNews], fetchRss)
+  }
 
-  return { rssNews, maxAge, addNews, removeNews, fetchRss }
+  return { noWatch, rssNews, maxAge, maxNews, addNews, removeNews, fetchRss }
 }
