@@ -8,20 +8,24 @@ import { parseXml, type XmlDocument, type XmlElement } from '@rgrove/parse-xml'
  * @param maxAge The maximum age of the article in days
  */
 const isRecentArticle = (pubDate: string, maxAge: number): boolean => {
-  const articleDate = new Date(pubDate);
-  const currentDate = new Date();
+  const articleDate = new Date(pubDate)
+  const currentDate = new Date()
 
   // Set the time part to zero to compare only the date
-  currentDate.setHours(0, 0, 0, 0);
-  articleDate.setHours(0, 0, 0, 0);
+  currentDate.setHours(0, 0, 0, 0)
+  articleDate.setHours(0, 0, 0, 0)
 
   // Calculate the date maxAge days ago
-  const maxAgeDate = new Date(currentDate);
-  maxAgeDate.setDate(currentDate.getDate() - maxAge);
+  const maxAgeDate = new Date(currentDate)
+  maxAgeDate.setDate(currentDate.getDate() - maxAge)
 
-  return articleDate >= maxAgeDate;
-};
+  return articleDate >= maxAgeDate
+}
 
+
+const getChildren = (node: XmlDocument | XmlElement, name: string) => {
+  return node.children.filter(node => node.type === 'element' && node.name === name)
+}
 
 /**
  * Fetch the news from the given RSS feeds
@@ -37,36 +41,35 @@ export async function fetchRss(newsUrls: string[], maxAge: number = 2): Promise<
         // Use parseXML from rgrove to parse the XML data
         const document: XmlDocument = parseXml(data)
 
-        if (!document || !document.children) {
-          return []
-        }
+      const root = getChildren(document, 'rss')[0] as XmlElement
+      const channel = getChildren(root, 'channel')[0] as XmlElement
 
-        const rssNode = document.children.find(node => node.type === 'element' && node.name === 'rss') as XmlElement
-        if (!rssNode || !rssNode.children) {
-          return []
-        }
-
-        const channelNode = rssNode.children.find(node => node.type === 'element' && node.name === 'channel') as XmlElement
-        if (!channelNode || !channelNode.children) {
-          return []
-        }
-
-        const items = channelNode.children.filter(node => node.type === 'element' && node.name === 'item') as XmlElement[]
+      const items = getChildren(channel, 'item') as XmlElement[]
         if (!items) {
           return []
         }
 
         // Extract the relevant information from the XML data
-        return items
+      const newsItems = items
           .map(item => {
             const pubDate = item.children.find(node => node.name === 'pubDate')?.children[0]?.text
             const title = item.children.find(node => node.name === 'title')?.children[0]?.text
             const link = item.children.find(node => node.name === 'link')?.children[0]?.text
-            const description = item.children.find(node => node.name === 'description')?.children[0]?.text
+            const text = item.children.find(node => node.name === 'description')?.children[0]?.text
             const origin = url
-            return { title, link, description, pubDate, origin }
+            return { title, link, text, pubDate, origin } as RssNews
           })
-          .filter((item: RssNews) => item.pubDate && isRecentArticle(item.pubDate, maxAge)) as RssNews[]
+
+      // Filter out articles that are older than maxAge
+      const newsItemsAfterPubDateCheck = newsItems.filter((item: RssNews) => item.pubDate && isRecentArticle(item.pubDate, maxAge))
+
+      // If no recent news is found, return all news items
+      if (newsItemsAfterPubDateCheck.length === 0 && newsItems.length > 0) {
+        console.warn('No recent news found. Returning all news items.')
+        return newsItems
+      }
+
+      return newsItems
       }
     ))
     // Flatten the result matrix

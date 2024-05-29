@@ -3,19 +3,12 @@ import { fetchRss as utilsFetchRss } from '~/utils/fetchRss'
 import { ref, watch } from 'vue'
 
 const NEWS_URLS = [
-  'https://www.tagesschau.de/xml/rss2' /* Tagesschau */,
-  'https://feeds.bbci.co.uk/news/rss.xml'  /* BBC News */,
-  'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml' /* New York Times */
+  'https://www.tagesschau.de/xml/rss2' /* Tagesschau */
 ]
 
-export default async function() {
-  const rssNews = ref<RssNews[]>([])
+export default async function(noAutoFetch: boolean = false) {
+  const news = ref<RssNews[]>([])
   const newsList = ref<Set<string>>(new Set(NEWS_URLS))
-  /**
-   * If set to true, the fetchRss function will not be called automatically
-   * when parameters change
-   */
-  const noWatch = ref<boolean>(false)
   /**
    * The maximum age of the news in days
    */
@@ -27,12 +20,19 @@ export default async function() {
 
   const fetchRss = async () => {
     try {
-      rssNews.value = await utilsFetchRss(Array.from(newsList.value), maxAge.value).then(news => news.slice(0, maxNews.value))
+      news.value = await utilsFetchRss(Array.from(newsList.value), maxAge.value).then(news => news.slice(0, maxNews.value))
+      console.debug('Fetched RSS feeds:', news.value)
     } catch (error) {
       console.error('Error fetching RSS feeds:', error)
     }
   }
-  await fetchRss()
+  const autoFetch = async () => {
+    if (!noAutoFetch) {
+      return await fetchRss()
+    }
+  }
+
+  await autoFetch()
 
   /**
    * Add a news URL to the set of urls
@@ -40,7 +40,15 @@ export default async function() {
    */
   const addNews = async (url: string) => {
     newsList.value.add(url)
-    await fetchRss()
+    await autoFetch()
+  }
+
+  /**
+   * Reset the news list to the default list
+   */
+  const reset = async () => {
+    newsList.value = new Set()
+    news.value = []
   }
 
   /**
@@ -51,12 +59,12 @@ export default async function() {
    */
   const removeNews = (url: string) => {
     newsList.value.delete(url)
-    return fetchRss()
+    return autoFetch()
   }
 
-  if (!noWatch.value) {
+  if (!noAutoFetch) {
     watch([maxAge, maxNews], fetchRss)
   }
 
-  return { noWatch, rssNews, maxAge, maxNews, addNews, removeNews, fetchRss }
+  return { noAutoFetch, news, maxAge, maxNews, reset, addNews, removeNews, fetchRss }
 }

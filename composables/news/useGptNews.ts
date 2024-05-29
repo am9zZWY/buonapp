@@ -1,6 +1,6 @@
 import OpenAI from 'openai'
-import type { AiNews, RssNews } from '~/types/news'
-import useRssNews from '~/composables/useRssNews'
+import type { GptNews, RssNews } from '~/types/news'
+import useRssNews from '~/composables/news/useRssNews'
 import { ref } from 'vue'
 import { cleanString } from '~/utils/cleanString'
 
@@ -10,7 +10,7 @@ const MAX_TOKENS: number = 50
  * Parse news summaries from a string
  * @param summaries
  */
-const parseAndClean = (summaries?: string): AiNews[] => {
+const parseAndCleanGptSummary = (summaries?: string): GptNews[] => {
   if (!summaries) {
     console.warn('Empty summaries')
     return []
@@ -18,11 +18,12 @@ const parseAndClean = (summaries?: string): AiNews[] => {
 
   return summaries
     .split(/(?:\d+\.\s*(?=[A-Z]))|(?:\d\.?$)|(?:\-\s(?=[A-Z]))/g)  // Split using the regex pattern
-    .map(summary =>
-      summary.trim()
+    .map(summary => ({
+      text: summary.trim()
         .replace(/\n/g, ' ')
-        .replace(/[/#!$%^&*;:{}=\-_`~()]+$/g, ''))
-    .filter(summary => summary && summary.trim().split(' ').length > 3)
+        .replace(/[/#!$%^&*;:{}=\-_`~()]+$/g, '')
+    }))
+    .filter(summary => summary && summary.text.trim().split(' ').length > 3)
 }
 
 
@@ -32,7 +33,7 @@ const parseAndClean = (summaries?: string): AiNews[] => {
  * @param openaiApiKey OpenAI API key
  */
 export default async function(openaiApiKey: string) {
-  const aiNews = ref<AiNews[]>([])
+  const aiNews = ref<GptNews[]>([])
 
   // Initialize OpenAI
   const openai = new OpenAI({ apiKey: openaiApiKey })
@@ -48,9 +49,9 @@ export default async function(openaiApiKey: string) {
 
   // Clean up the news feed
   const newsFeed = Array
-    .from(new Set(rssNews.rssNews.value))
+    .from(new Set(rssNews.news.value))
     .map((item: RssNews) =>
-      `${cleanString(item.title, 30)}: ${cleanString(item.description, 30)}`
+      `${cleanString(item.title, 30)}: ${cleanString(item.text, 30)}`
     )
     .join('\n')
   console.info('Cleaned up RSS News feed:', newsFeed)
@@ -86,7 +87,7 @@ export default async function(openaiApiKey: string) {
     console.info('GPT AI News:', gptAiNews)
 
     // Parse the news summaries
-    const parsedNews = parseAndClean(gptAiNews)
+    const parsedNews = parseAndCleanGptSummary(gptAiNews)
 
     if (gptAiNews) {
       aiNews.value = parsedNews

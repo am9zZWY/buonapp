@@ -1,4 +1,4 @@
-import useRss from '~/composables/useRssNews'
+import useRssNews from '~/composables/news/useRssNews'
 import { z } from 'zod'
 
 // Schema for the query parameters
@@ -9,8 +9,7 @@ const rssSchema = z.object({
 
 // Define the event handler for the RSS news endpoint
 export default defineEventHandler(async (event) => {
-  const rss = await useRss()
-  rss.noWatch.value = true
+  const rss = await useRssNews(true)
 
   // Validate the query parameters
   const query = await getValidatedQuery(event, query => rssSchema.parse(query))
@@ -31,5 +30,5 @@ export default defineEventHandler(async (event) => {
   // Fetch the RSS news
   await rss.fetchRss()
 
-  return rss.rssNews.value
+  return rss.news.value
 })

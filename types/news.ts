@@ -1,16 +1,25 @@
-/**
- * RSS news type
- */
-export type RssNews = {
-  title: string,
-  link: string,
-  description: string,
-  pubDate: string,
-  origin: string
+export interface News {
+  text: string,
 }
 
 /**
- * AI news type
- * Is alias of string
+ * RSS news type
  */
-export type AiNews = string
+export interface RssNews extends News {
+  title: string,
+  pubDate: string,
+  link: string,
+}
+
+/**
+ * GPT news type
+ */
+export interface GptNews extends News {
+}
+
+/**
+ * Transformer type
+ */
+export interface LTfNews extends News {
+  source: string,
+}

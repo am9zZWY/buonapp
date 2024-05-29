@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { AiNews } from '~/types/news'
+import type { GptNews } from '~/types/news'
 
 interface AiNewsProps {
   maxNews?: number,
@@ -12,11 +12,11 @@ interface AiNewsProps {
 
 const props = withDefaults(defineProps<AiNewsProps>(), {
   maxNews: 5,
-  subjects: 'AI',
+  subjects: 'climate,energy,health'
 })
 
 const { subjects } = toRefs(props)
 
-const { data } = await useLazyFetch<AiNews[]>(`/api/news/ai/${subjects.value}`)
-const news = computed(() => data.value?.join(' | ') ?? 'No news yet')
+const { data } = await useLazyFetch<GptNews[]>(`/api/news/ai/${subjects.value}`)
+const news = computed(() => data.value?.map((summary) => summary.text).join(' | ') ?? 'No news yet')
 </script>

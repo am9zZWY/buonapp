@@ -10,6 +10,8 @@
 </template>
 
 <script lang="ts" setup>
-const localTransformerNews = await useLocalTransformerNews()
-const news = computed(() => localTransformerNews.aiNews.value)
+import useLTfNews from '~/composables/news/useLTfNews'
+
+const localTransformerNews = await useLTfNews()
+const news = computed(() => localTransformerNews.news.value.map((summary) => summary.text).join(' | ') ?? 'No news yet')
 </script>

@@ -1,5 +1,5 @@
 import type { NitroRuntimeConfig } from 'nitropack'
-import useAiNews from '~/composables/useChatGptNews'
+import useAiNews from '~/composables/news/useGptNews'
 import { z } from 'zod'
 
 const categoriesSchema = z.object({
