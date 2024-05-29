@@ -10,10 +10,8 @@
     <p>
       <span class="text-gray-600 dark:text-gray-400">
         <ClientOnly>
-          <NuxtLink to="/buone/notizie" class="hover:underline">
             <LazyTransformerNews />
-            <!-- <AiNews :max-news="2" subjects="politics, technology, climate" /> -->
-          </NuxtLink>
+          <!-- <AiNews :max-news="2" subjects="politics, technology, climate" /> -->
         </ClientOnly>
       </span>
       <br>

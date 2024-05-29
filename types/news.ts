@@ -7,6 +7,7 @@ export interface News {
  */
 export interface RssNews extends News {
   title: string,
+  encoded: string,
   pubDate: string,
   link: string,
 }

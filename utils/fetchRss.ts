@@ -56,8 +56,9 @@ export async function fetchRss(newsUrls: string[], maxAge: number = 2): Promise<
             const title = item.children.find(node => node.name === 'title')?.children[0]?.text
             const link = item.children.find(node => node.name === 'link')?.children[0]?.text
             const text = item.children.find(node => node.name === 'description')?.children[0]?.text
+            const encoded = item.children.find(node => node.name === 'content:encoded')?.children[0]?.text
             const origin = url
-            return { title, link, text, pubDate, origin } as RssNews
+            return { title, link, text, pubDate, origin, encoded } as RssNews
           })
 
       // Filter out articles that are older than maxAge

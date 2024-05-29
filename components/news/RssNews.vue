@@ -30,7 +30,9 @@ const props = withDefaults(defineProps<RssNewsProps>(), {
   maxNews: 3
 })
 
-const { data } = await useLazyFetch<RssNews[]>('/api/news/rss')
+const { data } = await useLazyFetch<RssNews[]>('/api/news/rss', {
+  method: 'POST'
+})
 const filter = ref<string>('')
 const filteredData = computed<RssNews[]>(() => {
   if (!data.value) {

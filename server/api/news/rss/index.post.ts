@@ -7,9 +7,20 @@ const rssSchema = z.object({
   max: z.string().optional()
 })
 
+const rssBodySchema = z.object({
+  url: z.array(z.string()).optional()
+})
+
 // Define the event handler for the RSS news endpoint
 export default defineEventHandler(async (event) => {
   const rss = await useRssNews(true)
+
+  // URLS in body
+  const body = await readValidatedBody(event, body => rssBodySchema.parse(body))
+  if (body.url) {
+    await rss.reset()
+    body.url.forEach(url => rss.addNews(url))
+  }
 
   // Validate the query parameters
   const query = await getValidatedQuery(event, query => rssSchema.parse(query))
