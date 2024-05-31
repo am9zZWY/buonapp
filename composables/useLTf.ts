@@ -32,15 +32,8 @@ export default function() {
 
         switch (workerData.type) {
           case 'ready':
-            console.log(`Worker with id ${randomId} is ready`)
-            message.value = workerData
-            break
           case 'progress':
-            console.log(`Worker with id ${randomId} is`, workerData.status)
-            message.value = workerData
-            break
           case 'finished':
-            console.log(`Worker with id ${randomId} finished`)
             message.value = workerData
             break
           case 'error':
@@ -55,8 +48,10 @@ export default function() {
       }
       worker.value = newWorker
 
+      // Set worker id
       workerId.value = randomId
 
+      // Create a message channel
       const newChannel = new MessageChannel()
       channel.value = newChannel
 
@@ -97,7 +92,7 @@ export default function() {
     if (worker.value !== null && channel.value !== null) {
       worker.value.postMessage({ type: 'init' }, [channel.value.port1])
       worker.value.postMessage({ type: 'data', data: data }, [channel.value.port2])
-      console.log(`Started worker with id ${workerId.value}`)
+      console.debug(`Started worker with id ${workerId.value}`)
     } else {
       console.error(`Worker with id ${workerId.value} not found`)
     }
