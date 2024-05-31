@@ -23,11 +23,6 @@ export default defineNuxtConfig({
     preset: 'vercel-edge',
     prerender: {
       routes: ['/']
-    },
-    commonJS: {
-      dynamicRequireTargets: [
-        './node_modules/onnxruntime-node/bin/napi-v3/darwin/arm64'
-      ]
     }
   },
   pinia: {
