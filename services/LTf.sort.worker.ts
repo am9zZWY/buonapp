@@ -1,18 +1,21 @@
-import { getLTfSummary } from '~/utils/getLTfSummary'
+import { getLTfSorting } from '~/utils/ltf/getLTfSorting'
 
 self.onmessage = async (event) => {
   const workerData = event.data
   const data = workerData.data
   switch (workerData.type) {
-    case 'summarize':
+    case 'init':
+      self.postMessage({ type: 'ready' })
+      break
+    case 'data':
       try {
         const progressCallback = (status: string) => {
           self.postMessage({ type: 'progress', status })
         }
 
-        const news = data as string[]
-        const summaries = await Promise.all(news.map(n => getLTfSummary(n, progressCallback)))
-        self.postMessage({ type: 'summarized', data: summaries })
+        const texts = data as string[]
+        const sorting = await getLTfSorting(texts, progressCallback)
+        self.postMessage({ type: 'finished', data: sorting })
       } catch (error) {
         self.postMessage({ type: 'error', error })
       }
