@@ -6,49 +6,47 @@
       </NuxtLink>
     </template>
     <template v-else>
-      {{ statusMessage }}
+      <span>{{ statusMessage }}</span>
 
-      <!-- TODO: Find better loader -->
-      <!-- <div class="loader" /> -->
+      <div class="mt-2 w-64">
+        <UProgress :value="currTotalDownload" :max="totalDownload" size="sm" />
+      </div>
     </template>
   </ClientOnly>
-  <DevOnly>
+  <DevOnly v-if="!news">
     <pre>{{ downloadStatus }}</pre>
+    <pre>{{ currTotalDownload }} / {{ totalDownload }}</pre>
   </DevOnly>
 </template>
 
 <script lang="ts" setup>
-import './TransformerNews.css'
 import type { RssNews } from '~/types/news'
 import { cleanString, type CleanStringOptions, DEFAULT_CLEAN_STRING_OPTIONS } from '~/utils/cleanString'
+import useLTf from '~/composables/useLTf'
 
+const downloadStatus = ref<{ [key: string]: number }>({})
+const currTotalDownload = computed<number>(() => Object.values(downloadStatus.value).reduce((acc, curr) => acc + curr, 0))
+const totalDownload = computed<number>(() => Object.values(downloadStatus.value).length * 100)
 const statusMessage = computed(() => {
-  if (Object.keys(downloadStatus.value).length == 0) {
+  if (currTotalDownload.value === totalDownload.value) {
     return 'Summarizing news...'
   } else {
     return 'Downloading transformer model...'
   }
 })
 
-type DownloadStatus = {
-  progress: number
-}
-const downloadStatus = ref<{ [key: string]: DownloadStatus }>({})
-
 const summarizedNews = ref<string[]>([])
 const news = computed(() => summarizedNews.value.join(' | '))
 
-// Import the worker script as a Web Worker
-const worker = new Worker(new URL('~/services/LTf.worker.ts', import.meta.url), {
-  type: 'module'
-})
+const summaryTransformer = useLTf()
+summaryTransformer.createWorker('summarize')
 
 // Function to handle messages from the worker
-worker.onmessage = (event) => {
+summaryTransformer.onmessage.value = (event) => {
   const workerData = event.data
 
   switch (workerData.type) {
-    case 'summarized': {
+    case 'finished': {
       summarizedNews.value = workerData.data
       break
     }
@@ -58,20 +56,13 @@ worker.onmessage = (event) => {
 
       if (workerStatus.status === 'progress') {
         if (!downloadStatus.value[name]) {
-          downloadStatus.value[name] = {
-            progress: workerStatus.progress
-          }
-        }
-
-        if (workerStatus.progress === 100) {
-          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-          delete downloadStatus.value[name]
+          downloadStatus.value[name] = workerStatus.progress
           break
         }
 
-        downloadStatus.value[name].progress = workerStatus.progress
-      } else {
-        console.debug('Worker status:', workerStatus)
+        if (downloadStatus.value[name] < workerStatus.progress) {
+          downloadStatus.value[name] = workerStatus.progress
+        }
       }
       break
     }
@@ -98,7 +89,7 @@ options.maxLength = undefined
 options.stripStopwords = false
 options.stripPunctuation = '+'
 
-const newsFeed = rssNews.map((item: RssNews) => `${cleanString(item.title)}. ${cleanString(item.encoded, options)}`)
+const newsFeed = rssNews.map((item: RssNews) => `${cleanString(item.title, options)}. ${cleanString(item.encoded, options)}`)
 
-worker.postMessage({ type: 'summarize', data: newsFeed })
+summaryTransformer.startTask(newsFeed)
 </script>
