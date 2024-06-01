@@ -1,3 +1,8 @@
+/**
+ * Thanks to @xenova for the transformers package
+ *
+ * https://github.com/xenova
+ */
 import { getLTfSummary } from '~/utils/ltf/getLTfSummary'
 
 self.onmessage = async (event) => {

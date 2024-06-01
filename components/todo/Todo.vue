@@ -1,69 +1,106 @@
 <template>
-  <div>
-    <div class="relative mb-4 cursor-pointer flex items-center">
+  <div
+    class="bg-white dark:bg-neutral-900 p-3 rounded-xl shadow-lg dark:shadow-lg"
+    :class="{ 'bg-opacity-90 bg-green-100 dark:bg-green-900': completed }">
+    <div v-if="isCreated" class="flex items-center gap-x-3 text-xs justify-start">
+      <!-- Date -->
+      <span
+        v-if="formattedDueDate !== ''"
+        class="text-gray-600 dark:text-gray-400"
+      >
+        {{ formattedDueDate }}
+      </span>
+      <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
+
+      <!-- Status Label -->
+      <label
+        v-if="isCreated && title"
+        :for="`task-checkbox-${id}`"
+        class="text-gray-600 dark:text-gray-400 hover:underline cursor-pointer focus:outline-none inline-block text-nowrap">
+        {{ completed ? '🎉 Completed' : 'Complete Task' }}
+      </label>
+
+      <template v-if="isCreated && title && completed">
+        <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
+        <!-- Edit Button -->
+        <button
+          class="text-primary-600 dark:text-primary-400 hover:underline"
+          @click="editTodo">
+          Edit Task
+        </button>
+      </template>
+
+      <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
+      <!-- Delete Button -->
+      <button
+        v-if="isCreated && title"
+        class="text-red-600 dark:text-red-400 hover:underline"
+        @click="emit('delete')">
+        Delete Task
+      </button>
+    </div>
+
+    <div class="relative flex items-center mt-2">
+      <!-- Checkbox -->
       <input
-        v-if="todo"
-        :id="`task-checkbox-${randomId}`"
+        v-if="isCreated && title"
+        :id="`task-checkbox-${id}`"
         v-model="completed"
         type="checkbox"
-        class="form-checkbox h-5 w-5 rounded-full border-2 focus:ring-0 mr-2 cursor-pointer"
-        :class="{ 'border-green-700 text-green-700': todo?.completed, 'border-red-700': !todo?.completed }"
+        class="hidden"
+        :class="{ 'border-green-700 text-green-700': completed, 'border-gray-300': !completed }"
       >
+
+      <!-- Title -->
       <textarea
+        ref="textarea"
         v-model="title"
-        class="w-full text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent"
-        :class="{ 'line-through': todo?.completed, 'font-serif italic': title?.length !== 0 }"
-        :disabled="todo?.completed"
+        class="w-full text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
+        :class="{ 'line-through': completed, 'font-serif italic': title?.length !== 0 }"
+        :disabled="completed"
         aria-label="Todo Description"
         rows="1"
         placeholder="Type your task here..."
         @keydown.enter.prevent="emit('enter')"
         @keydown.delete="deleteTodo"
       />
-      <label
-        v-if="todo"
-        :for="`task-checkbox-${randomId}`"
-        class="text-xs mb-2 px-2 py-0.5 absolute top-3 right-3 border-1 rounded-2xl cursor-pointer"
-        :class="{'border border-green-600 dark:text-white': todo.completed, 'border border-red-700  dark:text-white': !todo.completed}">
-        {{ todo?.completed ? '🎉 Completed' : 'Not Completed' }}
-      </label>
     </div>
-    <p
-      v-if="formattedDueDate !== ''"
-      class="text-gray-600 dark:text-gray-400 font-extralight text-xs mt-2"
-    >
-      {{ formattedDueDate }}
-    </p>
   </div>
+
+  <!-- Border -->
   <div class="border-b last-of-type:hidden my-4" />
 </template>
 
+
 <script lang="ts" setup>
-import { type Todo } from '~/types/todo'
+import type { VNodeRef } from 'vue'
+
+const emit = defineEmits(['enter', 'delete'])
+
+const textarea = ref<VNodeRef | null>(null)
 
 interface TodoProps {
-  todo?: Todo,
+  id?: string,
+  isCreated?: boolean
 }
 
-const emit = defineEmits(['enter', 'delete', 'completed'])
-const randomId = Math.random().toString(36).substring(7)
-
-const props = defineProps<TodoProps>()
-const { todo } = toRefs(props)
-
+withDefaults(defineProps<TodoProps>(), {
+  id: '0',
+  isCreated: true
+})
 const title = defineModel<string>('title')
-const completed = ref(false)
+const dueDate = defineModel<Date>('dueDate')
+const completed = defineModel<boolean>('completed')
 
 /**
  * Computed property to format the due date
  */
 const formattedDueDate = computed(() => {
-  if (!todo?.value?.dueDate) {
+  if (!dueDate.value) {
     return ''
   }
 
-  const dueDate = new Date(todo.value.dueDate)
-  return dueDate.toLocaleDateString()
+  return dueDate.value.toLocaleDateString()
 })
 
 /**
@@ -82,25 +119,10 @@ const deleteTodo = () => {
 }
 
 /**
- * Watch for the completed prop and emit the completed event
+ * Edit the todo
  */
-watch(completed, (value) => {
-  if (todo.value) {
-    emit('completed', value)
-  }
-})
-
-/**
- * Watch for the todo prop and update the title
- */
-if (todo.value) {
-  watch(todo.value, () => {
-    if (!todo.value) {
-      return
-    }
-
-    title.value = todo.value.title
-    completed.value = todo.value.completed
-  }, { immediate: true })
+const editTodo = () => {
+  completed.value = false
+  textarea.value?.focus()
 }
 </script>

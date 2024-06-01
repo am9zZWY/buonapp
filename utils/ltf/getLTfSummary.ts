@@ -3,6 +3,7 @@ import type { GenerationConfigType } from '@xenova/transformers/types/utils/gene
 
 let generator: SummarizationPipeline
 const model = 'Xenova/distilbart-xsum-12-6'
+const task = 'summarization'
 
 /**
  * Get the Local Transformers summarization pipeline
@@ -10,7 +11,7 @@ const model = 'Xenova/distilbart-xsum-12-6'
  */
 async function getGenerator(progress_callback?: (status: string) => void): Promise<SummarizationPipeline> {
   if (!generator) {
-    generator = await pipeline('summarization', model, {
+    generator = await pipeline(task, model, {
       quantized: true,
       progress_callback
     })

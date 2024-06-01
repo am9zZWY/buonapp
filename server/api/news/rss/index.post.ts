@@ -8,8 +8,8 @@ const rssSchema = z.object({
 })
 
 const rssBodySchema = z.object({
-  url: z.array(z.string()).optional()
-})
+  url: z.array(z.string())
+}).optional()
 
 // Define the event handler for the RSS news endpoint
 export default defineEventHandler(async (event) => {
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
   // URLS in body
   const body = await readValidatedBody(event, body => rssBodySchema.parse(body))
-  if (body.url) {
+  if (body?.url) {
     await rss.reset()
     body.url.forEach(url => rss.addNews(url))
   }

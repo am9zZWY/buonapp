@@ -15,7 +15,9 @@
     </Section>
 
     <Section title="Plan your day 📅">
-      <TodoContainer />
+      <ClientOnly>
+        <TodoContainer />
+      </ClientOnly>
     </Section>
   </div>
 </template>

@@ -1,69 +1,95 @@
 import { defineStore } from 'pinia'
 import type { Todo } from '~/types/todo'
+import type { LTfDocumentRanking } from '~/utils/ltf/getLTfDocumentRanking'
 
 const localStorage = import.meta.server ? null : window.localStorage
 
 export const useTodoStore = defineStore('todo', () => {
-  const todosMap = useState('todosMap', () => new Map<string, Todo>())
+  const todos = useState('todos', () => [] as Todo[])
 
   // Load todos from localStorage
-  const todosFromStorage = localStorage?.getItem('todos')
-  if (todosFromStorage) {
-    const todos = JSON.parse(todosFromStorage) as Todo[]
-    for (const todo of todos) {
+  const todosFromStorageStr = localStorage?.getItem('todos')
+  if (todosFromStorageStr) {
+    const newTodos = [] as Todo[]
+    const todosFromStorage = JSON.parse(todosFromStorageStr) as Todo[]
+    for (const todo of todosFromStorage) {
+      todo.id = todo.id ?? Math.random().toString(36).substring(7)
       todo.title = todo.title ?? ''
       todo.priority = todo.priority ?? 'medium'
       todo.completed = todo.completed ?? false
       todo.dueDate = todo.dueDate ? new Date(todo.dueDate) : undefined
       todo.createdDate = new Date(todo.createdDate)
 
-      const id = todo.createdDate.getTime().toString()
-      todosMap.value.set(id, todo)
+      newTodos.push(todo)
     }
-    console.info('Loaded todos from localStorage:', todosMap.value)
+    todos.value = newTodos
   }
 
-  const todosList = computed(() => Array.from(todosMap.value.values()))
-
-  const saveTodos = () => {
-    localStorage?.setItem('todos', JSON.stringify(todosList.value))
+  const updateLocalStorage = () => {
+    localStorage?.setItem('todos', JSON.stringify(todos.value))
   }
 
   const addTodo = (title: string, dueDate: Date, priority: 'low' | 'medium' | 'high' = 'medium') => {
     const createdDate = new Date()
-    const id = createdDate.getTime().toString()
+    const randomId = Math.random().toString(36).substring(7)
 
-    todosMap.value.set(id, {
+    const newTodo: Todo = {
+      id: randomId,
       title: title,
       completed: false,
       createdDate: createdDate,
       dueDate: dueDate,
       priority: priority
-    } as Todo)
-
-    // Save to localStorage
-    saveTodos()
-
-    return id
+    }
+    todos.value.push(newTodo)
+    return randomId
   }
 
   const addTodoFromTitle = (title: string) => addTodo(title, new Date())
 
-  const removeTodo = (id: string): boolean => {
-    return todosMap.value.delete(id)
+  const removeTodo = (id: string) => {
+    todos.value = todos.value.filter(todo => todo.id !== id)
+    console.log('todos.value', todos.value)
   }
 
   const completeTodo = (id: string, completed = true) => {
-    const todo = todosMap.value.get(id)
-    if (!todo) {
+    const todoIndex = todos.value.findIndex(todo => todo.id === id)
+    if (todoIndex === -1) {
+      console.error('Todo not found')
       return
     }
 
-    todo.completed = completed
-
-    // Save to localStorage
-    saveTodos()
+    todos.value[todoIndex].completed = completed
   }
 
-  return { todosMap, addTodo, addTodoFromTitle, completeTodo, removeTodo }
+  const sort = () => {
+    todos.value = todos.value
+      .toSorted((a, b) => a.createdDate.getDate() - b.createdDate.getDate())
+      .toSorted((a, b) => a.completed === b.completed ? 0 : a.completed ? 1 : -1)
+  }
+
+  const rankBy = (query: string) => {
+    if (query.trim() === '') {
+      console.error('Query is empty')
+      return
+    }
+
+    const ltfRanker = useLTf('rank')
+    ltfRanker.ondatacallback.value = (data: LTfDocumentRanking[]) => {
+      todos.value = todos.value.toSorted((a: Todo, b: Todo) => {
+        const aRank = data.find((d) => d.text === a.title)?.score ?? 0
+        const bRank = data.find((d) => d.text === b.title)?.score ?? 0
+        console.log('aRank', aRank, 'bRank', bRank)
+        return bRank - aRank
+      })
+    }
+    ltfRanker.startTask({
+      query: query,
+      documents: todos.value.map((todo) => todo.title)
+    })
+  }
+
+  watch(todos, updateLocalStorage, { deep: true })
+
+  return { todos, rankBy, addTodo, addTodoFromTitle, completeTodo, removeTodo, sort }
 })

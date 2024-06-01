@@ -1,6 +1,7 @@
-import { getLTfSorting } from '~/utils/ltf/getLTfSorting'
+import { getLTfDocumentRanking } from '~/utils/ltf/getLTfDocumentRanking'
 
 self.onmessage = async (event) => {
+  console.log('LTf.rank.worker.ts', event.data)
   const workerData = event.data
   const data = workerData.data
   switch (workerData.type) {
@@ -13,14 +14,15 @@ self.onmessage = async (event) => {
           self.postMessage({ type: 'progress', status })
         }
 
-        const texts = data as string[]
-        const sorting = await getLTfSorting(texts, progressCallback)
+        const sorting = await getLTfDocumentRanking(data, progressCallback)
         self.postMessage({ type: 'finished', data: sorting })
       } catch (error) {
+        console.error('Error in LTf.rank.worker.ts', error)
         self.postMessage({ type: 'error', error })
       }
       break
     default:
+      console.error('Unknown message type in LTf.rank.worker.ts', workerData.type)
       break
   }
 }

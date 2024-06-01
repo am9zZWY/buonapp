@@ -14,7 +14,6 @@
           <!-- <AiNews :max-news="2" subjects="politics, technology, climate" /> -->
         </ClientOnly>
       </span>
-      <br>
       <span class="font-extralight text-gray-300 dark:text-gray-500">AI News</span>
     </p>
   </div>

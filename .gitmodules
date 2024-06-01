@@ -1,0 +1,3 @@
+[submodule "public/models/jina-reranker-v1-tiny-en"]
+	path = public/models/jina-reranker-v1-tiny-en
+	url = git@hf.co:jinaai/jina-reranker-v1-tiny-en

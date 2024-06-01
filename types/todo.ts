@@ -1,4 +1,5 @@
 export type Todo = {
+  id: string
   title: string
   completed: boolean
   createdDate: Date
@@ -7,6 +8,7 @@ export type Todo = {
 }
 
 export const defaultTodo: Todo = {
+  id: '0',
   title: 'Clean up room',
   completed: false,
   createdDate: new Date(),
