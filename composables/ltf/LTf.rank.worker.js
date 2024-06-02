@@ -5,34 +5,25 @@
  * https://huggingface.co/jinaai/jina-reranker-v1-tiny-en
  */
 
-import type { PreTrainedTokenizer } from '@xenova/transformers'
 import { AutoModelForSequenceClassification, AutoTokenizer } from '@xenova/transformers'
 
 const model_id = 'jinaai/jina-reranker-v1-tiny-en'
-let ranker: AutoModelForSequenceClassification
-let tokenizer: PreTrainedTokenizer
+let ranker
+let tokenizer
 
 /**
  * Get the Local Transformers text classification pipeline
  * @param progress_callback
  */
-async function getRanker(progress_callback?: (status: string) => void) {
+async function getRanker(progress_callback) {
   if (!ranker) {
-    tokenizer = await AutoTokenizer
-      .from_pretrained(model_id)
-    ranker = await AutoModelForSequenceClassification
-      .from_pretrained(model_id, {
-        quantized: false,
-        progress_callback
-      })
+    tokenizer = await AutoTokenizer.from_pretrained(model_id)
+    ranker = await AutoModelForSequenceClassification.from_pretrained(model_id, {
+      quantized: false,
+      progress_callback
+    })
   }
   return ranker
-}
-
-export interface LTfDocumentRanking {
-  corpus_id: number,
-  score: number,
-  text: string
 }
 
 /**
@@ -40,10 +31,7 @@ export interface LTfDocumentRanking {
  * @param data an object containing the query and the data to be ranked
  * @param progress_callback a callback function to report progress
  */
-export async function getLTfDocumentRanking(data: {
-  query: string,
-  documents: string[]
-}, progress_callback?: (status: string) => void): Promise<LTfDocumentRanking[]> {
+async function getLTfDocumentRanking(data, progress_callback) {
   console.log('Ranking data:', data)
   const ranker = await getRanker(progress_callback)
   const { query, documents } = data
@@ -55,18 +43,45 @@ export async function getLTfDocumentRanking(data: {
   )
 
   const { logits } = await ranker(inputs)
-  const results: LTfDocumentRanking[] = logits
+  const results = logits
     .sigmoid()
     .tolist()
-    .map(([score], i: number) => ({
+    .map((score, i) => ({
       corpus_id: i,
       score,
       ...(return_documents ? { text: documents[i] } : {})
     }))
-    .sort((a: { score: number }, b: { score: number }) => b.score - a.score)
+    .sort((a, b) => b.score - a.score)
     .slice(0, top_k)
 
   console.log('Sorted documents:', results)
 
   return results
 }
+
+self.addEventListener('message', async (event) => {
+  console.log('LTf.rank.worker.ts', event.data)
+  const workerData = event.data
+  const data = workerData.data
+  switch (workerData.type) {
+    case 'init':
+      self.postMessage({ type: 'ready' })
+      break
+    case 'data':
+      try {
+        const progressCallback = (status) => {
+          self.postMessage({ type: 'progress', status })
+        }
+
+        const sorting = await getLTfDocumentRanking(data, progressCallback)
+        self.postMessage({ type: 'finished', data: sorting })
+      } catch (error) {
+        console.error('Error in LTf.rank.worker.ts', error)
+        self.postMessage({ type: 'error', error })
+      }
+      break
+    default:
+      console.error('Unknown message type in LTf.rank.worker.ts', workerData.type)
+      break
+  }
+});

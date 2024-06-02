@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Todo } from '~/types/todo'
-import type { LTfDocumentRanking } from '~/utils/ltf/getLTfDocumentRanking'
+import useLTf from '~/composables/ltf/useLtf'
 
 const localStorage = import.meta.server ? null : window.localStorage
 
@@ -82,8 +82,8 @@ export const useTodoStore = defineStore('todo', () => {
           return 0
         }
 
-        const aRank = data.find((d: unknown) => (d as LTfDocumentRanking).text === (a as Todo).title)?.score ?? 0
-        const bRank = data.find((d: unknown) => (d as LTfDocumentRanking).text === (b as Todo).title)?.score ?? 0
+        const aRank = data.find((d: unknown) => (d as { text: string }).text === (a as Todo).title)?.score ?? 0
+        const bRank = data.find((d: unknown) => (d as { text: string }).text === (b as Todo).title)?.score ?? 0
         console.log('aRank', aRank, 'bRank', bRank)
         return bRank - aRank
       })

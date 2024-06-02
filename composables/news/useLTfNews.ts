@@ -1,7 +1,7 @@
 import type { RssNews } from '~/types/news'
 import { ref } from 'vue'
 import { cleanString, type CleanStringOptions, DEFAULT_CLEAN_STRING_OPTIONS } from '~/utils/cleanString'
-import useLTf from '~/composables/useLTf'
+import useLTf from '~/composables/ltf/useLtf'
 
 
 export default async function() {

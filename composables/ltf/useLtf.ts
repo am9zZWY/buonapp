@@ -1,5 +1,9 @@
+import SummarizeWorker from './LTf.summarize.worker.js?worker'
+import RankWorker from './LTf.rank.worker.js?worker'
+
 type Task = 'summarize' | 'rank'
 type WorkerStatus = 'ready' | 'progress' | 'finished' | 'error'
+
 
 /**
  * A composable to create a worker for Local Transformers
@@ -16,6 +20,7 @@ export default function(task?: Task) {
    * The id of the worker
    */
   const workerId = ref<string | null>(null)
+  const workerTask = ref<Task | null>(null)
   /**
    * The worker
    */
@@ -45,16 +50,6 @@ export default function(task?: Task) {
   })
 
   /**
-   * Supported tasks. Initialize the worker with one of these tasks
-   * @Example
-   * ```
-   * const worker = useLTf('summarize')
-   * ...
-   * ```
-   */
-  const supported_tasks: Task[] = ['summarize', 'rank']
-
-  /**
    * Initialize a worker with a task
    * @Example
    * ```
@@ -66,56 +61,68 @@ export default function(task?: Task) {
    * @returns The id of the worker
    */
   function createWorker(task: Task): string {
-    const url = `../services/LTf.${task}.worker.ts`
     const name = `${task}-${Math.random().toString(36).substring(7)}`
-    console.debug(`Trying to create worker for task ${task} with id ${name}`)
+    console.debug(`Trying to create worker for task ${task} with id ${name} ...`)
 
-    if (supported_tasks.includes(task)) {
-      const newWorker = new Worker(new URL(url, import.meta.url), {
-        type: 'module',
-        name: `LTf ${task} worker ${name}`
-      })
-      newWorker.onmessage = (event) => {
-        const workerMessage = event.data
-        status.value = workerMessage.status
-        onmessage.value(event)
-
-        if (workerMessage.type === 'ready' || workerMessage.type === 'progress' || workerMessage.type === 'finished') {
-          if (workerMessage.type === 'finished') {
-            console.debug(`Worker with id ${name} finished`)
-            data.value = workerMessage.data
-            ondatacallback.value(data.value)
-          }
-
-          message.value = workerMessage
-          console.debug(`Worker with id ${name} sent a message:`, workerMessage)
-        } else if (workerMessage.type === 'error') {
-          console.error(`Worker with id ${name} encountered an error:`, workerMessage.error)
-        } else {
-          console.error(`Worker with id ${name} sent an unknown message:`, workerMessage)
-        }
-      }
-      newWorker.onerror = (event) => {
-        console.error(`Worker with id ${name} encountered an error: ${event}`)
-      }
-      newWorker.onmessageerror = (event) => {
-        console.error(`Worker with id ${name} encountered a message error: ${event}`)
-      }
-      worker.value = newWorker
-
-      // Set worker id
-      workerId.value = name
-
-      // Create a message channel
-      const newChannel = new MessageChannel()
-      channel.value = newChannel
-
-      newWorker.postMessage({ type: 'init' })
-
-      console.log(`Created worker for task ${task} with id ${name}`)
+    let newWorker: Worker
+    if (task === 'summarize') {
+      //url = 'web-worker:./LTf.summarize.worker.js'
+      newWorker = new SummarizeWorker()
+    } else if (task === 'rank') {
+      //url = 'web-worker:./LTf.rank.worker.js'
+      newWorker = new RankWorker()
     } else {
-      console.error(`Task ${task} is not supported`)
+      throw new Error('Task not supported: ' + task)
     }
+
+    /* const newWorker = new Worker(new URL(url, import.meta.url), {
+      type: 'module',
+      name: `LTf ${task} worker ${name}`
+    }) */
+    workerTask.value = task
+
+    /* const newWorker = new Worker(new URL(pathToWorker, import.meta.url), {
+      type: 'module',
+      name: `LTf ${task} worker ${name}`
+    }) */
+    newWorker.onmessage = (event) => {
+      const workerMessage = event.data
+      status.value = workerMessage.status
+      onmessage.value(event)
+
+      if (workerMessage.type === 'ready' || workerMessage.type === 'progress' || workerMessage.type === 'finished') {
+        if (workerMessage.type === 'finished') {
+          console.debug(`Worker with id ${name} finished`)
+          data.value = workerMessage.data
+          ondatacallback.value(data.value)
+        }
+
+        message.value = workerMessage
+        console.debug(`Worker with id ${name} sent a message:`, workerMessage)
+      } else if (workerMessage.type === 'error') {
+        console.error(`Worker with id ${name} encountered an error:`, workerMessage.error)
+      } else {
+        console.error(`Worker with id ${name} sent an unknown message:`, workerMessage)
+      }
+    }
+    newWorker.onerror = (event) => {
+      console.error(`Worker with id ${name} encountered an error:`, event)
+    }
+    newWorker.onmessageerror = (event) => {
+      console.error(`Worker with id ${name} encountered an error:`, event)
+    }
+    worker.value = newWorker
+
+    // Set worker id
+    workerId.value = name
+
+    // Create a message channel
+    const newChannel = new MessageChannel()
+    channel.value = newChannel
+
+    newWorker.postMessage({ type: 'init' })
+
+    console.log(`Successfully created worker for task ${task} with id ${name}`)
 
     return name
   }

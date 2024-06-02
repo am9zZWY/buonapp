@@ -1,7 +1,11 @@
-import { pipeline, type SummarizationPipeline } from '@xenova/transformers'
-import type { GenerationConfigType } from '@xenova/transformers/types/utils/generation'
+/**
+ * Thanks to @xenova for the transformers package
+ *
+ * https://github.com/xenova
+ */
+import { pipeline } from '@xenova/transformers'
 
-let generator: SummarizationPipeline
+let generator
 const model = 'Xenova/distilbart-xsum-12-1'
 const task = 'summarization'
 
@@ -9,7 +13,7 @@ const task = 'summarization'
  * Get the Local Transformers summarization pipeline
  * @param progress_callback
  */
-async function getGenerator(progress_callback?: (status: string) => void): Promise<SummarizationPipeline> {
+async function getGenerator(progress_callback) {
   if (!generator) {
     generator = await pipeline(task, model, {
       quantized: true,
@@ -24,10 +28,10 @@ async function getGenerator(progress_callback?: (status: string) => void): Promi
  * @param text the text to summarize
  * @param progress_callback a callback function to report progress
  */
-export async function getLTfSummary(text: string, progress_callback?: (status: string) => void): Promise<string> {
+async function getLTfSummary(text, progress_callback) {
   const generator = await getGenerator(progress_callback)
 
-  const config: GenerationConfigType = {
+  const config = {
     max_length: 25,
     min_length: 10,
     do_sample: true,
@@ -45,10 +49,37 @@ export async function getLTfSummary(text: string, progress_callback?: (status: s
   const output = await generator(text, config)
 
   if (Array.isArray(output) && output.length > 0 && 'summary_text' in output[0]) {
-    return output[0].summary_text as string
+    return output[0].summary_text
   } else if ('summary_text' in output) {
-    return output.summary_text as string
+    return output.summary_text
   }
 
   throw new Error('Unexpected output format from summarization pipeline')
 }
+
+self.addEventListener('message', async (event) => {
+  const workerData = event.data
+  const data = workerData.data
+  switch (workerData.type) {
+    case 'init':
+      self.postMessage({ type: 'ready' })
+      break
+    case 'data':
+      try {
+        const progressCallback = (status) => {
+          self.postMessage({ type: 'progress', status })
+        }
+
+        console.log('data', data)
+
+        const text = data
+        const summaries = await Promise.all(text.map(n => getLTfSummary(n, progressCallback)))
+        self.postMessage({ type: 'finished', data: summaries })
+      } catch (error) {
+        self.postMessage({ type: 'error', error })
+      }
+      break
+    default:
+      break
+  }
+})
