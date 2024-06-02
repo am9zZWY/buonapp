@@ -27,10 +27,9 @@ export default async function() {
     }
   })
 
-  const summaryTransformer = useLTf()
-  summaryTransformer.createWorker('summarize')
+  const summaryTransformer = useLTf('summarize')
 
-// Function to handle messages from the worker
+  // Function to handle messages from the worker
   summaryTransformer.onmessage.value = (event) => {
     const workerData = event.data
 
@@ -70,8 +69,10 @@ export default async function() {
   options.stripStopwords = false
   options.stripPunctuation = '+'
 
-  const newsFeed = rssNews.map((item: RssNews) => `${cleanString(item.title, options)}. ${cleanString(item.encoded, options)}`)
+  // Clean up the news feed for the transformer
+  const newsFeed = rssNews.map((item: RssNews) => `title: ${cleanString(item.title, options)}: ${cleanString(item.encoded, options)}`)
 
+  // Start the transformer
   summaryTransformer.startTask(newsFeed)
 
   return {

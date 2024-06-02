@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white dark:bg-neutral-900 p-3 rounded-xl shadow-lg dark:shadow-lg"
+    class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-lg dark:shadow-lg"
     :class="{ 'bg-opacity-90 bg-green-100 dark:bg-green-900': completed }">
     <div v-if="isCreated" class="flex items-center gap-x-3 text-xs justify-start">
       <!-- Date -->
@@ -10,7 +10,7 @@
       >
         {{ formattedDueDate }}
       </span>
-      <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
+      <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
 
       <!-- Status Label -->
       <label
@@ -21,7 +21,7 @@
       </label>
 
       <template v-if="isCreated && title && completed">
-        <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
+        <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
         <!-- Edit Button -->
         <button
           class="text-primary-600 dark:text-primary-400 hover:underline"
@@ -30,7 +30,7 @@
         </button>
       </template>
 
-      <div class="mx-2 h-8 bg-gray-300 dark:bg-neutral-600 w-px" />
+      <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
       <!-- Delete Button -->
       <button
         v-if="isCreated && title"

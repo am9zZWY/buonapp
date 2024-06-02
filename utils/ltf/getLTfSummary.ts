@@ -2,7 +2,7 @@ import { pipeline, type SummarizationPipeline } from '@xenova/transformers'
 import type { GenerationConfigType } from '@xenova/transformers/types/utils/generation'
 
 let generator: SummarizationPipeline
-const model = 'Xenova/distilbart-xsum-12-6'
+const model = 'Xenova/distilbart-xsum-12-1'
 const task = 'summarization'
 
 /**
@@ -32,12 +32,14 @@ export async function getLTfSummary(text: string, progress_callback?: (status: s
     min_length: 10,
     do_sample: true,
     early_stopping: false,
-    length_penalty: -10.0,
+    temperature: 0.9,
+    num_return_sequences: 1,
+    max_time: 25,
     top_k: 50,
     top_p: 0.95,
-    temperature: 0.4,
-    num_return_sequences: 1,
-    max_time: 25
+    num_beams: 5,
+    length_penalty: -2.0,
+    no_repeat_ngram_size: 2
   }
 
   const output = await generator(text, config)

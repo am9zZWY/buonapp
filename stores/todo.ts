@@ -75,10 +75,15 @@ export const useTodoStore = defineStore('todo', () => {
     }
 
     const ltfRanker = useLTf('rank')
-    ltfRanker.ondatacallback.value = (data: LTfDocumentRanking[]) => {
-      todos.value = todos.value.toSorted((a: Todo, b: Todo) => {
-        const aRank = data.find((d) => d.text === a.title)?.score ?? 0
-        const bRank = data.find((d) => d.text === b.title)?.score ?? 0
+    ltfRanker.ondatacallback.value = function(data: unknown) {
+      todos.value = todos.value.toSorted((a: unknown, b: unknown) => {
+        if (!Array.isArray(data)) {
+          console.error('Data is not an array')
+          return 0
+        }
+
+        const aRank = data.find((d: unknown) => (d as LTfDocumentRanking).text === (a as Todo).title)?.score ?? 0
+        const bRank = data.find((d: unknown) => (d as LTfDocumentRanking).text === (b as Todo).title)?.score ?? 0
         console.log('aRank', aRank, 'bRank', bRank)
         return bRank - aRank
       })

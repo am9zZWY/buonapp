@@ -38,7 +38,8 @@
       </div>
       <!-- Textarea and Buttons Container -->
       <div
-        class="w-full flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-white dark:bg-neutral-900 p-3 rounded-xl shadow-sm dark:shadow-lg">
+        v-if="false"
+        class="bg-white-50 dark:bg-white-700 w-full flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 rounded-xl shadow-sm dark:shadow-lg">
         <!-- Textarea -->
         <textarea
           v-model="query"

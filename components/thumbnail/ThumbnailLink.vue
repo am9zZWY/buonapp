@@ -1,7 +1,7 @@
 <template>
   <NuxtLink :disabled="!to" :to="to">
     <div
-      class="max-w-md md:max-w-1xl rounded-xl shadow-md overflow-hidden hover:shadow-xl bg-white dark:bg-neutral-900 transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
+      class="max-w-md md:max-w-1xl rounded-xl shadow-md overflow-hidden hover:shadow-xl bg-white dark:bg-white-900 transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer">
       <div class="md:flex">
         <div class="md:shrink-0">
           <img :alt="alt" :src="src" class="h-48 w-full object-cover md:h-full md:w-48" >

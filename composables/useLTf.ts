@@ -41,7 +41,7 @@ export default function(task?: Task) {
   /**
    * Define a callback for when the worker sends data
    */
-  const ondatacallback = ref<(data: any) => void>(() => {
+  const ondatacallback = ref<(data: unknown) => void>(() => {
   })
 
   /**

@@ -11,13 +11,13 @@
 
       <!-- Floating Island -->
       <div
-        class="floating-island p-2 rounded-3xl shadow-lg ring-1 ring-black/5 bg-white/70 dark:bg-neutral-600 items-center">
-        <button class="rounded-3xl p-2 hover:bg-neutral-200 dark:hover:bg-neutral-700" @click="toHome">
+        class="floating-island p-2 rounded-3xl shadow-lg ring-1 ring-black/5 bg-white/70 dark:bg-white-600 items-center">
+        <button class="rounded-3xl p-2 hover:bg-white-200 dark:hover:bg-white-700" @click="toHome">
           <UIcon name="ri:home-4-line" :dynamic="true" />
         </button>
         <div class="mx-2 h-8 bg-gray-300 dark:bg-white w-px" />
         <a
-class="rounded-2xl p-1 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+          class="rounded-2xl p-1 hover:bg-white-200 dark:hover:bg-white-700"
            href="https://github.com/am9zZWY/buonapp" target="_blank" rel="noopener noreferrer" title="GitHub">
           <UIcon name="mdi:github" dynamic />
         </a>
