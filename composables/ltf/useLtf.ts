@@ -1,5 +1,6 @@
 import SummarizeWorker from './LTf.summarize.worker.js?worker'
 import RankWorker from './LTf.rank.worker.js?worker'
+import { ref } from 'vue'
 
 type Task = 'summarize' | 'rank'
 type WorkerStatus = 'ready' | 'progress' | 'finished' | 'error'
@@ -39,6 +40,18 @@ export default function(task?: Task) {
    */
   const status = ref<WorkerStatus | null>(null)
   /**
+   * Download progress for each transformer model
+   */
+  const downloads = ref<{ [key: string]: number }>({})
+  /**
+   * Total download progress in percentage
+   */
+  const downloadProgress = computed<number>(() => {
+    const current = Object.values(downloads.value).reduce((acc, curr) => acc + curr, 0)
+    const total = Object.values(downloads.value).length * 100
+    return Math.round((current / total) * 100)
+  })
+  /**
    * Define a callback for when the worker sends a message
    */
   const onmessage = ref<(event: MessageEvent) => void>(() => {
@@ -50,12 +63,16 @@ export default function(task?: Task) {
   })
 
   /**
-   * Initialize a worker with a task
+   * Initialize a worker with a task.
+   * This does not need to be called manually if the task is passed to the composable.
+   * After the worker is created, it can be started with `worker.startTask(data)`
+   *
    * @Example
    * ```
    * const worker = useLTf()
    * worker.createWorker('summarize')
    * ...
+   * ```
    *
    * @param task The task to initialize the worker with
    * @returns The id of the worker
@@ -66,25 +83,16 @@ export default function(task?: Task) {
 
     let newWorker: Worker
     if (task === 'summarize') {
-      //url = 'web-worker:./LTf.summarize.worker.js'
       newWorker = new SummarizeWorker()
     } else if (task === 'rank') {
-      //url = 'web-worker:./LTf.rank.worker.js'
       newWorker = new RankWorker()
     } else {
       throw new Error('Task not supported: ' + task)
     }
 
-    /* const newWorker = new Worker(new URL(url, import.meta.url), {
-      type: 'module',
-      name: `LTf ${task} worker ${name}`
-    }) */
+
     workerTask.value = task
 
-    /* const newWorker = new Worker(new URL(pathToWorker, import.meta.url), {
-      type: 'module',
-      name: `LTf ${task} worker ${name}`
-    }) */
     newWorker.onmessage = (event) => {
       const workerMessage = event.data
       status.value = workerMessage.status
@@ -95,6 +103,17 @@ export default function(task?: Task) {
           console.debug(`Worker with id ${name} finished`)
           data.value = workerMessage.data
           ondatacallback.value(data.value)
+        } else if (workerMessage.type === 'progress') {
+          const downloadStatus = workerMessage.status
+          const modelName = downloadStatus.name + downloadStatus.file
+
+          if (!downloads.value[modelName]) {
+            downloads.value[modelName] = downloadStatus.progress
+          }
+
+          if (downloads.value[modelName] < downloadStatus.progress) {
+            downloads.value[modelName] = downloadStatus.progress
+          }
         }
 
         message.value = workerMessage
@@ -132,7 +151,7 @@ export default function(task?: Task) {
   }
 
   /**
-   * Terminate a worker
+   * Terminate the worker
    */
   function removeWorker() {
     const status = false
@@ -153,7 +172,7 @@ export default function(task?: Task) {
   }
 
   /**
-   * Start a worker by id
+   * Start a task with the worker
    * @param data
    */
   function startTask(data: unknown) {
@@ -169,6 +188,8 @@ export default function(task?: Task) {
     createWorker,
     startTask,
     removeWorker,
+    downloads,
+    downloadProgress,
     workerId,
     onmessage,
     ondatacallback,

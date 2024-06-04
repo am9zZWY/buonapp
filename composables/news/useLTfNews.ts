@@ -16,18 +16,16 @@ export default async function() {
   })
   const news = computed(() => summarizedNews.value.join(' | '))
 
-  const downloadStatus = ref<{ [key: string]: number }>({})
-  const currTotalDownload = computed<number>(() => Object.values(downloadStatus.value).reduce((acc, curr) => acc + curr, 0))
-  const totalDownload = computed<number>(() => Object.values(downloadStatus.value).length * 100)
+  const summaryTransformer = useLTf('summarize')
+
+  const downloadProgress = computed(() => summaryTransformer.downloadProgress.value)
   const statusMessage = computed(() => {
-    if (currTotalDownload.value === totalDownload.value) {
-      return 'Summarizing news...'
+    if (downloadProgress.value < 100) {
+      return 'Downloading transformer model: ' + downloadProgress.value + '%'
     } else {
-      return 'Downloading transformer model...'
+      return 'Summarizing news...'
     }
   })
-
-  const summaryTransformer = useLTf('summarize')
 
   // Function to handle messages from the worker
   summaryTransformer.onmessage.value = (event) => {
@@ -36,22 +34,6 @@ export default async function() {
     switch (workerData.type) {
       case 'finished': {
         summarizedNews.value = workerData.data
-        break
-      }
-      case 'progress': {
-        const workerStatus = workerData.status
-        const name = workerStatus.name + workerStatus.file
-
-        if (workerStatus.status === 'progress') {
-          if (!downloadStatus.value[name]) {
-            downloadStatus.value[name] = workerStatus.progress
-            break
-          }
-
-          if (downloadStatus.value[name] < workerStatus.progress) {
-            downloadStatus.value[name] = workerStatus.progress
-          }
-        }
         break
       }
       case 'error': {
@@ -78,7 +60,6 @@ export default async function() {
   return {
     news,
     statusMessage,
-    currTotalDownload,
-    totalDownload
+    downloadProgress,
   }
 }

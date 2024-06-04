@@ -1,5 +1,28 @@
 <template>
   <div class="container">
+    <!-- Textarea and Buttons Container -->
+    <div v-if="todos.length > 0" class="flex items-center gap-x-3">
+      <div class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-md dark:shadow-lg cursor-pointer">
+        <!-- Textarea -->
+        <input
+          v-model.trim="query"
+          :disabled="todos.length === 0" placeholder="Rank todos by..."
+          type="text"
+          class="text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
+          aria-label="Todo Description"
+          rows="2"
+          @keydown.enter.prevent="rankTodos"
+        >
+        <button
+          class="btn btn-primary bg-primary-500 text-white px-4 py-2 rounded-xl hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 text-nowrap"
+          :disabled="todos.length === 0" @click="rankTodos">
+          <UIcon name="tabler:sparkles" />
+        </button>
+      </div>
+    </div>
+
+    <div v-if="todos.length > 0" class="border-b my-4" />
+
     <div class="mb-8">
       <LazyTodo
         v-for="(todo, todoIndex) in todos" :id="todo.id"
@@ -35,25 +58,6 @@
             Remove completed
           </button>
         </div>
-      </div>
-      <!-- Textarea and Buttons Container -->
-      <div
-        v-if="false"
-        class="bg-white-50 dark:bg-white-700 w-full flex flex-col sm:flex-row items-start sm:items-center gap-2 p-3 rounded-xl shadow-sm dark:shadow-lg">
-        <!-- Textarea -->
-        <textarea
-          v-model="query"
-          class="w-full text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
-          aria-label="Todo Description"
-          rows="2"
-          placeholder="Rank your todos by e.g. house ..."
-          @keydown.enter.prevent="rankTodos"
-        />
-        <button
-          class="btn btn-primary bg-primary-500 text-white px-4 py-2 rounded-xl hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 text-nowrap"
-          @click="rankTodos">
-          <UIcon name="tabler:sparkles" />
-        </button>
       </div>
     </div>
   </div>
