@@ -69,6 +69,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     weatherApiKey: '',
-    openaiApiKey: ''
+    openaiApiKey: '',
+    mongodbUsername: '',
+    mongodbPassword: ''
   }
 })
