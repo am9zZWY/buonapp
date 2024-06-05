@@ -19,7 +19,7 @@ interface SectionProps {
 }
 
 withDefaults(defineProps<SectionProps>(), {
-  title: 'New Title',
+  title: '',
   subtitle: undefined,
 })
 </script>
