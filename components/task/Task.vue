@@ -2,7 +2,7 @@
   <div
     :class="`${ completed ? 'bg-opacity-90 bg-green-100 dark:bg-green-900' : ''}
     ${highlight? 'bg-primary-400 dark:bg-primary-700 shadow-primary-800': 'bg-white-50 dark:bg-white-700'} p-3 rounded-xl shadow-lg dark:shadow-lg`">
-    <div v-if="isCreated" class="flex items-center gap-x-3 text-xs justify-start">
+    <div v-if="isCreated" class="flex items-center gap-x-3 text-xs justify-start mb-2">
       <!-- Date -->
       <span
         v-if="formattedDueDate !== ''"
@@ -43,7 +43,7 @@
       </button>
     </div>
 
-    <div class="relative flex items-center mt-2">
+    <div class="relative flex items-center">
       <!-- Checkbox -->
       <input
         v-if="isCreated && title"
