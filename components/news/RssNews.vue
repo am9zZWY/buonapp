@@ -1,13 +1,15 @@
 <template>
   <div class="flex flex-col space-y-4 w-full">
     <div class="grid grid-cols-1 gap-4">
-      <input
-        v-if="data && data.length > 0"
-        v-model.trim="filter"
-        class="border border-gray-300 p-2 rounded"
-        placeholder="Filter news"
-        type="text"
-      >
+      <div class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-md dark:shadow-lg cursor-pointer">
+        <input
+          v-if="data && data.length > 0"
+          v-model.trim="filter"
+          class="text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
+          placeholder="Filter news"
+          type="text"
+        >
+      </div>
       <template v-for="news in filteredData">
         <LazyNews
           :pub-date="news.pubDate"
@@ -33,7 +35,7 @@ const props = withDefaults(defineProps<RssNewsProps>(), {
 const { data } = await useLazyFetch<RssNews[]>('/api/news/rss', {
   method: 'POST'
 })
-const filter = ref<string>('')
+const filter = useState('filter', () => '')
 const filteredData = computed<RssNews[]>(() => {
   if (!data.value) {
     return []

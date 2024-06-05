@@ -92,6 +92,8 @@ export const useTodoStore = defineStore('todo', () => {
       query: query,
       documents: todos.value.map((todo) => todo.title)
     })
+
+    return ltfRanker.downloadProgress
   }
 
   watch(todos, updateLocalStorage, { deep: true })

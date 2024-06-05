@@ -1,41 +1,44 @@
 <template>
   <div
-    class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-lg dark:shadow-lg"
-    :class="{ 'bg-opacity-90 bg-green-100 dark:bg-green-900': completed }">
+    :class="`${ completed ? 'bg-opacity-90 bg-green-100 dark:bg-green-900' : ''}
+    ${highlight? 'bg-primary-400 dark:bg-primary-700 shadow-primary-800': 'bg-white-50 dark:bg-white-700'} p-3 rounded-xl shadow-lg dark:shadow-lg`">
     <div v-if="isCreated" class="flex items-center gap-x-3 text-xs justify-start">
       <!-- Date -->
       <span
         v-if="formattedDueDate !== ''"
-        class="text-gray-600 dark:text-gray-400"
+        :class="{'text-gray-600 dark:text-gray-400': !highlight}"
       >
         {{ formattedDueDate }}
       </span>
-      <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
+      <VSep height="10" />
 
       <!-- Status Label -->
       <label
         v-if="isCreated && title"
         :for="`task-checkbox-${id}`"
-        class="text-gray-600 dark:text-gray-400 hover:underline cursor-pointer focus:outline-none inline-block text-nowrap">
+        :class="{'text-gray-600 dark:text-gray-400': !highlight}"
+        class="hover:underline cursor-pointer focus:outline-none inline-block text-nowrap`">
         {{ completed ? '🎉 Completed' : 'Complete Task' }}
       </label>
 
       <template v-if="isCreated && title && completed">
-        <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
+        <VSep height="10" />
         <!-- Edit Button -->
         <button
-          class="text-primary-600 dark:text-primary-400 hover:underline"
-          @click="editTodo">
+          :class="{'text-gray-600 dark:text-gray-400': !highlight}"
+          class="hover:underline"
+          @click="editTask">
           Edit Task
         </button>
       </template>
 
-      <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
+      <VSep height="10" />
+
       <!-- Delete Button -->
       <button
         v-if="isCreated && title"
         class="text-red-600 dark:text-red-400 hover:underline"
-        @click="emit('delete')">
+        @click="deleteTask">
         Delete Task
       </button>
     </div>
@@ -48,21 +51,25 @@
         v-model="completed"
         type="checkbox"
         class="hidden"
-        :class="{ 'border-green-700 text-green-700': completed, 'border-gray-300': !completed }"
+        :class="{
+          'text-white': highlight,
+          'border-green-700 text-green-700': completed && !highlight,
+          'border-gray-300': !completed
+        }"
       >
 
       <!-- Title -->
       <textarea
         ref="textarea"
         v-model="title"
-        class="w-full text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
-        :class="{ 'line-through': completed, 'font-serif italic': title?.length !== 0 }"
+        class="w-full dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0 text-gray-900 placeholder-gray-900"
+        :class="{ 'line-through': completed, 'font-serif italic': title?.length !== 0, 'dark:text-white dark:placeholder-white': highlight }"
         :disabled="completed"
-        aria-label="Todo Description"
+        aria-label="Task description"
         rows="1"
-        placeholder="Type your task here..."
+        :placeholder="placeholder"
         @keydown.enter.prevent="emit('enter')"
-        @keydown.delete="deleteTodo"
+        @keydown.delete="deleteTask"
       />
     </div>
   </div>
@@ -73,20 +80,20 @@
 
 
 <script lang="ts" setup>
-import type { VNodeRef } from 'vue'
-
 const emit = defineEmits(['enter', 'delete'])
 
-const textarea = ref<VNodeRef | null>(null)
-
-interface TodoProps {
+interface TaskProps {
   id?: string,
-  isCreated?: boolean
+  isCreated?: boolean,
+  highlight?: boolean,
+  placeholder?: string,
 }
 
-withDefaults(defineProps<TodoProps>(), {
+withDefaults(defineProps<TaskProps>(), {
   id: '0',
-  isCreated: true
+  isCreated: true,
+  highlight: false,
+  placeholder: 'Type your task here ...'
 })
 const title = defineModel<string>('title')
 const dueDate = defineModel<Date>('dueDate')
@@ -104,24 +111,14 @@ const formattedDueDate = computed(() => {
 })
 
 /**
- * Delete the todo if the title is empty
+ * Delete the task if the title is empty
  */
-const deleteTodo = () => {
-  if (!title.value) {
-    return
-  }
-
-  // If the title is empty, emit a delete event
-  // == 1 because this method is called before the title is updated
-  if (title.value.length === 1) {
-    emit('delete')
-  }
-}
+const deleteTask = () => emit('delete')
 
 /**
- * Edit the todo
+ * Edit the task
  */
-const editTodo = () => {
+const editTask = () => {
   completed.value = false
   textarea.value?.focus()
 }

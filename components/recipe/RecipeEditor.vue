@@ -4,7 +4,7 @@
       <DevOnly>{{ recipe }}</DevOnly>
 
       <form class="w-full" @submit.prevent="handleForm">
-        <div class="shadow-lg rounded-lg overflow-hidden mb-5">
+        <div class="shadow-lg rounded-xl overflow-hidden mb-5">
           <div class="flex flex-col md:flex-row justify-between items-start px-6 py-4">
             <div class="w-full md:w-1/2">
               <h2 class="text-xl font-semibold font-serif text-gray-800 dark:text-gray-200">
@@ -78,7 +78,7 @@
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-start">
-          <div class="w-full md:w-1/2 shadow-lg rounded-lg overflow-hidden md:mr-2 mb-4 md:mb-0">
+          <div class="w-full md:w-1/2 shadow-lg rounded-xl overflow-hidden md:mr-2 mb-4 md:mb-0">
             <div class="px-6 py-4">
               <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">
                 Ingredients
@@ -90,7 +90,7 @@
             </div>
           </div>
 
-          <div class="w-full md:w-1/2 shadow-lg rounded-lg overflow-hidden md:ml-2">
+          <div class="w-full md:w-1/2 shadow-lg rounded-xl overflow-hidden md:ml-2">
             <div class="px-6 py-4">
               <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">
                 Instructions
@@ -148,9 +148,9 @@ const generateEmptyRecipe = () => ({
   link: '',
   notes: ''
 })
-const recipe = ref<MelaRecipe>(generateEmptyRecipe())
+const recipe = useState<MelaRecipe>('recipe', () => generateEmptyRecipe())
 
-const errorMessage = ref<string>('')
+const errorMessage = useState('errorMessage', () => '')
 
 const updateFromStore = async (id: string) => {
   recipe.value = recipeMap.value?.[id] ?? generateEmptyRecipe()

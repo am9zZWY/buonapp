@@ -1,26 +1,27 @@
 <template>
-  <div class="flex items-center gap-x-3 text-xs">
-    <div
-class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-md dark:shadow-lg cursor-pointer"
-         @click="editWeather = true">
-      <span class="text-gray-600 dark:text-gray-400">
-        <Weather v-model:edit="editWeather" compact />
-      </span>
-      <span class="font-extralight text-gray-300 dark:text-gray-500">Weather</span>
-    </div>
-    <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
-    <div class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-md dark:shadow-lg">
-      <span class="text-gray-600 dark:text-gray-400">
-        <ClientOnly>
-            <LazyTransformerNews />
-          <!-- <AiNews :max-news="2" subjects="politics, technology, climate" /> -->
-        </ClientOnly>
-      </span>
-      <span class="font-extralight text-gray-300 dark:text-gray-500">AI News</span>
-    </div>
+  <div class="flex items-center gap-x-3 text-xs pb-5 pt-1 pl-2 -ml-2 overflow-x-scroll">
+    <QuickLookWrapper :ignore-colors="true" highlight>
+      Start your day!
+    </QuickLookWrapper>
+
+    <VSep height="10" />
+
+    <QuickLookWrapper title="Weather" @click="editWeather = true">
+      <Weather v-model:edit="editWeather" compact />
+    </QuickLookWrapper>
+
+    <VSep height="10" />
+
+    <QuickLookWrapper title="News" to="/buone/notizie">
+      Read the latest news
+      <UIcon name="tabler:rss" class="ml-1" />
+      <!-- <AiNews :max-news="2" subjects="politics, technology, climate" /> -->
+    </QuickLookWrapper>
   </div>
 </template>
 
 <script lang="ts" setup>
+import QuickLookWrapper from '~/components/quicklook/QuickLookWrapper.vue'
+
 const editWeather = useState('editMode', () => false)
 </script>

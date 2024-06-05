@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <section v-if="recipe">
-      <div class="shadow-lg rounded-lg overflow-hidden mb-5">
+      <div class="shadow-lg rounded-xl overflow-hidden mb-5">
         <div class="w-full flex flex-col md:flex-row justify-between items-start px-6 py-4">
           <div class="w-full md:w-1/2">
             <h2 class="text-xl font-semibold font-serif text-gray-800 dark:text-gray-200">{{ recipe.name }}</h2>
@@ -42,7 +42,7 @@
 
 
       <div class="flex flex-col md:flex-row justify-between items-start">
-        <div class="w-full md:w-1/2 shadow-lg rounded-lg overflow-hidden md:mr-2 mb-4 md:mb-0">
+        <div class="w-full md:w-1/2 shadow-lg rounded-xl overflow-hidden md:mr-2 mb-4 md:mb-0">
           <div class="px-6 py-4">
             <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">Ingredients</h3>
             <ul class="text-gray-800 dark:text-slate-400">
@@ -53,7 +53,7 @@
           </div>
         </div>
 
-        <div class="w-full md:w-1/2 shadow-lg rounded-lg overflow-hidden md:ml-2">
+        <div class="w-full md:w-1/2 shadow-lg rounded-xl overflow-hidden md:ml-2">
           <div class="px-6 py-4">
             <h3 class="text-lg font-light font-serif text-gray-800 dark:text-gray-200 mb-3">Instructions</h3>
             <ol class="text-gray-800 dark:text-slate-400">

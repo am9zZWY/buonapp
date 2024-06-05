@@ -7,7 +7,7 @@
         </NuxtLink>
       </template>
       <template v-else>
-        <span>{{ statusMessage }}</span>
+        <DownloadProgress :progress="downloadProgress" />
       </template>
     </ClientOnly>
   </div>
@@ -19,4 +19,5 @@ import useLTfNews from '~/composables/news/useLTfNews'
 const ltfNews = await useLTfNews()
 const news = computed(() => ltfNews.news.value)
 const statusMessage = computed(() => ltfNews.statusMessage.value)
+const downloadProgress = computed(() => ltfNews.downloadProgress.value)
 </script>
