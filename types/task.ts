@@ -1,4 +1,4 @@
-export type Todo = {
+export type Task = {
   id: string
   title: string
   completed: boolean
@@ -7,7 +7,7 @@ export type Todo = {
   priority: 'low' | 'medium' | 'high'
 }
 
-export const defaultTodo: Todo = {
+export const defaultTask: Task = {
   id: '0',
   title: 'Clean up room',
   completed: false,

@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
-import type { Todo } from '~/types/todo'
+import type { Task } from '~/types/task'
 import useLTf from '~/composables/ltf/useLtf'
 
 const localStorage = import.meta.server ? null : window.localStorage
 
 export const useTodoStore = defineStore('todo', () => {
-  const todos = useState('todos', () => [] as Todo[])
+  const todos = useState('todos', () => [] as Task[])
 
   // Load todos from localStorage
   const todosFromStorageStr = localStorage?.getItem('todos')
   if (todosFromStorageStr) {
-    const newTodos = [] as Todo[]
-    const todosFromStorage = JSON.parse(todosFromStorageStr) as Todo[]
+    const newTodos = [] as Task[]
+    const todosFromStorage = JSON.parse(todosFromStorageStr) as Task[]
     for (const todo of todosFromStorage) {
       todo.id = todo.id ?? Math.random().toString(36).substring(7)
       todo.title = todo.title ?? ''
@@ -33,7 +33,7 @@ export const useTodoStore = defineStore('todo', () => {
     const createdDate = new Date()
     const randomId = Math.random().toString(36).substring(7)
 
-    const newTodo: Todo = {
+    const newTodo: Task = {
       id: randomId,
       title: title,
       completed: false,
@@ -55,7 +55,7 @@ export const useTodoStore = defineStore('todo', () => {
   const completeTodo = (id: string, completed = true) => {
     const todoIndex = todos.value.findIndex(todo => todo.id === id)
     if (todoIndex === -1) {
-      console.error('Todo not found')
+      console.error('Task not found')
       return
     }
 
@@ -82,8 +82,8 @@ export const useTodoStore = defineStore('todo', () => {
           return 0
         }
 
-        const aRank = data.find((d: unknown) => (d as { text: string }).text === (a as Todo).title)?.score ?? 0
-        const bRank = data.find((d: unknown) => (d as { text: string }).text === (b as Todo).title)?.score ?? 0
+        const aRank = data.find((d: unknown) => (d as { text: string }).text === (a as Task).title)?.score ?? 0
+        const bRank = data.find((d: unknown) => (d as { text: string }).text === (b as Task).title)?.score ?? 0
         console.log('aRank', aRank, 'bRank', bRank)
         return bRank - aRank
       })

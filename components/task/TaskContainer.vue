@@ -11,7 +11,7 @@
           placeholder="..."
           type="text"
           class="font-serif italic text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
-          aria-label="Todo Description"
+          aria-label="Task Description"
           rows="2"
           @keydown.enter.prevent="rankTodos"
         >
