@@ -1,6 +1,5 @@
-import { Session } from '~/models/session'
 import { z } from 'zod'
-import useMongoose from '~/composables/db/useMongoose'
+import useMongo from '~/composables/db/useMongo'
 
 const sessionSchema = z.object({
   token: z.string(),
@@ -9,9 +8,9 @@ const sessionSchema = z.object({
 
 // Verify a new device
 export default defineEventHandler(async (event) => {
-  await useMongoose()
+  const db = await useMongo('buonapp')
 
-  const body = await readValidatedBody(event, body => sessionSchema.parse(body))
+  const body = await readValidatedBody(event, (body) => sessionSchema.parse(body))
   if (!body) {
     throw createError({
       statusCode: 400,
@@ -21,8 +20,7 @@ export default defineEventHandler(async (event) => {
 
   const { token, deviceId } = body
 
-  const session = await Session
-    .findOne({ token })
+  const session = await db.collection('sessions').findOne({ token })
 
   if (session) {
     // Set cookie with the session token and device ID
@@ -34,18 +32,21 @@ export default defineEventHandler(async (event) => {
       return {
         status: 'success',
         message: 'Device already verified',
-        userId: session.userId
+        userId: (session.userId || '') as string
       }
     }
 
-    // TODO: Add the device to the to-be-verified devices
-    session.devices.push(deviceId)
+    // Add the device to the verified devices
+    await db.collection('sessions')
+      .updateOne(
+        { token },
+        { $push: { devices: deviceId } }
+      )
 
-    await session.save()
     return {
       status: 'success',
       message: 'Device verified',
-      userId: session.userId
+      userId: (session.userId || '') as string
     }
   } else {
     throw createError({

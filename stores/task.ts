@@ -7,22 +7,24 @@ const localStorage = import.meta.server ? null : window.localStorage
 export const useTaskStore = defineStore('task', () => {
   const tasks = useState('tasks', () => [] as Task[])
 
-  // Load todos from localStorage
-  const tasksFromStorageStr = localStorage?.getItem('todos')
-  if (tasksFromStorageStr) {
-    const newTasks = [] as Task[]
-    const tasksFromStorage = JSON.parse(tasksFromStorageStr) as Task[]
-    for (const task of tasksFromStorage) {
-      task.id = task.id ?? Math.random().toString(36).substring(7)
-      task.title = task.title ?? ''
-      task.priority = task.priority ?? 'medium'
-      task.completed = task.completed ?? false
-      task.dueDate = task.dueDate ? new Date(task.dueDate) : undefined
-      task.createdDate = new Date(task.createdDate)
+  const getFromLocalStorage = () => {
+    // Load todos from localStorage
+    const tasksFromStorageStr = localStorage?.getItem('todos')
+    if (tasksFromStorageStr) {
+      const newTasks = [] as Task[]
+      const tasksFromStorage = JSON.parse(tasksFromStorageStr) as Task[]
+      for (const task of tasksFromStorage) {
+        task.taskId = task.taskId ?? ''
+        task.title = task.title ?? ''
+        task.priority = task.priority ?? 'medium'
+        task.completed = task.completed ?? false
+        task.dueDate = task.dueDate ? new Date(task.dueDate) : undefined
+        task.createdDate = new Date(task.createdDate)
 
-      newTasks.push(task)
+        newTasks.push(task)
+      }
+      tasks.value = newTasks
     }
-    tasks.value = newTasks
   }
 
   const updateLocalStorage = () => {
@@ -47,13 +49,26 @@ export const useTaskStore = defineStore('task', () => {
     console.log('Sending request to /api/task/' + route, body)
 
     // Call the API to update the tasks
-    return await $fetch(`/api/task/${route}`, {
-      method: 'POST',
-      body: body
-    }).then((response) => {
-      console.log('API response:', response)
-      return response
-    })
+    return await $fetch(`/api/task/${route}`,
+      {
+        method: 'POST',
+        body: body
+      })
+      .then((response) => {
+        console.log('API response:', response)
+        return response
+      })
+      .then((response) => {
+        if (route === 'fetch') {
+          if (!response.tasks) {
+            console.error('Tasks not found')
+            return
+          }
+          return setTasks(response.tasks)
+        } else {
+          console.log('Tasks updated successfully')
+        }
+      })
   }
 
   const add = (title: string, dueDate: Date, priority: 'low' | 'medium' | 'high' = 'medium') => {
@@ -61,7 +76,7 @@ export const useTaskStore = defineStore('task', () => {
     const randomId = Math.random().toString(36).substring(7)
 
     const newTask: Task = {
-      id: randomId,
+      taskId: randomId,
       title: title,
       completed: false,
       createdDate: createdDate,
@@ -78,13 +93,21 @@ export const useTaskStore = defineStore('task', () => {
 
   const addFromTitle = (title: string) => add(title, new Date())
 
+  const setTasks = (newTasks: Task[]) => {
+    tasks.value = newTasks.map((task) => {
+      task.createdDate = new Date(task.createdDate)
+      task.dueDate = task.dueDate ? new Date(task.dueDate) : undefined
+      return task
+    })
+  }
+
   const remove = (id: string) => {
-    tasks.value = tasks.value.filter(todo => todo.id !== id)
+    tasks.value = tasks.value.filter(todo => todo.taskId !== id)
     console.log('todos.value', tasks.value)
   }
 
   const complete = (id: string, completed = true) => {
-    const todoIndex = tasks.value.findIndex(todo => todo.id === id)
+    const todoIndex = tasks.value.findIndex(todo => todo.taskId === id)
     if (todoIndex === -1) {
       console.error('Task not found')
       return
@@ -131,22 +154,17 @@ export const useTaskStore = defineStore('task', () => {
     updateLocalStorage()
   }, { deep: true })
 
+  // Load todos from localStorage
+  getFromLocalStorage()
   apiCall('fetch')
-    .then((response) => {
-      console.log('Tasks fetched successfully:', response)
-      if (!response.tasks) {
-        return
-      }
-      tasks.value = response.tasks
-    })
 
   return {
-    todos: tasks,
+    tasks,
     rankBy,
-    addTodo: add,
-    addTodoFromTitle: addFromTitle,
-    completeTodo: complete,
-    removeTodo: remove,
+    add,
+    addFromTitle,
+    complete,
+    remove,
     sort
   }
 })

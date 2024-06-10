@@ -1,12 +1,13 @@
 import { defineEventHandler } from 'h3'
-import { Task } from '~/models/task'
-import { randomBytes } from 'node:crypto'
 import { z } from 'zod'
+import useMongo from '~/composables/db/useMongo'
+import { randomBytes } from 'node:crypto'
 
 const UpdateTaskSchema = z.object({
   deviceId: z.string(),
   token: z.string(),
   tasks: z.array(z.object({
+    taskId: z.string(),
     title: z.string(),
     dueDate: z.string().datetime(),
     priority: z.enum(['low', 'medium', 'high'])
@@ -23,6 +24,7 @@ export default defineEventHandler(async (event) => {
     deviceId,
     token
   }
+
   const verifySessionResponse = await $fetch('/api/session/verify', {
     method: 'POST',
     headers: {
@@ -30,23 +32,34 @@ export default defineEventHandler(async (event) => {
     },
     body: verificationBody
   })
+
   if (verifySessionResponse.status !== 'success') {
     throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
 
   const userId = verifySessionResponse.userId
+  const randomId = Math.random().toString(36).substring(7)
 
   const newTasks = tasks.map(task => ({
+    taskId: task.taskId || randomId,
     userId,
-    id: randomBytes(16).toString('hex'),
     title: task.title,
     completed: false,
     createdDate: new Date(),
-    dueDate: task.dueDate,
+    dueDate: new Date(task.dueDate),
     priority: task.priority
-  }))
+  }));
 
-  await Task.insertMany(newTasks)
+  const bulkOps = newTasks.map(task => ({
+    updateOne: {
+      filter: { taskId: task.taskId },
+      update: { $set: task },
+      upsert: true
+    }
+  }));
+
+  const db = await useMongo('buonapp');
+  const result = await db.collection('tasks').bulkWrite(bulkOps);
 
   return { message: 'Task added successfully', tasks: newTasks }
 })

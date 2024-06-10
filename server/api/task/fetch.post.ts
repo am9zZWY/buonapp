@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3'
-import { Task } from '~/models/task'
 import { z } from 'zod'
+import useMongo from '~/composables/db/useMongo'
 
 const FetchTaskSchema = z.object({
   deviceId: z.string(),
@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
     deviceId,
     token
   }
+
   const verifySessionResponse = await $fetch('/api/session/verify', {
     method: 'POST',
     headers: {
@@ -24,15 +25,16 @@ export default defineEventHandler(async (event) => {
     },
     body: verificationBody
   })
+
   if (verifySessionResponse.status !== 'success') {
     throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
 
   const userId = verifySessionResponse.userId
+  const db = await useMongo('buonapp')
+  const userTasks = await db.collection('tasks').find({ userId }).toArray()
 
-  const userTasks = await Task.find({ userId })
-
-  if (!userTasks) {
+  if (!userTasks.length) {
     return { tasks: [] }
   }
 

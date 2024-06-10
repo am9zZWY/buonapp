@@ -1,18 +1,17 @@
 <template>
   <div class="container">
     <!-- Textarea and Buttons Container -->
-    <div v-show="todos.length > 1" class="flex items-center gap-x-3">
+    <div v-show="tasks.length > 1" class="flex items-center gap-x-3">
       <div class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-md dark:shadow-lg">
         <!-- Textarea -->
         <span class="font-serif italic">Sort by </span>
         <input
           v-model.trim="query"
-          :disabled="todos.length === 0 || (downloadProgress > 0 && downloadProgress < 100)"
+          :disabled="tasks.length === 0 || (downloadProgress > 0 && downloadProgress < 100)"
           placeholder="..."
           type="text"
           class="font-serif italic text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
           aria-label="Task Description"
-          rows="2"
           @keydown.enter.prevent="rankTodos"
         >
 
@@ -52,17 +51,17 @@
       </div> -->
     </div>
 
-    <HSep v-show="todos.length > 1" height="10" />
+    <HSep v-show="tasks.length > 1" height="10" />
 
     <div class="mb-8">
       <Task
-        v-for="(todo, todoIndex) in todos"
-        :id="todo.id"
-        :key="todo.id"
-        v-model:completed="todos[todoIndex].completed"
-        v-model:title="todos[todoIndex].title"
-        v-model:dueDate="todos[todoIndex].dueDate"
-        @delete="deleteTodo(todos[todoIndex].id)"
+        v-for="(todo, todoIndex) in tasks"
+        :id="todo.taskId"
+        :key="todo.taskId"
+        v-model:completed="tasks[todoIndex].completed"
+        v-model:title="tasks[todoIndex].title"
+        v-model:dueDate="tasks[todoIndex].dueDate"
+        @delete="deleteTodo(tasks[todoIndex].taskId)"
       />
       <Task key="new-todo" v-model:title="title" :is-created="false" highlight @save="addTodo" />
     </div>
@@ -71,13 +70,11 @@
 
 <script lang="ts" setup>
 import { useTaskStore } from '~/stores/task'
+import { storeToRefs } from 'pinia'
 
 const query = useState('query', () => '')
 const todoStore = useTaskStore()
-const todos = computed(() => todoStore.todos)
-watch(todos, (newTodos) => {
-  todoStore.todos = newTodos
-})
+const { tasks } = storeToRefs(todoStore)
 
 const title = useState('title', () => '')
 const addTodo = () => {
@@ -85,15 +82,12 @@ const addTodo = () => {
     return
   }
 
-  todoStore.addTodoFromTitle(title.value)
+  todoStore.addFromTitle(title.value)
   title.value = ''
 }
 
 const deleteTodo = (todoId: string) => {
-  todoStore.removeTodo(todoId)
-}
-const deleteCompleted = () => {
-  todoStore.removeCompleted()
+  todoStore.remove(todoId)
 }
 
 const downloadProgress = useState('downloadProgress', () => 0)

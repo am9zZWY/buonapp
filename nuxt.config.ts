@@ -14,6 +14,11 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n', // Internationalization
     '@nuxt/eslint' // Linting
   ],
+  vite: {
+    build: {
+      target: 'esnext'
+    }
+  },
   nitro: {
     esbuild: {
       options: {

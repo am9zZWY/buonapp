@@ -1,18 +1,27 @@
 import { z } from 'zod'
-import { Session } from '~/models/session'
 import { randomBytes } from 'node:crypto'
-import useMongoose from '~/composables/db/useMongoose'
-
+import useMongo from '~/composables/db/useMongo'
+import type { Db } from 'mongodb'
 
 const sessionSchema = z.object({
   userId: z.string().optional(),
   deviceId: z.string().optional()
 })
 
+const createSession = async (db: Db, userId: string, deviceId: string) => {
+  const newUserId = userId || randomBytes(32).toString('hex')
+  const newToken = randomBytes(256).toString('hex')
+  const newSession = {
+    userId: newUserId,
+    token: newToken,
+    devices: [deviceId]
+  }
+  await db.collection('sessions').insertOne(newSession)
+  return newSession
+}
 
-// Create a new session for the user
 export default defineEventHandler(async (event) => {
-  await useMongoose()
+  const db = await useMongo('buonapp')
 
   console.log('Creating a new session')
   const body = await readValidatedBody(event, (body) => sessionSchema.parse(body))
@@ -20,24 +29,19 @@ export default defineEventHandler(async (event) => {
   const { userId, deviceId } = body ?? { userId: undefined, deviceId: undefined }
   console.log('User ID:', userId)
 
-  // Generate a new device ID if not provided
   const newDeviceId = deviceId || randomBytes(32).toString('hex')
 
-  // Check if the user ID is provided
   if (userId && newDeviceId) {
-    // ... and if the user already has a session
-    const existingSession = await Session
-      .findOne({ userId })
-      .populate('devices')
+    const existingSession = await db.collection('sessions').findOne({ userId })
 
     console.log('Existing session:', existingSession)
 
-    // Add the new device to the user's session
     if (existingSession) {
-      existingSession.devices.push(newDeviceId)
-      await existingSession.save()
+      await db.collection('sessions').updateOne(
+        { userId },
+        { $push: { devices: newDeviceId } }
+      )
 
-      // Set cookie with the session token and device ID
       setCookie(event, 'deviceId', newDeviceId)
       setCookie(event, 'token', existingSession.token)
 
@@ -46,29 +50,21 @@ export default defineEventHandler(async (event) => {
         message: 'Session updated',
         userId,
         newDeviceId,
-        allDevices: existingSession.devices
+        allDevices: existingSession.devices.concat(newDeviceId)
       }
     }
   }
 
-  // Generate a new user ID if not provided
-  const newUserId = userId || randomBytes(32).toString('hex')
+  const newSession = await createSession(db, userId, newDeviceId)
 
-  // Generate a new session token
-  const newToken = randomBytes(256).toString('hex')
-
-  const newSession = new Session({ userId: newUserId, token: newToken, devices: [newDeviceId] })
-  await newSession.save()
-
-  // Set cookie with the session token
-  setCookie(event, 'token', newToken)
+  setCookie(event, 'token', newSession.token)
   setCookie(event, 'deviceId', newDeviceId)
 
   return {
     status: 'success',
     message: 'Session created',
-    userId: newUserId,
+    userId: newSession.userId,
     newDeviceId,
-    allDevices: [newDeviceId]
+    allDevices: newSession.devices
   }
 })
