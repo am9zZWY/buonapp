@@ -1,12 +1,13 @@
 <template>
   <div
-    :class="`${ completed ? 'bg-opacity-90 bg-green-100 dark:bg-green-900' : ''}
-    ${highlight? 'bg-primary-400 dark:bg-primary-700 shadow-primary-800': 'bg-white-50 dark:bg-white-700'} p-3 rounded-xl shadow-lg dark:shadow-lg`">
+    :class="`${completed ? 'bg-opacity-90 bg-green-100 dark:bg-green-900' : ''}
+    ${highlight ? 'bg-primary-400 dark:bg-primary-700 shadow-primary-800' : 'bg-white-50 dark:bg-white-700'} p-3 rounded-xl shadow-lg dark:shadow-lg`"
+  >
     <div v-if="isCreated" class="flex items-center gap-x-3 text-xs justify-start mb-2">
       <!-- Date -->
       <span
         v-if="formattedDueDate !== ''"
-        :class="{'text-gray-600 dark:text-gray-400': !highlight}"
+        :class="{ 'text-gray-600 dark:text-gray-400': !highlight }"
       >
         {{ formattedDueDate }}
       </span>
@@ -16,8 +17,9 @@
       <label
         v-if="isCreated && title"
         :for="`task-checkbox-${id}`"
-        :class="{'text-gray-600 dark:text-gray-400': !highlight}"
-        class="hover:underline cursor-pointer focus:outline-none inline-block text-nowrap`">
+        :class="{ 'text-gray-600 dark:text-gray-400': !highlight }"
+        class="hover:underline cursor-pointer focus:outline-none inline-block text-nowrap`"
+      >
         {{ completed ? '🎉 Completed' : 'Complete Task' }}
       </label>
 
@@ -27,7 +29,8 @@
       <button
         v-if="isCreated && title"
         class="text-red-600 dark:text-red-400 hover:underline"
-        @click="deleteTask">
+        @click="deleteTask"
+      >
         Delete Task
       </button>
     </div>
@@ -45,14 +48,18 @@
           'border-green-700 text-green-700': completed && !highlight,
           'border-gray-300': !completed
         }"
-      >
+      />
 
       <!-- Title -->
       <textarea
         ref="textarea"
         v-model="title"
         class="w-full dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0 text-gray-900 placeholder-gray-900"
-        :class="{ 'line-through': completed, 'font-serif italic': title?.length !== 0, 'dark:text-white dark:placeholder-white': highlight }"
+        :class="{
+          'line-through': completed,
+          'font-serif italic': title?.length !== 0,
+          'dark:text-white dark:placeholder-white': highlight
+        }"
         :disabled="completed"
         aria-label="Task description"
         rows="1"
@@ -67,15 +74,14 @@
   <div class="border-b last-of-type:hidden my-4" />
 </template>
 
-
 <script lang="ts" setup>
 const emit = defineEmits(['save', 'delete'])
 
 interface TaskProps {
-  id?: string,
-  isCreated?: boolean,
-  highlight?: boolean,
-  placeholder?: string,
+  id?: string
+  isCreated?: boolean
+  highlight?: boolean
+  placeholder?: string
 }
 
 withDefaults(defineProps<TaskProps>(), {

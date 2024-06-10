@@ -17,25 +17,26 @@
 
       <Subsection title="Welcome to Buonapp!">
         <p>
-          Buonapp is a beautifully designed todo app that makes planning your day a delight. Created with love and care,
-          it's simple to use.<br>
-          Get started by creating a new session, logging into an existing one, or dive right in without an account.
+          Buonapp is a beautifully designed todo app that makes planning your day a delight. Created
+          with love and care, it's simple to use.<br >
+          Get started by creating a new session, logging into an existing one, or dive right in
+          without an account.
         </p>
       </Subsection>
 
       <div class="flex flex-row gap-4 items-center justify-center mt-4">
         <div
-          class="bg-primary-500 dark:bg-primary-700 shadow-primary-800 p-3 rounded-xl shadow-lg dark:shadow-lg inline-block">
+          class="bg-primary-500 dark:bg-primary-700 shadow-primary-800 p-3 rounded-xl shadow-lg dark:shadow-lg inline-block"
+        >
           <input
             v-model.trim="newUserId"
             class="w-full dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0 text-gray-900 placeholder-gray-900"
             placeholder="Enter your User ID"
-            type="text">
+            type="text"
+          >
         </div>
 
-        <div class="p-3">
-          and
-        </div>
+        <div class="p-3">and</div>
 
         <button
           class="btn border border-primary-500 dark:border-primary-700 text-white px-4 py-2 rounded-xl hover:border-secondary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 text-nowrap inline-block"

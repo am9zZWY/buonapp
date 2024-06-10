@@ -7,7 +7,7 @@
         <span class="font-serif italic">Sort by </span>
         <input
           v-model.trim="query"
-          :disabled="todos.length === 0 || downloadProgress > 0 && downloadProgress < 100"
+          :disabled="todos.length === 0 || (downloadProgress > 0 && downloadProgress < 100)"
           placeholder="..."
           type="text"
           class="font-serif italic text-gray-900 dark:text-gray-100 resize-none border-none focus:outline-none bg-transparent p-0 m-0"
@@ -56,15 +56,15 @@
 
     <div class="mb-8">
       <Task
-        v-for="(todo, todoIndex) in todos" :id="todo.id"
-        :key="todo.id" v-model:completed="todos[todoIndex].completed"
+        v-for="(todo, todoIndex) in todos"
+        :id="todo.id"
+        :key="todo.id"
+        v-model:completed="todos[todoIndex].completed"
         v-model:title="todos[todoIndex].title"
         v-model:dueDate="todos[todoIndex].dueDate"
-        @delete="deleteTodo(todos[todoIndex].id)" />
-      <Task
-        key="new-todo"
-        v-model:title="title" :is-created="false" highlight
-        @save="addTodo" />
+        @delete="deleteTodo(todos[todoIndex].id)"
+      />
+      <Task key="new-todo" v-model:title="title" :is-created="false" highlight @save="addTodo" />
     </div>
   </div>
 </template>
@@ -107,5 +107,4 @@ const rankTodos = () => {
     downloadProgress.value = newProgress
   })
 }
-
 </script>

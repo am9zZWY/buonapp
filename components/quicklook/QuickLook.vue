@@ -1,9 +1,7 @@
 <template>
   <div class="flex items-center gap-x-3 text-xs pb-5 pt-1 pl-2 -ml-2 overflow-x-scroll">
     <slot>
-      <QuickLookWrapper :ignore-colors="true" highlight>
-        Start your day!
-      </QuickLookWrapper>
+      <QuickLookWrapper :ignore-colors="true" highlight> Start your day!</QuickLookWrapper>
 
       <VSep height="10" />
 

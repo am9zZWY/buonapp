@@ -2,7 +2,9 @@
   <header class="max-w-screen-lg m-auto my-4 py-3">
     <div class="container mx-auto flex justify-between items-center">
       <!-- Logo -->
-      <h1 class="text-2xl font-bold underline  decoration-wavy decoration-from-font underline-offset-8">
+      <h1
+        class="text-2xl font-bold underline decoration-wavy decoration-from-font underline-offset-8"
+      >
         <NuxtLink to="/">Buonapp</NuxtLink>
       </h1>
 
@@ -14,5 +16,4 @@
   </header>
 </template>
 
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>

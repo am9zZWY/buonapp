@@ -4,10 +4,11 @@
       <Subsection title="Getting Started">
         <template #full-width>
           <p>
-            Welcome back! You're already authenticated and ready to go. Click the button below to get started.
+            Welcome back! You're already authenticated and ready to go. Click the button below to
+            get started.
           </p>
         </template>
-      </subsection>
-    </section>
+      </Subsection>
+    </Section>
   </div>
 </template>

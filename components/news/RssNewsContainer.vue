@@ -1,7 +1,9 @@
 <template>
   <div class="flex flex-col space-y-4 w-full">
     <div class="grid grid-cols-1 gap-4">
-      <div class="bg-white-50 dark:bg-neutral-900 p-3 rounded-xl shadow-md dark:shadow-lg cursor-pointer">
+      <div
+        class="bg-white-50 dark:bg-neutral-900 p-3 rounded-xl shadow-md dark:shadow-lg cursor-pointer"
+      >
         <input
           v-if="data && data.length > 0"
           v-model.trim="filter"
@@ -11,11 +13,7 @@
         >
       </div>
       <template v-for="news in filteredData">
-        <LazyNews
-          :pub-date="news.pubDate"
-          :title="news.title"
-          :to="news.link"
-        />
+        <LazyNews :pub-date="news.pubDate" :title="news.title" :to="news.link" />
       </template>
     </div>
   </div>

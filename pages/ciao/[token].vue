@@ -2,9 +2,7 @@
   <Section>
     <Subsection>
       <template #full-width>
-        <p class="text-4xl font-serif text-center">
-          Ciao ☀️
-        </p>
+        <p class="text-4xl font-serif text-center">Ciao ☀️</p>
       </template>
     </Subsection>
   </Section>

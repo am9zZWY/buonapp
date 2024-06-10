@@ -26,7 +26,7 @@
                         placeholder="Prep time"
                       >
                     </span>
-                    <br>
+                    <br >
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Prep</span>
                   </p>
                   <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
@@ -38,7 +38,7 @@
                         placeholder="Cook time"
                       >
                     </span>
-                    <br>
+                    <br >
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Cook</span>
                   </p>
                   <div class="mx-2 h-8 bg-gray-300 dark:bg-white-600 w-px" />
@@ -50,7 +50,7 @@
                         placeholder="Total time"
                       >
                     </span>
-                    <br>
+                    <br >
                     <span class="font-extralight text-gray-300 dark:text-gray-500">Total</span>
                   </p>
                 </div>

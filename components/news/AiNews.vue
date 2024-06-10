@@ -6,8 +6,8 @@
 import type { GptNews } from '~/types/news'
 
 interface AiNewsProps {
-  maxNews?: number,
-  subjects?: string,
+  maxNews?: number
+  subjects?: string
 }
 
 const props = withDefaults(defineProps<AiNewsProps>(), {
