@@ -21,17 +21,6 @@
         {{ completed ? '🎉 Completed' : 'Complete Task' }}
       </label>
 
-      <template v-if="isCreated && title && completed">
-        <VSep height="10" />
-        <!-- Edit Button -->
-        <button
-          :class="{'text-gray-600 dark:text-gray-400': !highlight}"
-          class="hover:underline"
-          @click="editTask">
-          Edit Task
-        </button>
-      </template>
-
       <VSep height="10" />
 
       <!-- Delete Button -->
@@ -68,8 +57,8 @@
         aria-label="Task description"
         rows="1"
         :placeholder="placeholder"
-        @keydown.enter.prevent="emit('enter')"
-        @keydown.delete="deleteTask"
+        @blur="emit('save')"
+        @keydown.enter.prevent="emit('save')"
       />
     </div>
   </div>
@@ -80,7 +69,7 @@
 
 
 <script lang="ts" setup>
-const emit = defineEmits(['enter', 'delete'])
+const emit = defineEmits(['save', 'delete'])
 
 interface TaskProps {
   id?: string,

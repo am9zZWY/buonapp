@@ -1,5 +1,6 @@
 import { Session } from '~/models/session'
 import { z } from 'zod'
+import useMongoose from '~/composables/db/useMongoose'
 
 const sessionSchema = z.object({
   token: z.string(),
@@ -8,6 +9,8 @@ const sessionSchema = z.object({
 
 // Verify a new device
 export default defineEventHandler(async (event) => {
+  await useMongoose()
+
   const body = await readValidatedBody(event, body => sessionSchema.parse(body))
   if (!body) {
     throw createError({
@@ -18,14 +21,31 @@ export default defineEventHandler(async (event) => {
 
   const { token, deviceId } = body
 
-  const session = await Session.findOne({ token })
+  const session = await Session
+    .findOne({ token })
 
   if (session) {
-    // Assume user accepts the new device via another device session
+    // Set cookie with the session token and device ID
+    setCookie(event, 'token', session.token)
+    setCookie(event, 'deviceId', deviceId)
+
+    // Check if the device is already verified
+    if (session.devices.includes(deviceId)) {
+      return {
+        status: 'success',
+        message: 'Device already verified',
+        userId: session.userId
+      }
+    }
+
+    // TODO: Add the device to the to-be-verified devices
     session.devices.push(deviceId)
+
     await session.save()
     return {
-      message: 'Device verified'
+      status: 'success',
+      message: 'Device verified',
+      userId: session.userId
     }
   } else {
     throw createError({

@@ -9,7 +9,6 @@
 </template>
 
 <script setup lang="ts">
-
 const title = 'Buonapp - Your daily companion ☀️'
 const description = 'Discover buonapp: Your ultimate all-in-one tool for seamless daily management. With features like calendar, todos, recipes, weather, and news, buonapp streamlines your day with simplicity and convenience. Say hello to effortless organization and productivity!'
 
@@ -27,5 +26,6 @@ useSeoMeta({
   twitterImage: 'https://buonapp.vercel.app/banner.png'
 })
 
-
+// Verify the user's session
+useSessionStore()
 </script>

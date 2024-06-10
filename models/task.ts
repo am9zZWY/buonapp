@@ -14,7 +14,7 @@ interface TaskDocument extends Document {
   updatedAt: Date;
 }
 
-const taskSchema = new Schema<TaskDocument>({
+const mongoTaskSchema = new Schema<TaskDocument>({
   userId: { type: String, required: true },
   tasks: [{
     id: { type: String, required: true },
@@ -28,4 +28,4 @@ const taskSchema = new Schema<TaskDocument>({
   updatedAt: { type: Date, default: Date.now }
 })
 
-export const Task = model<TaskDocument>('Task', taskSchema)
+export const Task = model<TaskDocument>('Task', mongoTaskSchema)

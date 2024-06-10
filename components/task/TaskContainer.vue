@@ -64,16 +64,16 @@
       <Task
         key="new-todo"
         v-model:title="title" :is-created="false" highlight
-        @enter="addTodo" />
+        @save="addTodo" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useTodoStore } from '~/stores/todo'
+import { useTaskStore } from '~/stores/task'
 
 const query = useState('query', () => '')
-const todoStore = useTodoStore()
+const todoStore = useTaskStore()
 const todos = computed(() => todoStore.todos)
 watch(todos, (newTodos) => {
   todoStore.todos = newTodos
