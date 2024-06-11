@@ -1,7 +1,7 @@
 <template>
   <NuxtLink :disabled="!to" :to="to">
     <div
-      class="rounded-xl shadow-lg bg-white dark:bg-neutral-900 p-4 hover:shadow-xl transition duration-500 ease-in-out transform hover:-translate-y-1 cursor-pointer"
+      class="rounded-xl shadow-lg bg-white dark:bg-neutral-900 p-4 hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1 cursor-pointer"
     >
       <h2
         class="text-xl font-semibold text-gray-800 dark:text-gray-100 font-serif pb-2 hover:underline"

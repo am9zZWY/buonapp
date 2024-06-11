@@ -73,6 +73,10 @@ export const useTaskStore = defineStore('task', () => {
       })
   }
 
+  const getFromApi = async () => {
+    apiCall('fetch')
+  }
+
   const add = (title: string, dueDate: Date, priority: 'low' | 'medium' | 'high' = 'medium') => {
     const createdDate = new Date()
     const randomId = Math.random().toString(36).substring(7)
@@ -191,9 +195,8 @@ export const useTaskStore = defineStore('task', () => {
     tasks, nonDeletedTasks,
     rankBy,
     add,
+    getFromApi,
     addFromTitle,
-    complete,
-    remove,
     sort
   }
 })
