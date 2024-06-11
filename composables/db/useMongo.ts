@@ -1,6 +1,12 @@
 import { MongoClient } from 'mongodb'
 
+let client: MongoClient | null = null
+
 export default async function(databaseName: string = 'buonapp') {
+  if (client) {
+    return client.db(databaseName)
+  }
+
   const config = useRuntimeConfig()
   const { mongodbUsername, mongodbPassword } = config
 
@@ -11,8 +17,7 @@ export default async function(databaseName: string = 'buonapp') {
 
   const mongoUri = `mongodb+srv://${mongodbUsername}:${mongodbPassword}@buonapp0.i4lfmcr.mongodb.net/?retryWrites=true&w=majority&appName=Buonapp0`
 
-  // Create a MongoClient
-  const client = new MongoClient(mongoUri)
+  client = new MongoClient(mongoUri)
 
   try {
     // Connect to the MongoDB cluster

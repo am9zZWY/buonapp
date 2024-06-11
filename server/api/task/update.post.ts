@@ -8,8 +8,11 @@ const UpdateTaskSchema = z.object({
   tasks: z.array(z.object({
     taskId: z.string(),
     title: z.string(),
-    dueDate: z.string().datetime(),
-    priority: z.enum(['low', 'medium', 'high'])
+    deleted: z.boolean().optional(),
+    completed: z.boolean(),
+    createdDate: z.string().datetime(),
+    dueDate: z.string().datetime().optional(),
+    priority: z.enum(['low', 'medium', 'high']),
   }))
 })
 
@@ -43,10 +46,11 @@ export default defineEventHandler(async (event) => {
     taskId: task.taskId || randomId,
     userId,
     title: task.title,
-    completed: false,
-    createdDate: new Date(),
-    dueDate: new Date(task.dueDate),
-    priority: task.priority
+    deleted: task.deleted || false,
+    completed: task.completed || false,
+    createdDate: new Date(task.createdDate),
+    dueDate: task.dueDate ? new Date(task.dueDate) : null,
+    priority: task.priority || 'medium'
   }))
 
   const bulkOps = newTasks.map(task => ({

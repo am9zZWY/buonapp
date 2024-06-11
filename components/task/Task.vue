@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!deleted" v-cloak
     :class="`${completed ? 'bg-opacity-90 bg-green-100 dark:bg-green-900' : ''}
     ${highlight ? 'bg-primary-400 dark:bg-primary-700 shadow-primary-800' : 'bg-white-50 dark:bg-white-700'} p-3 rounded-xl shadow-lg dark:shadow-lg`"
   >
@@ -29,10 +30,17 @@
       <button
         v-if="isCreated && title"
         class="text-red-600 dark:text-red-400 hover:underline"
-        @click="deleteTask"
+        @click="deleted = true"
       >
         Delete Task
       </button>
+
+      <DevOnly>
+        <VSep height="10" />
+
+        <!-- Task ID -->
+        <span class="text-gray-600 dark:text-gray-400">ID: {{ id }}</span>
+      </DevOnly>
     </div>
 
     <div class="relative flex items-center">
@@ -48,7 +56,7 @@
           'border-green-700 text-green-700': completed && !highlight,
           'border-gray-300': !completed
         }"
-      />
+      >
 
       <!-- Title -->
       <textarea
@@ -71,7 +79,7 @@
   </div>
 
   <!-- Border -->
-  <div class="border-b last-of-type:hidden my-4" />
+  <div v-if="!deleted" v-cloak  class="border-b last-of-type:hidden my-4" />
 </template>
 
 <script lang="ts" setup>
@@ -93,6 +101,7 @@ withDefaults(defineProps<TaskProps>(), {
 const title = defineModel<string>('title')
 const dueDate = defineModel<Date>('dueDate')
 const completed = defineModel<boolean>('completed')
+const deleted = defineModel<boolean>('deleted')
 
 /**
  * Computed property to format the due date
@@ -104,17 +113,4 @@ const formattedDueDate = computed(() => {
 
   return dueDate.value.toLocaleDateString()
 })
-
-/**
- * Delete the task if the title is empty
- */
-const deleteTask = () => emit('delete')
-
-/**
- * Edit the task
- */
-const editTask = () => {
-  completed.value = false
-  textarea.value?.focus()
-}
 </script>

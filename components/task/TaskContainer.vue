@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- Textarea and Buttons Container -->
-    <div v-show="tasks.length > 1" class="flex items-center gap-x-3">
+    <div v-show="nonDeletedTasks.length > 1" class="flex items-center gap-x-3">
       <div class="bg-white-50 dark:bg-white-700 p-3 rounded-xl shadow-md dark:shadow-lg">
         <!-- Textarea -->
         <span class="font-serif italic">Sort by </span>
@@ -51,19 +51,19 @@
       </div> -->
     </div>
 
-    <HSep v-show="tasks.length > 1" height="10" />
+    <HSep v-show="nonDeletedTasks.length > 1" height="10" />
 
     <div class="mb-8">
+      <Task key="new-todo" v-model:title="title" :is-created="false" highlight @save="addTodo" />
       <Task
-        v-for="(todo, todoIndex) in tasks"
-        :id="todo.taskId"
-        :key="todo.taskId"
+        v-for="(task, todoIndex) in tasks"
+        :id="task.taskId"
+        :key="task.taskId"
         v-model:completed="tasks[todoIndex].completed"
         v-model:title="tasks[todoIndex].title"
         v-model:dueDate="tasks[todoIndex].dueDate"
-        @delete="deleteTodo(tasks[todoIndex].taskId)"
+        v-model:deleted="tasks[todoIndex].deleted"
       />
-      <Task key="new-todo" v-model:title="title" :is-created="false" highlight @save="addTodo" />
     </div>
   </div>
 </template>
@@ -75,6 +75,7 @@ import { storeToRefs } from 'pinia'
 const query = useState('query', () => '')
 const todoStore = useTaskStore()
 const { tasks } = storeToRefs(todoStore)
+const nonDeletedTasks = computed(() => todoStore.nonDeletedTasks)
 
 const title = useState('title', () => '')
 const addTodo = () => {

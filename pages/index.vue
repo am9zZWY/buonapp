@@ -15,9 +15,7 @@
     </Section>
 
     <Section title="Plan your day 📅">
-      <ClientOnly>
-        <TaskContainer />
-      </ClientOnly>
+      <TaskContainer />
     </Section>
   </div>
 </template>

@@ -6,6 +6,7 @@ const localStorage = import.meta.server ? null : window.localStorage
 
 export const useTaskStore = defineStore('task', () => {
   const tasks = useState('tasks', () => [] as Task[])
+  const nonDeletedTasks = computed(() => tasks.value.filter((task) => !task.deleted))
 
   const getFromLocalStorage = () => {
     // Load todos from localStorage
@@ -16,10 +17,11 @@ export const useTaskStore = defineStore('task', () => {
       for (const task of tasksFromStorage) {
         task.taskId = task.taskId ?? ''
         task.title = task.title ?? ''
-        task.priority = task.priority ?? 'medium'
+        task.deleted = task.deleted ?? false
         task.completed = task.completed ?? false
         task.dueDate = task.dueDate ? new Date(task.dueDate) : undefined
         task.createdDate = new Date(task.createdDate)
+        task.priority = task.priority ?? 'medium'
 
         newTasks.push(task)
       }
@@ -64,7 +66,7 @@ export const useTaskStore = defineStore('task', () => {
             console.error('Tasks not found')
             return
           }
-          return setTasks(response.tasks)
+          return mergeTasks(response.tasks)
         } else {
           console.log('Tasks updated successfully')
         }
@@ -78,12 +80,13 @@ export const useTaskStore = defineStore('task', () => {
     const newTask: Task = {
       taskId: randomId,
       title: title,
+      deleted: false,
       completed: false,
       createdDate: createdDate,
       dueDate: dueDate,
       priority: priority
     }
-    tasks.value.push(newTask)
+    tasks.value = [newTask, ...tasks.value]
 
     // Call the API to update the tasks on the server
     apiCall('update')
@@ -93,16 +96,38 @@ export const useTaskStore = defineStore('task', () => {
 
   const addFromTitle = (title: string) => add(title, new Date())
 
-  const setTasks = (newTasks: Task[]) => {
-    tasks.value = newTasks.map((task) => {
-      task.createdDate = new Date(task.createdDate)
-      task.dueDate = task.dueDate ? new Date(task.dueDate) : undefined
-      return task
-    })
+  /**
+   * Merge new tasks with existing tasks
+   * based on the taskId
+   * @param newTasks
+   */
+  const mergeTasks = (newTasks: Task[]) => {
+    // Convert dates to Date objects
+    newTasks = newTasks
+      .map((task) => {
+        task.createdDate = new Date(task.createdDate)
+        task.dueDate = task.dueDate ? new Date(task.dueDate) : undefined
+        return task
+      })
+    const mergedTasks = tasks.value
+    for (const newTask of newTasks) {
+      const taskIndex = mergedTasks.findIndex((task) => task.taskId === newTask.taskId)
+      if (taskIndex === -1) {
+        mergedTasks.push(newTask)
+      } else {
+        mergedTasks[taskIndex] = newTask
+      }
+    }
+    tasks.value = mergedTasks
   }
 
   const remove = (id: string) => {
-    tasks.value = tasks.value.filter(todo => todo.taskId !== id)
+    tasks.value = tasks.value.map((task) => {
+      if (task.taskId === id) {
+        task.deleted = true
+      }
+      return task
+    })
     console.log('todos.value', tasks.value)
   }
 
@@ -118,6 +143,8 @@ export const useTaskStore = defineStore('task', () => {
 
   const sort = () => {
     tasks.value = tasks.value
+      .toSorted((a, b) => a.priority === b.priority ? 0 : a.priority === 'high' ? -1 : 1)
+      .toSorted((a, b) => a.dueDate?.getTime() - b.dueDate?.getTime())
       .toSorted((a, b) => a.createdDate.getDate() - b.createdDate.getDate())
       .toSorted((a, b) => a.completed === b.completed ? 0 : a.completed ? 1 : -1)
   }
@@ -150,17 +177,18 @@ export const useTaskStore = defineStore('task', () => {
     return ltfRanker.downloadProgress
   }
 
-  watch(tasks, async () => {
-    updateLocalStorage()
-    apiCall('update')
-  }, { deep: true })
-
   // Load todos from localStorage
   getFromLocalStorage()
   apiCall('fetch')
+    .then(() => {
+      watch(tasks, async () => {
+        updateLocalStorage()
+        apiCall('update')
+      }, { deep: true })
+    })
 
   return {
-    tasks,
+    tasks, nonDeletedTasks,
     rankBy,
     add,
     addFromTitle,
