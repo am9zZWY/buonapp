@@ -152,6 +152,7 @@ export const useTaskStore = defineStore('task', () => {
 
   watch(tasks, async () => {
     updateLocalStorage()
+    apiCall('update')
   }, { deep: true })
 
   // Load todos from localStorage

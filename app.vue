@@ -27,5 +27,5 @@ useSeoMeta({
 })
 
 // Verify the user's session
-useSessionStore()
+await useSessionStore().verifySession()
 </script>

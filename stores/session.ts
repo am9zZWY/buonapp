@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
 
 export const useSessionStore = defineStore('session', () => {
-  const id = useState('id', () => '')
+  const buonappId = useState('id', () => '')
   const deviceId = useState('deviceId', () => '')
-  const devices = useState<string[]>('devices', () => [])
   const isVerified = useState('isVerified', () => false)
   const isCreated = useState('isCreated', () => false)
 
@@ -14,17 +13,15 @@ export const useSessionStore = defineStore('session', () => {
     })
 
     if (response.status === 'success') {
-      id.value = response.userId
-      deviceId.value = response.newDeviceId
-      devices.value = response.allDevices
-    }
-
-    if (response.message === 'Session created') {
+      buonappId.value = response.userId
       isCreated.value = true
       isVerified.value = true
+      deviceId.value = response.newDeviceId
+
+      return true
     }
 
-    return isCreated.value
+    return false
   }
 
   async function verifySession() {
@@ -54,7 +51,7 @@ export const useSessionStore = defineStore('session', () => {
     if (response.status === 'success') {
       console.log('Device verified')
       isVerified.value = true
-      id.value = response.userId
+      buonappId.value = response.userId
       deviceId.value = cookieDeviceId
       return true
     }
@@ -72,12 +69,11 @@ export const useSessionStore = defineStore('session', () => {
   })
 
   return {
-    getToken,
-    userId: id,
+    buonappId,
     deviceId,
-    devices,
     isCreated,
     isVerified,
+    getToken,
     createSession,
     verifySession
   }

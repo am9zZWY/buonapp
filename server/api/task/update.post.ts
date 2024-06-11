@@ -1,7 +1,6 @@
 import { defineEventHandler } from 'h3'
 import { z } from 'zod'
 import useMongo from '~/composables/db/useMongo'
-import { randomBytes } from 'node:crypto'
 
 const UpdateTaskSchema = z.object({
   deviceId: z.string(),
@@ -48,7 +47,7 @@ export default defineEventHandler(async (event) => {
     createdDate: new Date(),
     dueDate: new Date(task.dueDate),
     priority: task.priority
-  }));
+  }))
 
   const bulkOps = newTasks.map(task => ({
     updateOne: {
@@ -56,10 +55,10 @@ export default defineEventHandler(async (event) => {
       update: { $set: task },
       upsert: true
     }
-  }));
+  }))
 
-  const db = await useMongo('buonapp');
-  const result = await db.collection('tasks').bulkWrite(bulkOps);
+  const db = await useMongo('buonapp')
+  const result = await db.collection('tasks').bulkWrite(bulkOps)
 
   return { message: 'Task added successfully', tasks: newTasks }
 })

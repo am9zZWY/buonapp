@@ -1,15 +1,18 @@
 import { z } from 'zod'
 import useMongo from '~/composables/db/useMongo'
 import type { Db } from 'mongodb'
+import { randomBytes } from 'node:crypto'
+
 
 const sessionSchema = z.object({
   userId: z.string().optional(),
   deviceId: z.string().optional()
 })
 
-const createSession = async (db: Db, userId: string, deviceId: string) => {
-  const newUserId = userId || Math.random().toString(36).substring(7)
-  const newToken = Math.random().toString(36).substring(7)
+const createSession = async (db: Db, deviceId: string, userId?: string) => {
+  const randomId = randomBytes(32).toString('hex')
+  const newUserId = userId ?? randomId
+  const newToken = randomBytes(32).toString('hex')
   const newSession = {
     userId: newUserId,
     token: newToken,
@@ -20,20 +23,22 @@ const createSession = async (db: Db, userId: string, deviceId: string) => {
 }
 
 export default defineEventHandler(async (event) => {
+  console.log('Creating a new session ...')
+
+  // Connect to the MongoDB cluster
   const db = await useMongo('buonapp')
 
-  console.log('Creating a new session')
+  // Parse the request body
   const body = await readValidatedBody(event, (body) => sessionSchema.parse(body))
-
   const { userId, deviceId } = body ?? { userId: undefined, deviceId: undefined }
-  console.log('User ID:', userId)
+  console.debug('[create.post]: user ID:' + userId + ', device ID:' + deviceId)
 
-  const newDeviceId = deviceId || randomBytes(32).toString('hex')
+  const newDeviceId = deviceId ?? randomBytes(32).toString('hex')
 
   if (userId && newDeviceId) {
     const existingSession = await db.collection('sessions').findOne({ userId })
 
-    console.log('Existing session:', existingSession)
+    console.debug('[create.post]: There is an existing session for user ID: ' + userId)
 
     if (existingSession) {
       await db.collection('sessions').updateOne(
@@ -51,10 +56,16 @@ export default defineEventHandler(async (event) => {
         newDeviceId,
         allDevices: existingSession.devices.concat(newDeviceId)
       }
+    } else {
+      console.error('[create.post]: There is no existing session for user ID: ' + userId)
+      return {
+        status: 'error',
+        message: 'User ID provided but no existing session found'
+      }
     }
   }
 
-  const newSession = await createSession(db, userId, newDeviceId)
+  const newSession = await createSession(db, newDeviceId, userId)
 
   setCookie(event, 'token', newSession.token)
   setCookie(event, 'deviceId', newDeviceId)
@@ -63,7 +74,7 @@ export default defineEventHandler(async (event) => {
     status: 'success',
     message: 'Session created',
     userId: newSession.userId,
-    newDeviceId,
+    newDeviceId: newDeviceId,
     allDevices: newSession.devices
   }
 })
