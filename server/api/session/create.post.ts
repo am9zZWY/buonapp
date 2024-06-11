@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import { randomBytes } from 'node:crypto'
 import useMongo from '~/composables/db/useMongo'
 import type { Db } from 'mongodb'
 
@@ -9,8 +8,8 @@ const sessionSchema = z.object({
 })
 
 const createSession = async (db: Db, userId: string, deviceId: string) => {
-  const newUserId = userId || randomBytes(32).toString('hex')
-  const newToken = randomBytes(256).toString('hex')
+  const newUserId = userId || Math.random().toString(36).substring(7)
+  const newToken = Math.random().toString(36).substring(7)
   const newSession = {
     userId: newUserId,
     token: newToken,
